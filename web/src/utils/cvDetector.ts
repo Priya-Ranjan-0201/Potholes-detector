@@ -30,6 +30,7 @@ export interface InspectionResult {
   imageWidth?: number;
   imageHeight?: number;
   engine?: string;
+  error?: string;
 }
 
 /**
@@ -48,6 +49,9 @@ export async function detectDefects(
     let blob: Blob;
     if (typeof imageSource === "string") {
       const res = await fetch(imageSource, { signal: externalSignal });
+      if (!res.ok) {
+        throw new Error(`Failed to load image (${res.status} ${res.statusText})`);
+      }
       blob = await res.blob();
     } else {
       blob = imageSource;
@@ -111,23 +115,59 @@ export async function detectDefects(
         latencyMs: latency,
         imageWidth: data.image_width,
         imageHeight: data.image_height,
-        engine: data.engine || "70/30 Hybrid Ensemble",
+        engine: data.engine || "Calibrated Multi-Model Ensemble",
       };
     }
-    console.error("[ScamRoad AI] Inference API error:", apiRes.status, await apiRes.text());
-  } catch (err) {
-    console.warn("[ScamRoad AI] Inference API connection issue:", err);
-  }
 
-  return {
-    source: "neural_api",
-    totalDefects: 0,
-    potholeCount: 0,
-    crackCount: 0,
-    maxSeverity: "Minor",
-    overallScore: 100,
-    boxes: [],
-    latencyMs: Math.round(performance.now() - startTime),
-    engine: "70/30 Hybrid Ensemble",
-  };
+    let detail = "";
+    try {
+      const errJson = await apiRes.json();
+      detail = errJson.detail || errJson.message || JSON.stringify(errJson);
+    } catch {
+      detail = await apiRes.text().catch(() => "");
+    }
+
+    const errorMsg =
+      apiRes.status === 404
+        ? "ScamRoad inference backend not reached on port 8000. Ensure the server is running."
+        : apiRes.status === 422
+        ? `Image issue: ${detail}`
+        : `Backend error (HTTP ${apiRes.status}): ${detail || apiRes.statusText}`;
+
+    console.error("[ScamRoad AI] Inference API error:", apiRes.status, detail);
+    return {
+      source: "neural_api",
+      totalDefects: 0,
+      potholeCount: 0,
+      crackCount: 0,
+      maxSeverity: "Minor",
+      overallScore: 100,
+      boxes: [],
+      latencyMs: Math.round(performance.now() - startTime),
+      engine: "Calibrated Multi-Model Ensemble",
+      error: errorMsg,
+    };
+  } catch (err: any) {
+    if (err?.name === "AbortError") {
+      throw err;
+    }
+    const message =
+      err?.message?.includes("Failed to fetch") || err?.name === "TypeError"
+        ? "Cannot connect to backend server on port 8000. Is python scripts/serve_inference.py running?"
+        : err?.message || "Inference failed due to a network connection issue.";
+
+    console.warn("[ScamRoad AI] Inference API connection issue:", err);
+    return {
+      source: "neural_api",
+      totalDefects: 0,
+      potholeCount: 0,
+      crackCount: 0,
+      maxSeverity: "Minor",
+      overallScore: 100,
+      boxes: [],
+      latencyMs: Math.round(performance.now() - startTime),
+      engine: "Calibrated Multi-Model Ensemble",
+      error: message,
+    };
+  }
 }

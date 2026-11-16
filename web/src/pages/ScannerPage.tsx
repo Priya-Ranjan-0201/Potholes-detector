@@ -30,10 +30,10 @@ const SAMPLE_IMAGES: SampleImage[] = [
     road: "Bengaluru Arterial Road",
   },
   {
-    id: "capture-mumbai",
-    label: "Mumbai",
-    src: "/samples/mumbai_potholes.avif",
-    road: "Mumbai Monsoon Road",
+    id: "capture-pothole",
+    label: "Crater",
+    src: "/samples/asphalt_crater.jpg",
+    road: "Asphalt Crater",
   },
   {
     id: "capture-cracks",
@@ -42,22 +42,22 @@ const SAMPLE_IMAGES: SampleImage[] = [
     road: "Alligator Fatigue Cracks",
   },
   {
-    id: "capture-diagram",
-    label: "Diagram",
-    src: "/samples/civil_distress_diagram.jpg",
-    road: "Road Distress Diagram",
+    id: "capture-mumbai",
+    label: "Mumbai",
+    src: "/samples/mumbai_potholes.avif",
+    road: "Mumbai Monsoon Road",
   },
   {
-    id: "capture-pothole",
-    label: "Crater",
-    src: "/samples/asphalt_crater.jpg",
-    road: "Asphalt Crater",
+    id: "capture-nh44",
+    label: "NH-44",
+    src: "/samples/pothole_nh44.jpg",
+    road: "NH-44 Highway Distress",
   },
   {
     id: "capture-clean",
     label: "Clean Road",
-    src: "/samples/pothole_nh44.jpg",
-    road: "Clean Road",
+    src: "/samples/clean_road.jpg",
+    road: "Clean Highway Pavement",
   },
 ];
 
@@ -86,7 +86,7 @@ export const ScannerPage: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [allSaved, setAllSaved] = useState<boolean>(false);
   const [isSavingAll, setIsSavingAll] = useState<boolean>(false);
-  const { success } = useToast();
+  const { success, error: showErrorToast } = useToast();
   const { t } = useLanguage();
 
   const [inspection, setInspection] = useState<InspectionResult>({
@@ -100,7 +100,7 @@ export const ScannerPage: React.FC = () => {
     latencyMs: 0,
     imageWidth: 640,
     imageHeight: 480,
-    engine: "70/30 Hybrid Ensemble",
+    engine: "Calibrated Multi-Model Ensemble",
   });
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -127,6 +127,7 @@ export const ScannerPage: React.FC = () => {
       crackCount: 0,
       boxes: [],
       latencyMs: 0,
+      error: undefined,
     }));
 
     try {
@@ -140,9 +141,13 @@ export const ScannerPage: React.FC = () => {
       );
       if (scanIdRef.current !== scanId) return;
       setInspection(result);
+      if (result.error) {
+        showErrorToast("Inference Connection Error", result.error);
+      }
     } catch (err) {
       if ((err as Error)?.name !== "AbortError") {
         console.error("Inference failed", err);
+        showErrorToast("Inference Failed", (err as Error)?.message || "Backend unreachable");
       }
     } finally {
       if (scanIdRef.current === scanId) {
@@ -432,14 +437,21 @@ export const ScannerPage: React.FC = () => {
             <div>
               <div className="text-[11px] text-slate-500 dark:text-slate-400">{t("statusLabel")}</div>
               <div
-                className={`text-sm font-bold mt-0.5 ${inspection.boxes.length === 0
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : inspection.maxSeverity === "Critical"
-                      ? "text-rose-600 dark:text-rose-400"
-                      : "text-amber-600 dark:text-amber-400"
-                  }`}
+                className={`text-sm font-bold mt-0.5 ${
+                  inspection.error
+                    ? "text-rose-600 dark:text-rose-400"
+                    : inspection.boxes.length === 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : inspection.maxSeverity === "Critical"
+                        ? "text-rose-600 dark:text-rose-400"
+                        : "text-amber-600 dark:text-amber-400"
+                }`}
               >
-                {inspection.boxes.length === 0 ? t("goodStatus") : inspection.maxSeverity}
+                {inspection.error
+                  ? "Offline"
+                  : inspection.boxes.length === 0
+                    ? t("goodStatus")
+                    : inspection.maxSeverity}
               </div>
             </div>
           </div>
@@ -482,6 +494,28 @@ export const ScannerPage: React.FC = () => {
                   </button>
                 );
               })
+            ) : inspection.error ? (
+              <div className="py-10 px-4 text-center text-xs flex flex-col items-center gap-3 bg-rose-50/50 dark:bg-rose-950/20 m-3 rounded-lg border border-rose-200 dark:border-rose-900/50">
+                <div className="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400 font-bold text-base">
+                  !
+                </div>
+                <div className="space-y-1">
+                  <div className="font-semibold text-rose-800 dark:text-rose-300">
+                    Inference Server Offline
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-400 text-[11px] max-w-xs leading-relaxed">
+                    {inspection.error}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => runDetection(uploadedFileRef.current ?? activeImageSrc)}
+                  className="px-3 py-1.5 rounded-md text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Retry Inference</span>
+                </button>
+              </div>
             ) : (
               <div className="py-12 px-4 text-center text-slate-500 text-xs flex flex-col items-center gap-2">
                 <CheckCircle className="w-6 h-6 text-emerald-500" />

@@ -19,6 +19,7 @@ from __future__ import annotations
 import base64
 import io
 import os
+from pathlib import Path
 import tempfile
 import time
 from typing import Any, List, Optional, Tuple
@@ -33,11 +34,26 @@ from backend.app.services.video_tracker import VideoDefectEvent, VideoDefectTrac
 
 router = APIRouter()
 
-# Global engine cache
+# Global project root & engine cache
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
 _ENGINE_CACHE: dict = {}
 
 # Obstacle classes (vehicles and pedestrians)
 _VEHICLE_AND_PEDESTRIAN_CLASSES = frozenset({0, 1, 2, 3, 5, 7})
+
+
+def resolve_candidate_path(candidates: List[str]) -> Optional[str]:
+    """Find the first matching file among candidates, resolving relative to cwd or project root."""
+    for c in candidates:
+        if os.path.exists(c):
+            return os.path.abspath(c)
+        p = PROJECT_ROOT / c
+        if p.exists():
+            return str(p)
+        alt = Path.cwd() / "scam_road" / c
+        if alt.exists():
+            return str(alt)
+    return None
 
 
 class DetectionBox(BaseModel):
@@ -164,14 +180,15 @@ def _get_ort_session(cache_key: str, path: str):
     """Load and cache an ONNX Runtime CPU session safely."""
     if cache_key in _ENGINE_CACHE:
         return _ENGINE_CACHE[cache_key]
-    if not os.path.exists(path):
+    resolved = resolve_candidate_path([path])
+    if not resolved:
         return None
     try:
         import onnxruntime as ort
 
         sess_opts = ort.SessionOptions()
         sess_opts.enable_cpu_mem_arena = False
-        sess = ort.InferenceSession(path, sess_options=sess_opts, providers=["CPUExecutionProvider"])
+        sess = ort.InferenceSession(resolved, sess_options=sess_opts, providers=["CPUExecutionProvider"])
         _ENGINE_CACHE[cache_key] = sess
         return sess
     except Exception as e:
@@ -188,7 +205,7 @@ def get_pothole_engine(conf_thresh: float = 0.20, iou_thresh: float = 0.35):
         "ml/weights/yolo11n_pothole_best.onnx",
         "ml/weights/best.onnx",
     ]
-    selected_path = next((p for p in candidates if os.path.exists(p)), None)
+    selected_path = resolve_candidate_path(candidates)
     if not selected_path:
         return None
 
@@ -210,7 +227,7 @@ def get_pothole_engine(conf_thresh: float = 0.20, iou_thresh: float = 0.35):
         return None
 
 
-def get_crack_engine(conf_thresh: float = 0.45, iou_thresh: float = 0.35):
+def get_crack_engine(conf_thresh: float = 0.65, iou_thresh: float = 0.35):
     """Retrieve multi-class road distress crack engine."""
     from edge.agent.infer import EdgeInferenceEngine
 
@@ -218,7 +235,7 @@ def get_crack_engine(conf_thresh: float = 0.45, iou_thresh: float = 0.35):
         "runs/baselines/yolov8n/weights/best.onnx",
         "ml/runs/pothole_yolov8n/weights/best.onnx",
     ]
-    selected_path = next((p for p in candidates if os.path.exists(p)), None)
+    selected_path = resolve_candidate_path(candidates)
     if not selected_path:
         return None
 
@@ -251,7 +268,7 @@ def get_segmentation_engine():
         "ml/weights/yolov8n_seg_pothole.onnx",
         "ml/weights/yolov8n_seg_pothole.pt",
     ]
-    selected = next((p for p in candidates if os.path.exists(p)), None)
+    selected = resolve_candidate_path(candidates)
     if not selected:
         return None
 
@@ -431,7 +448,7 @@ def run_pipeline_on_image(
     pothole_eng = get_pothole_engine(conf_thresh=conf_thresh, iou_thresh=iou_thresh)
     raw_potholes = pothole_eng.predict(img) if pothole_eng else []
 
-    # 3. Crack detections from YOLOv8n (calibrated threshold to eliminate clean asphalt noise)
+    # 3. Crack detections from YOLOv8n crack specialist (calibrated threshold)
     crack_floor = max(0.65, conf_thresh + 0.30)
     crack_eng = get_crack_engine(conf_thresh=crack_floor, iou_thresh=iou_thresh)
     raw_cracks = crack_eng.predict(img) if crack_eng else []
