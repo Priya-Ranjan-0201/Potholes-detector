@@ -1,7 +1,7 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 8 — Global-Stage Readiness & Production Verification
-- **Status:** COMPLETED (Gate Passed)
+- **Current Phase:** Phase 9 — Final Verification (Pass 2 & Pass 3) and Detailed Report
+- **Status:** COMPLETED & FROZEN
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
 - **Phase 1 Tag:** `v13-phase-1-done`
@@ -12,17 +12,28 @@
 - **Phase 6 Tag:** `v13-phase-6-done`
 - **Phase 7 Tag:** `v13-phase-7-done`
 - **Phase 8 Tag:** `v13-phase-8-done`
+- **Final Freeze Tag:** `v2.0.0`
 - **Evidence Paths:**
-  - `docs/ABOUT_THE_BUILD.md` (Academic AI assistance disclosure note)
-  - `docs/EVIDENCE.md` (Evidence pack mapping every reported number directly to disk files)
-  - `docs/THREAT_MODEL.md` (Tested privacy and security mitigations: blur recall, upload sanity, RBAC)
-  - `docs/PROJECT_REPORT.md` (Full undergraduate capstone paper with citations, methodology, and metrics)
-  - `docs/DECISIONS.md` (ADR-007 on global pipeline robustness and real-data architecture)
-  - `docker/docker-compose.yml` (Standard containerized deployment manifests)
-- **Phase 8 Deliverables & Verifications:**
-  - **Internationalization (i18n):** Verified 100% parity across 27 keys across all 6 languages (`en`, `hi`, `pa`, `ta`, `te`, `bn`) via `scripts/check_i18n_keys.py`.
-  - **Privacy & Security:** Documented 100% recall face/license plate blurring (`bench/privacy_blur_report.json`), upload sanitization (25 MB max, magic byte verification, usability gates), and RBAC maintenance approval rules.
-  - **Reviewer Evidence Pack:** Authored `docs/EVIDENCE.md` providing direct cross-references for every single metric and score in `README.md` and reports.
-  - **Academic AI Disclosure:** Created `docs/ABOUT_THE_BUILD.md` describing AI tool assistance and verifying human empirical execution.
-  - **Verification Suite Execution:** All unit, integration, and UI tests pass cleanly.
-- **Next Action:** Proceed to Phase 9 — Final Verification (Pass 2 & Pass 3) and Detailed Report (`docs/FINAL_REPORT.md`).
+  - `docs/FINAL_REPORT.md` (Exhaustive final engineering report covering all 9 mission requirements)
+  - `docs/IMPROVEMENT_BACKLOG.md` (15 ranked engineering weaknesses from Pass 2 hostile audit)
+  - `docs/EVIDENCE.md` (Full claim-to-file traceability matrix)
+  - `docs/MODELS_AND_DATA.md` (Cryptographic provenance register)
+  - `docs/FORENSICS.md` (Phase 1 failure root-cause analysis)
+  - `docs/AI_EVALUATION.md` (Phase 3 held-out evaluation report)
+  - `docs/CLEANUP_LOG.md` (Phase 6 safe cleanup audit log)
+  - `ml/runs/final/metrics.json` (Real evaluation results on 1,728 images and 20 videos)
+- **Phase 9 Deliverables & Verifications:**
+  - **Pass 2 (Hostile Re-Audit):**
+    - Re-evaluated all 7 failure cases in `eval_failures/` through `/api/v1/infer`: confirmed orientation fix, AVIF decoding fix, pothole recall restoration, and obstacle gate calibration.
+    - Verified zero test leakage via `scripts/verify_leakage.py` (0 exact SHA-256 and 0 perceptual hash collisions).
+    - Ranked 15 weakest points in `docs/IMPROVEMENT_BACKLOG.md`.
+  - **Pass 3 (Freeze & Verification):**
+    - Backend Pytest Suite: 11 / 11 tests PASSED.
+    - Frontend Vitest Suite: 10 / 10 tests PASSED.
+    - Frontend Production Build: `npm run build` PASSED (gzip JS: 263.45 kB).
+    - Production 50-sample evaluation run: 50 / 50 PASSED.
+  - **Master Final Report:**
+    - Authored `docs/FINAL_REPORT.md` with full academic rigor.
+  - **Compliance with Hard Rules G1 to G10:**
+    - Fully audited and compliant.
+- **Final Tag:** `v2.0.0`

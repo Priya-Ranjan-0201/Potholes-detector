@@ -1,5 +1,5 @@
 {
-  "phase": "PHASE_8_GLOBAL_READINESS",
+  "phase": "PHASE_9_FINAL_FREEZE",
   "status": "COMPLETED",
   "branch": "v13/global-fix",
   "baseline_tag": "before-v13",
@@ -11,20 +11,23 @@
   "phase_6_tag": "v13-phase-6-done",
   "phase_7_tag": "v13-phase-7-done",
   "phase_8_tag": "v13-phase-8-done",
+  "final_freeze_tag": "v2.0.0",
   "evidence_paths": {
-    "about_the_build": "docs/ABOUT_THE_BUILD.md",
-    "evidence_pack": "docs/EVIDENCE.md",
-    "threat_model": "docs/THREAT_MODEL.md",
-    "project_report": "docs/PROJECT_REPORT.md",
-    "decisions": "docs/DECISIONS.md"
+    "final_report": "docs/FINAL_REPORT.md",
+    "improvement_backlog": "docs/IMPROVEMENT_BACKLOG.md",
+    "evidence_matrix": "docs/EVIDENCE.md",
+    "evaluation_metrics": "ml/runs/final/metrics.json"
   },
   "metrics": {
-    "i18n_languages_count": 6,
-    "i18n_key_parity_pct": 100.0,
-    "privacy_blur_face_recall": 1.0,
-    "privacy_blur_plate_recall": 1.0,
-    "evidence_matrix_complete": true
+    "eval_images_count": 1728,
+    "defect_recall": 0.9746,
+    "image_f1": 0.7883,
+    "video_duplicate_rate": 0.0,
+    "leakage_collisions": 0,
+    "python_tests_passed": 11,
+    "web_tests_passed": 10,
+    "build_status": "SUCCESS"
   },
   "gate_passed": true,
-  "next_action": "Phase 9: Final Verification (Pass 2 & Pass 3) & Final Report"
+  "next_action": "ALL PHASES COMPLETE. Freeze tagged v2.0.0."
 }
