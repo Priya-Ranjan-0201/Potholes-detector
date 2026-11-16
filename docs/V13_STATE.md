@@ -1,18 +1,31 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 1 — Forensic Audit
+- **Current Phase:** Phase 2 — Build a Trustworthy Evaluation Set (images and video)
 - **Status:** COMPLETED (Gate Passed)
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
-- **Completed Tag:** `v13-phase-1-done`
+- **Phase 1 Tag:** `v13-phase-1-done`
+- **Phase 2 Tag:** `v13-phase-2-done`
 - **Evidence Paths:**
-  - `docs/FORENSICS.md`
-  - `docs/forensics/`
-  - `eval_failures/`
-- **Phase 1 Deliverables:**
-  - Complete failure case reproductions with intermediate tensors, obstacle masks, model outputs, and visual overlays.
-  - Ranked root-cause analysis with concrete code evidence.
-  - Pipeline integrity audit (EXIF orientation bug, aspect ratio squashing bug, AVIF decode failure, CPU INT8 vs FP32 latency paradox).
-  - Heuristics audit of 8 brittle hand-crafted rules.
-  - Audit of hardcoded evaluation metrics and synthetic data generators.
-- **Next Action:** Proceed to Phase 2 — Build a Trustworthy Evaluation Set (images and video).
+  - `ml/data/test_manifest.json`
+  - `scripts/build_evaluation_set.py`
+  - `scripts/verify_leakage.py`
+  - `data/test_videos/video_ground_truth.json`
+  - `data/evaluation_set/`
+- **Phase 2 Deliverables:**
+  - Total Held-Out Images: 1,728 (exceeds requirement of >= 1,500).
+  - Defect Images: 984 (exceeds requirement of >= 600).
+  - Hard Negatives: 744 (exceeds requirement of >= 600).
+  - Geographic Sources (6 countries, 11 distinct datasets):
+    - India: 100 images (RDD2022 India val split, streamed)
+    - United States: 250 images (RDD2022 USA, streamed)
+    - Egypt: 150 images (RDD2022 Egypt, streamed)
+    - Japan / SE Asia: 200 images (Ryukijano test + valid)
+    - International / Europe: 1,021 images (Manot, Taroii defects & clean roads, Kauevestena Deep Pavements surface patches)
+    - User Failure Cases: 7 images (real user failures with verified ground truth)
+  - 20 Real Dashcam Video Evaluation Clips: daylight, urban, highway, dusk, rain/wet, glare, night, and negative passes.
+  - Leakage Verification (`scripts/verify_leakage.py`):
+    - 0 exact SHA-256 collisions with training sets.
+    - 0 perceptual hash near-duplicate collisions (pHash distance <= 2) with training sets.
+    - Leakage Gate: PASSED.
+- **Next Action:** Proceed to Phase 3 — Fix the Pipeline and the Models (root causes, not patches).

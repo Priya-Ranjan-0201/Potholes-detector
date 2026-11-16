@@ -30,6 +30,8 @@ coverage.xml
 !/data/sample/
 !/data/sample/splits/
 !/data/sample/splits/**
+!/data/test_videos/
+data/test_videos/*.mp4
 data/sample/labels/
 data/sample/raw/
 data/sample/yolo_labels/

@@ -1,0 +1,412 @@
+<USER_REQUEST>
+# SCAMROAD — GLOBAL-STAGE ACCURACY, REAL-DATA, SIMPLE WEBSITE AND CLEANUP PROMPT (v13)
+
+One prompt for the whole job: find out why new photos and videos give wrong results, fix it properly, remove every piece of fake data, push accuracy as high as honest testing allows (target 90%), redesign the frontend as a simple full website with a new colour palette, clean the repository, and make the code and docs read like a careful human wrote them. This supersedes the visual direction of v8 to v12.
+
+Paste the block into the Antigravity Agent Manager (or save as `docs/V13_PLAN.md` and say "follow docs/V13_PLAN.md exactly").
+
+**Before you paste**
+1. Create a branch `v13/global-fix` and tag the current state `before-v13` so everything is recoverable.
+2. Put the images and videos that gave you wrong results into a folder `eval_failures/` (original files, unedited). They become the first test cases. Add a short text file `eval_failures/notes.txt` saying what the right answer should be for each (for example "no pothole here" or "2 potholes, bottom left").
+3. Allow terminal auto-run with a deny-list (`rm -rf` outside the repo, `git push --force`, `sudo`). Keep tokens in secret stores.
+4. Fill in the BUDGET line in the prompt.
+
+---
+
+```
+PROJECT: ScamRoad (scam_road) — road defect detection and maintenance platform (B.Tech capstone).
+Current state (from README v1.2.0): FastAPI backend, React 18 + Vite + TypeScript + Tailwind web app, edge agent,
+ONNX models. Detection uses a 70/30 weighted ensemble (D-FINE Large, YOLOv12s, YOLOv8n-Seg as the "external"
+stream; YOLO11n INT8 and an RDD2022 crack model as the "edge" stream), a COCO obstacle blocker, and hand-set
+filters (luminance depression, saturation caps, corner-shoulder geometry, crack cluster limits). Reported held-out
+result: mAP@50 85.75% on N=50 images / 105 annotations. The user reports wrong or inaccurate results whenever
+different images or videos are used.
+
+ROLE: Principal ML engineer + full-stack engineer + product designer + QA lead, working AUTONOMOUSLY.
+MISSION (in this order):
+ 1. Diagnose, with evidence, why results are wrong on new photos and videos.
+ 2. Fix the root causes so the system generalises, and prove it on large, diverse, untouched test sets.
+ 3. Remove ALL fake, seeded or hand-typed data. Everything shown is real and traceable.
+ 4. Reach and honestly verify the accuracy target (section 3). Never fake it.
+ 5. Redesign the frontend as a simple, clean, full website with a new colour palette.
+ 6. Clean the repository and make code and docs read like a careful human wrote them.
+ 7. Deliver a detailed final report of everything found, changed and measured.
+
+=====================================================================================
+0. HARD RULES
+=====================================================================================
+G1  REAL DATA ONLY. No fake, seeded, synthetic or placeholder records, no hand-typed numbers, no smoothed or
+    padded charts, no mock inference, no hardcoded results per image or preset. Every number in the UI, README
+    and reports must come from a database row created by a real action, or from a generated result file
+    (cite the path). When data does not exist, show a clear empty state.
+G2  NO TEST LEAKAGE. Tune only on train/validation. The final test sets are touched once per final model.
+    Never choose thresholds, ensemble weights, filters or post-processing by looking at test results. Never
+    remove hard test images to raise a score. Never relabel test data to fit predictions.
+G3  HONEST ACCURACY. Report the number the data gives, with the sample size and a confidence interval. If a
+    target is not reached within budget, say so and show what limits it. Never claim "zero false positives",
+    "100%", "zero hallucination" or similar. Remove any such claim that exists.
+G4  PROVENANCE AND LICENCES. For every model weight and dataset, record source URL, version/date, licence,
+    SHA-256 and what it was trained on in docs/MODELS_AND_DATA.md. If a model's provenance or licence cannot
+    be verified, do not ship it. Keep AGPL-3.0 and CC BY-SA 4.0 obligations and attributions.
+G5  NO GOVERNMENT IDENTITY. No emblem, Ashoka Chakra, flag-like layouts, MoRTH/NHAI/PWD logos or "official"
+    wording. Footer on every page: "Student research project. Not an official government system. Not
+    safety-certified." No standards-compliance claims; the severity rubric is a project method.
+G6  NO JARGON IN THE PRODUCT. No internal rule codes ("Rule R4", "Rule B6"), phase/pass names, "Frozen",
+    "Zero Mock Data", "Clause", or any prompt wording in the UI, API messages, comments or docs.
+G7  SAFE CLEANUP. Never permanently delete anything until it has been (a) proven unreferenced, (b) moved to a
+    staging folder, (c) tests pass without it, and (d) recorded in docs/CLEANUP_LOG.md. History stays intact.
+    No force pushes, no history rewrites.
+G8  Never weaken or delete a test to make it pass. Fix root causes. Regression test for every bug found.
+G9  Ask only for: missing secrets, licence doubts, destructive actions, or data only I can supply. Otherwise
+    decide, log in docs/DECISIONS.md and continue. Queue human tasks in docs/HUMAN_TODO.md.
+G10 No map UI. Location is plain text (coordinates, accuracy, optional place name).
+
+BUDGET: max GPU hours ____ ; max wall-clock days ____ ; max spend ____ . Estimate GPU time before each training
+job, log it, shrink the job instead of exceeding the budget.
+
+=====================================================================================
+1. AUTONOMOUS LOOP
+=====================================================================================
+State in docs/V13_STATE.md and ml/STATE.json (phase, status, evidence paths, open issues, next action).
+Per phase: plan -> implement -> run checks -> SELF-REVIEW GATE -> commit (short, plain commit messages) -> tag
+v13-phase-N-done. Gate fails: find the root cause, fix, re-run (max 3 attempts per issue, then mark blocked,
+record why, continue with independent work). No approval between phases. Finish with PASS 2 (hostile re-audit)
+and PASS 3 (clean-clone freeze).
+
+=====================================================================================
+PHASE 1 — FORENSIC AUDIT (read-only; produce docs/FORENSICS.md)
+=====================================================================================
+1.1 Inventory: repo tree, git log, LOC per folder, actual dependencies, models in ml/weights with hashes and
+    sizes, datasets present, tests and their results, API routes, DB tables, pages.
+1.2 Reproduce the failures: run EVERY file in eval_failures/ (and every sample in web/public) through the exact
+    production path (HTTP /api/v1/infer, and the video path). Save inputs, raw model outputs per stage
+    (each model before fusion, after fusion, after each filter), final output, and a rendered overlay into
+    docs/forensics/<file>/. Compare with notes.txt and classify each result: correct / false positive /
+    missed defect / wrong box / wrong class / wrong severity.
+1.3 Pipeline integrity checks (these are the usual silent causes of "works on one image, fails on another";
+    test each explicitly and record pass/fail with evidence):
+    - EXIF orientation: images from phones are rotated by metadata; is it applied before inference and before
+      drawing boxes? Test with rotated copies.
+    - Colour order and normalisation (RGB vs BGR, 0-255 vs 0-1), alpha channel PNGs, grayscale, 16-bit,
+      CMYK, HEIC/WebP, very large and very small images.
+    - Resize/letterbox: aspect ratio preserved? padding colour? box coordinates mapped back correctly?
+      Compare with the Ultralytics reference pipeline on 50 images.
+    - Post-processing: NMS thresholds, class-agnostic vs per-class, max detections, confidence scale of each
+      model (DETR scores and YOLO scores are not on the same scale; a fixed 70/30 mix of them is not a
+      calibrated probability).
+    - ONNX vs PyTorch parity per model, INT8 vs FP32 drop per slice.
+    - The browser (WASM) path vs the server path: same weights, same preprocessing, same output?
+    - Video path: frame decoding, rotation metadata, frame sampling, per-frame vs tracked results, temporal
+      smoothing, duplicate suppression, FPS handling.
+    - Threshold behaviour: the UI sensitivity slider vs server-side thresholds.
+1.4 Heuristic audit: for each hand-set rule (obstacle blocker conf=0.12 and bidirectional containment,
+    luminance depression ΔY < -8, saturation > 115 / > 58, corner-shoulder geometry, crack cluster W<=0.55,
+    H<=0.45, IoU 0.30/0.20, IoM 0.60, consensus boosts 1.10/1.15, ensemble 0.70/0.30, quality gate Var<85,
+    mean<35): where did the number come from, on which data was it tuned, and what does it do to recall on
+    unseen images? Run each ON/OFF on a validation set and record the effect. Rules that were tuned on the same
+    small sets used for reporting are suspect.
+1.5 Evaluation audit: the reported test set (N=50, 105 annotations) is far too small and too narrow for the
+    claims made. Record its country/source mix, class counts, negative images, and how the thresholds were
+    chosen. Compute 95% confidence intervals (bootstrap) for the reported metrics.
+1.6 Model audit: for each external model (D-FINE Large, YOLOv12s, YOLOv8n-Seg, COCO blocker) verify source,
+    licence, training data and whether it was fine-tuned on road damage. Models never trained on road damage
+    cannot be expected to detect potholes reliably; record this.
+1.7 Claims audit: list every claim in README/docs/UI, and mark true / false / unverifiable with evidence.
+    Suspect ones: "zero false positives", "Zero Hallucination Display", "calibrated" ensemble, "hardware
+    signature validation", "SHA-256 fingerprinting prevents injected defects", "verifies asphalt restoration",
+    privacy recall figures (give sample size and sources), latency/throughput figures (device and file).
+1.8 Root-cause ranking: write the top causes of wrong results in order of impact, each with the evidence file.
+GATE: FORENSICS.md complete; every eval_failures item reproduced and classified; root causes ranked.
+
+=====================================================================================
+PHASE 2 — BUILD A TRUSTWORTHY EVALUATION SET (images AND video)
+=====================================================================================
+2.1 Image test set (held out, never trained on). Sources must be real and licensed. Compose:
+    - RDD2022 official test or held-out splits across ALL countries (not only India): Japan, India, Czech,
+      Norway, United States, China (verify which have labels), as available and licensed.
+    - Additional public pothole/crack datasets with different cameras and countries (verify licences; use
+      cross-dataset: models trained on A are tested on B).
+    - Hard negatives (real images, no defects): clean asphalt, shadows, tyre marks, patches, manholes, speed
+      bumps, wet road, puddles, road markings, gravel shoulders, dirt tracks, vehicles, pedestrians, night,
+      rain, glare, motion blur, low resolution, rural unpaved roads.
+    - The user's eval_failures/ images (moved to a separate "user_cases" split that is used for debugging first
+      and for final reporting only after a duplicate-safe split is made).
+    Size target: at least 1,500 test images with at least 600 containing defects and at least 600 hard negatives,
+    from at least 4 distinct sources/countries. If licensed data cannot reach this, report the real size and the
+    limitation. Remove exact and near duplicates (perceptual hash) within and across train/val/test. Split by
+    source and sequence, never by random frame.
+2.2 Video test set: at least 20 real dashcam/phone clips (30-120 s each, day, dusk, rain, glare, rough roads,
+    multiple passes), public licensed clips plus the user's own. Annotate defects per frame or per event
+    (CVAT), with a two-annotator check on 10%. Report event-level metrics (see 3.3). Queue the user's own
+    recording and labelling in HUMAN_TODO with a safe-collection guide.
+2.3 Manifest: ml/data/test_manifest.json with file, source, licence, SHA-256, labels, tags (night, rain, small,
+    far, wet...). Generated by script. A leakage test (hash + group overlap) must pass in CI.
+GATE: sets built; counts generated by script; leakage test passes.
+
+=====================================================================================
+PHASE 3 — FIX THE PIPELINE AND THE MODELS (root causes, not patches)
+=====================================================================================
+3.0 Accuracy target (defined up front, measured only on the held-out test sets, never tuned on them):
+    - PRIMARY: image-level accuracy and F1 for "contains a road defect: yes/no" >= 90% on the multi-source
+      test set, with hard negatives included.
+    - OBJECT-LEVEL: report precision, recall, F1, mAP@50 and mAP@50-95 per class and overall, at the operating
+      threshold chosen on validation. Goal: precision >= 90% and recall >= 85% for the pothole class on the
+      multi-source test set. If not reached, report the real values with confidence intervals and the
+      slices that limit them.
+    - ROBUSTNESS: no slice (country, night, rain, small objects, blur, rural) may be more than 10 points below
+      overall without a documented explanation.
+    - VIDEO: see 3.3.
+3.1 Fix integrity problems found in Phase 1 first (orientation, colour order, letterbox, coordinate mapping,
+    post-processing, parity). Add regression tests with rotated, alpha, grayscale, large and tiny images.
+3.2 Replace ad-hoc heuristics with measured, learned behaviour:
+    - Train and fine-tune on a larger, multi-source, licensed training set (RDD2022 all countries plus other
+      licensed sets), with hard-negative images included as background. Use group-aware splits.
+    - Candidate models: YOLO11 (n/s/m) fine-tuned, RT-DETR or D-FINE fine-tuned (only if licence and
+      provenance are verified), YOLOv8/YOLO11-Seg for masks. Compare on VALIDATION; the edge model is chosen
+      by accuracy per latency.
+    - Ensemble: if used, fuse with Weighted Boxes Fusion or similar, with weights and thresholds FIT ON
+      VALIDATION (grid or optimisation), each model's scores calibrated first (temperature or isotonic). The
+      fixed 0.70/0.30 mix and the consensus boosts are removed unless validation shows they help.
+    - Hand-set filters (obstacle blocker, luminance, saturation, geometry, cluster limits, quality gate) stay
+      ONLY if an ablation on validation shows they improve precision without hurting recall, and a test on the
+      user_cases split does not show regressions. Otherwise delete them. Prefer fixing errors with data
+      (hard negatives, more diverse positives) over rules.
+    - Hard-negative mining rounds: run on negative images, add confident false positives to training as
+      background, retrain, repeat until validation precision stops improving. Active-learning round on the
+      user's failure images (after splitting them into train-eligible and held-out parts; held-out part is
+      never trained on).
+    - Augmentation for domain shift: brightness/contrast, blur, noise, JPEG compression, rain/fog/low-light,
+      scale, rotation within a few degrees, mosaic on/off ablation.
+    - Resolution study (640/800/960/1280) for small and far potholes; tiling for very large images.
+    - Calibration: report ECE and reliability diagrams; choose the operating threshold on validation for a
+      stated precision/recall trade-off.
+    - Ablation table (generated): each change vs the baseline with seed spread (>= 3 seeds when budget allows).
+      Keep a change only if it improves validation beyond seed spread and does not hurt held-out slices.
+3.3 Video:
+    - Pipeline: decode with correct rotation, sample frames adaptively, detect, track (ByteTrack/BoT-SORT),
+      require a minimum track length and mean confidence, merge a track into one defect event, keep the best
+      frame, smooth over time. Never report per-frame duplicates as separate defects.
+    - Metrics on the video test set: event precision, recall, F1 (a defect event is matched if its track overlaps
+      a ground-truth event in space and time), false alarms per minute and per km when speed is known, ID
+      switches, duplicate rate, latency per frame, end-to-end FPS. Target: event-level precision and recall
+      >= 90% on the video test set, reported with confidence intervals; if not reached, report honestly.
+3.4 Image-quality and input handling: reject or warn on unusable inputs (too dark, blurred, not a road scene)
+    with a clear message instead of a wrong answer. Learn the "not a road / unusable" decision from data or use
+    a documented, validated rule, and report its false-reject rate.
+3.5 Severity and measurement: pixel and relative-area measurements only; no centimetre or depth claims.
+    Severity weights live in a config file, with a documented method. If a rater study exists, report agreement;
+    otherwise label severity as "estimated by project method". Detection confidence is never shown as severity.
+3.6 Repair verification (ORB + RANSAC): evaluate on real before/after pairs; if none exist, label the feature
+    "experimental, not evaluated" in the UI and docs and do not show a percentage score as a verified result.
+3.7 Final evaluation (once): run the frozen model on the held-out image and video test sets. Generate
+    ml/runs/final/metrics.json, per-class and per-slice tables, confusion matrix, PR curves, calibration,
+    failure gallery with reasons, latency/throughput on named hardware, bootstrap confidence intervals.
+    docs/AI_EVALUATION.md is generated from these files by script.
+GATE: all integrity regression tests pass; final metrics generated; targets either met (shown) or honestly
+missed (explained); heuristics removed or justified by ablation.
+
+=====================================================================================
+PHASE 4 — REMOVE ALL FAKE DATA
+=====================================================================================
+- Delete seed/demo scripts that create synthetic defects, work orders, citizen reports, trends or counts.
+  Remove is_demo plumbing, "Demo data" badges and demo-mode tours (they are no longer needed).
+- Start with an empty database. Data enters only through real actions: image/video uploads and live camera
+  runs through the real model; real work orders created by a user; real citizen reports submitted via the form;
+  real edge syncs.
+- Provide "Run on evaluation samples": a button/CLI that runs the real pipeline over a chosen folder of real,
+  licensed test images and stores the true outputs with their source and licence attached. Location shows
+  "Unknown" when no GPS exists. No invented coordinates, wards, corridors or timestamps.
+- Remove invented structure where no real source exists: ward names, corridor names, SLA numbers and rate
+  cards tied to a specific place must be user-entered configuration; empty until the user adds them.
+- Charts: only from real rows; at least 7 distinct days of data to draw a trend, otherwise show a table and
+  "Not enough history yet (N records)". No interpolation or padding.
+- Benchmarks page reads only generated files; missing values show "Not measured".
+- Add tests: (a) a fresh install shows empty states everywhere, (b) after an upload the dashboard count equals
+  the database count, (c) every chart point maps to a database row or a metrics file entry, (d) a CI scan fails
+  if seed/demo/mock strings or random-number generators appear in non-test code paths that feed the UI.
+GATE: fresh database -> empty app; real uploads -> real counts; scans pass.
+
+=====================================================================================
+PHASE 5 — FRONTEND REDESIGN: SIMPLE, CLEAN, FULL WEBSITE
+=====================================================================================
+5.1 Direction: a simple, calm, modern website that looks like a real product site plus a clean working app.
+    Light theme by default with an optional dark theme. Generous whitespace, strong typography, one accent
+    colour, flat surfaces, thin borders. No glow, no gradients on cards, no decorative backgrounds, no mesh
+    blobs, no ornament patterns, no mascot, no marquee, no particle effects. Motion is functional only.
+5.2 NEW COLOUR PALETTE "Highway green" (replaces every earlier palette; CSS variables only, no hardcoded colours):
+    Light:  bg #FFFFFF, bg-subtle #F5F7F6, surface #FFFFFF, border #DDE3E0, border-strong #C5CEC9,
+            text #0F1A17, muted #4A5A55, primary #0F766E (road-sign green), primary-hover #0B5F58,
+            primary-contrast #FFFFFF, accent-sky #2563EB (links, info), focus #0F766E.
+    Dark:   bg #0A1210, bg-subtle #0F1A17, surface #13201C, border #1F2F2A, border-strong #2C413A,
+            text #E7F0EC, muted #9BB0A8, primary #34D3BB, primary-hover #5EE0CB, primary-contrast #06201B,
+            accent-sky #60A5FA, focus #5EE0CB.
+    Status/severity (always icon/shape + text label, never colour alone): Minor #2563EB, Moderate #CA8A04,
+            Severe #EA580C, Critical #DC2626; success #15803D, warning #B45309, error #B91C1C.
+    Verify WCAG AA contrast for every text/background pair automatically; adjust tokens until all pass.
+    If the owner prefers another palette later, only the token file changes.
+5.3 Typography: Inter for UI and headings (weights 400/500/600), JetBrains Mono for coordinates, IDs, latency
+    and numbers; Noto Sans scripts for Hindi, Punjabi, Tamil, Telugu, Bengali (bundled, subset, swap).
+    Scale 13/14/16/20/28/40/56. Plain sentence-case copy.
+5.4 Site structure (top navigation bar, like a normal website; mobile hamburger):
+    Home | Detect | Dashboard | Maintenance | Benchmarks | About     (Sign in / language / theme on the right)
+    - HOME: hero with one plain headline ("Find, track and fix road defects"), one-line explanation, two
+      buttons (Try the detector / View benchmarks), a real before/after example from the evaluation set with
+      source and licence credit, a 3-step "How it works" (Upload or record -> Detect and track -> Create and
+      verify work orders), a "Results" strip pulling real numbers from the final metrics file with sample
+      sizes and confidence intervals, a short "Limitations" section, footer with disclaimer, licences, links.
+    - DETECT: modes via tabs: Image, Video, Live camera. Large drop area, sensitivity control, results panel
+      (annotated image, list of detections with class, confidence, relative area %, severity, quality
+      warnings), "Create work order". Video mode shows a timeline with detected events and track IDs.
+      If the input is unusable, show a clear reason instead of a guess.
+    - DASHBOARD: four number cards (Total defects, Severe + Critical, Open work orders, Overdue), a defects
+      table with filters, recent activity; real data only; empty state with a "Go to Detect" button.
+    - MAINTENANCE: sub-tabs Work orders (table with optional board view), Defects, Citizen reports; side panel
+      for details; engineer sign-off dialog with before/after comparison; AI suggestions marked "Suggested".
+    - BENCHMARKS: headline metrics, per-class table, confusion matrix, PR curve, per-slice table (country,
+      night, rain, small, hard negatives), video results, latency by named device, model versions and hashes,
+      limitations. Everything from generated files; "No evaluation results found. Run make eval." if missing.
+    - ABOUT: what the project is, how it works, datasets and licences, privacy approach, limitations, student
+      project disclaimer, contact/GitHub link.
+    - Secondary: Login/Register, Settings (language, theme, rate card, reduce motion), 404 (plain).
+5.5 Components: consistent button hierarchy, inputs with inline validation, tables with sticky headers and
+    sorting, badges (severity as small shape + label), tabs, dialogs, toasts with undo, skeleton loaders,
+    empty states (icon + one sentence + action). 8-pt grid, radius 8, max width 1200 on content pages.
+5.6 Motion (functional only; Framer Motion or CSS; tokens in one file): 120-200 ms fades/slides for dialogs,
+    panels, tabs and toasts; skeletons; real progress bars; a scan line only while inference runs; boxes fade
+    in; before/after slider. No loops except spinners, skeletons and the live-camera dot. Honour
+    prefers-reduced-motion and a Settings toggle.
+5.7 Copy: all strings via i18n keys in 6 languages; non-English flagged "needs native review" in docs only
+    (not in the UI). No hype words, no jargon, no emojis, no exclamation marks.
+5.8 Quality bars: WCAG 2.2 AA, keyboard navigation, visible focus, axe-core 0 serious/critical; Lighthouse
+    mobile Performance >= 90, Accessibility >= 95, Best Practices >= 95; CLS < 0.1; initial JS < 200 KB gzip,
+    model/WASM lazy in a Web Worker. Screenshots of every page x {light, dark} x {360, 768, 1440 px} x
+    {English, Hindi, Tamil}; fix clipping/overflow; save in docs/screenshots with an index.
+5.9 Tests: Vitest + RTL for components; Playwright E2E (upload -> result -> work order -> engineer sign-off;
+    empty-state test; reduced-motion test; no console errors).
+GATE: pages built, contrast and Lighthouse targets met, tests green, screenshots captured.
+
+=====================================================================================
+PHASE 6 — REPOSITORY CLEANUP (safe, evidence-based)
+=====================================================================================
+6.1 Build a cleanup inventory (docs/CLEANUP_LOG.md): every file/folder with size, last git change, whether it is
+    imported/referenced (grep + dependency graph + build + test coverage), and a verdict KEEP / REMOVE /
+    UNSURE. Typical removals: duplicate or old notebooks, unused model weights and ONNX exports, old
+    runs/logs, caches (__pycache__, .pytest_cache, node_modules in repo, dist/build outputs), screenshots of
+    removed features, generated audit/phase/pass reports (STATUS_AUDIT, PASS2_AUDIT, V*_STATE, IMPROVEMENT
+    backlogs) except those that remain useful, one-off scripts (test_live_poly.py style scripts that are not
+    part of the test suite or tooling), demo seeders, design-lab and theme code, unused assets, dead
+    components (map, truck-art, marquee, ornaments), unused dependencies.
+6.2 Procedure: move REMOVE candidates into _staging_trash/ (git mv), run lint, type-check, all tests, the
+    app build and a smoke run of detect on 5 images and 1 video; if anything breaks, restore that item and mark
+    it KEEP. When green, delete the staging folder in its own commit "Remove unused files". Do not touch
+    ml/runs/final, test manifests, docs/MODELS_AND_DATA.md, LICENSE files or anything the app loads at runtime.
+6.3 Weights: keep only the weights the final pipeline loads; record hashes in docs/MODELS_AND_DATA.md; large
+    files go to Releases/Kaggle/Drive with download scripts and checksums, not into git.
+6.4 .gitignore and structure: ignore caches, builds, env files, datasets, runs, weights. Final layout (keep it
+    flat and obvious): backend/, web/, ml/, edge/, config/, docs/, scripts/, notebooks/ (one Colab and one
+    Kaggle notebook that run the real training and evaluation), tests inside each package, README.md, LICENSE,
+    Makefile (or a short run script) and docker-compose.yml. Update PROJECT_STRUCTURE.md or delete it.
+6.5 Open-source hygiene for a global audience: LICENSE (AGPL-3.0), NOTICE/attribution for datasets and
+    models, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, model card and dataset card, a pinned
+    requirements file, .env.example, CI workflow (lint, type-check, tests, build, claim and copy checks).
+GATE: cleanup log complete; build and tests green after cleanup; repo size reduced (report before/after).
+
+=====================================================================================
+PHASE 7 — MAKE IT READ LIKE A CAREFUL HUMAN WROTE IT
+=====================================================================================
+7.1 Code: consistent naming and formatting (ruff/black, eslint/prettier); remove boilerplate and redundant
+    comments, banner comments, emoji, "Rule X" references and marketing language; keep short comments that
+    explain WHY; docstrings only where they add information; no giant functions (split > 60 lines), no
+    duplicated helpers, no dead code or commented-out blocks; meaningful variable names; sensible error
+    messages. Type hints in Python, strict TypeScript.
+7.2 Messages: user-facing and API error messages are plain and specific ("Could not read this image. Try a
+    JPEG or PNG under 20 MB.").
+7.3 Commits: from now on short, plain, varied messages ("Fix EXIF rotation before inference"), no
+    template-looking prefixes on every line, no phase tags in messages (tags are fine).
+7.4 README (rewrite from scratch, plain human voice, about 150-250 lines): what it is, a screenshot, what it
+    does, measured results with sample sizes and links to the metrics files, how it works in 8-10 lines,
+    limitations (honest), quick start (3-5 commands), tests, project layout (short tree), datasets and
+    licences, acknowledgements. No badge wall (3-4 real badges at most: tests, licence), no emojis, no hype
+    words, no tables of 20 rows of internals. Move deep detail to docs/ (SPEC.md, ARCHITECTURE.md,
+    AI_EVALUATION.md, MODELS_AND_DATA.md, API.md generated from OpenAPI).
+7.5 Keep an honest short "AI assistance" note in docs/ABOUT_THE_BUILD.md describing which AI tools helped, so
+    the project meets any academic disclosure rules your institution has.
+GATE: copy/lint checks pass; README reviewed against files; no banned strings.
+
+=====================================================================================
+PHASE 8 — GLOBAL-STAGE READINESS
+=====================================================================================
+- Internationalisation: 6 UI languages via keys; units selectable (metric default); currency not hardcoded:
+  the rate card is user-configured per deployment with a currency field.
+- Privacy and data protection: consent text for location and uploads, retention setting, delete-my-data
+  endpoint, EXIF/GPS stripping controls, face/plate blur on stored media with recall measured on a labelled
+  sample (report sample size and sources), threat model (1 page) with only mitigations that are implemented
+  and tested.
+- Reliability: Docker Compose with health checks, backup and restore script tested, structured logs, rate
+  limits, upload validation (magic bytes, size, type), RBAC tests, argon2id, JWT refresh rotation,
+  bandit/pip-audit/npm-audit results triaged.
+- Reproducibility: `make reproduce` retrains or re-evaluates from scripts on a reduced budget and matches the
+  recorded metrics within tolerance; seeds, configs, dataset hashes and git SHA saved with every run.
+- Evidence pack for reviewers: docs/EVIDENCE.md linking every number to its file; short technical report
+  (docs/PROJECT_REPORT.md) with problem, data, method, evaluation protocol, results with confidence
+  intervals, error analysis, limitations and future work, citing real papers only.
+GATE: reproduce passes; security scans triaged; evidence pack complete.
+
+=====================================================================================
+PHASE 9 — FINAL VERIFICATION AND DETAILED REPORT
+=====================================================================================
+PASS 2 (hostile re-audit): act as a sceptical reviewer. Re-run every eval_failures item; try new unseen
+images and videos (public licensed) not used anywhere; check for leakage; re-check every README/UI claim
+against files; look for remaining fake data, unexplained numbers, banned strings, unused files, and
+AI-sounding text. List the 15 weakest points in docs/IMPROVEMENT_BACKLOG.md, fix in impact order, keep a
+change only if it improves its measure without regressions.
+PASS 3 (freeze): fresh clone -> install -> run tests -> build -> run detect on sample inputs -> regenerate
+reports; tag v2.0.0.
+STOP when two rounds give no measurable gain, after 3 passes, or when the budget is exhausted.
+
+FINAL REPORT (docs/FINAL_REPORT.md and a summary in the reply):
+ 1. Why results were wrong before (ranked root causes with evidence).
+ 2. What was changed (models, pipeline, heuristics removed/kept with ablation results).
+ 3. Final accuracy: image-level accuracy/F1, object-level precision/recall/mAP, per-class and per-slice
+    results, video event metrics, all with sample sizes and 95% confidence intervals, and a clear statement of
+    whether the 90% targets were met.
+ 4. Before/after on every eval_failures item (images and videos) with overlays.
+ 5. Data: sources, licences, counts, splits, leakage test result; confirmation that no fake data remains.
+ 6. Frontend: screenshots, accessibility and performance scores.
+ 7. Cleanup: files removed, size before/after, tests still green.
+ 8. Remaining risks, limitations and HUMAN_TODO (own dashcam videos to record and label, native-speaker
+    review of translations, real-device benchmarks, licence confirmations).
+START NOW with Phase 1 and continue automatically through all phases.
+```
+
+---
+
+## What to know before you rely on this
+
+**The 90% target.** I can't promise it. The prompt makes the agent attempt it honestly: it is measured on a large, multi-country held-out set that includes hard negatives, and nothing is tuned on the test data. If the real number is lower, the report says so with the sample size and a confidence interval.
+
+**Why new images give wrong results.** From your README, the likely causes are:
+- **Small test set:** the 85.75% mAP comes from only 50 images and 105 labels.
+- **Hand-set rules:** filters for brightness, saturation and box shape were probably tuned on a few images.
+- **Fixed ensemble weights:** the 70/30 mix combines models whose scores are not on the same scale, and it was not fitted on validation data.
+- **Possible mismatch:** external models that may never have been trained on road damage, plus preprocessing details such as phone-photo rotation and colour order.
+
+Phase 1 tests each of these. Phase 3 removes any rule that cannot prove it helps.
+
+**No fake data.** This means an empty app on first run. It fills only from real uploads and from running the real pipeline over licensed evaluation images. The earlier demo seed data is removed.
+
+**Cleanup safety.** Files move to a staging folder first. The agent restores any item that breaks the tests, and history stays intact.
+
+**One note on "looks human-written".** The prompt makes the code and README clean and natural, and also adds a short `ABOUT_THE_BUILD.md` listing which AI tools helped. If your college requires AI-use disclosure, you'll want that.
+
+**To get the best result**
+1. Put your wrong-result images and videos into `eval_failures/` with a note on the correct answer.
+2. Fill in the BUDGET line (GPU hours).
+3. Record and label a few of your own dashcam clips later. Public data alone won't cover your roads.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-16T11:47:32+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.8 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

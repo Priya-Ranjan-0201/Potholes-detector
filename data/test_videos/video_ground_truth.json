@@ -1,0 +1,384 @@
+[
+  {
+    "clip_id": "clip_01_day_highway",
+    "filename": "clip_01_day_highway.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_0_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_02_day_urban",
+    "filename": "clip_02_day_urban.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "urban",
+    "events": [
+      {
+        "track_id": "event_1_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_03_dusk_suburban",
+    "filename": "clip_03_dusk_suburban.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "dusk",
+    "road_type": "suburban",
+    "events": [
+      {
+        "track_id": "event_2_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_04_rain_wet_road",
+    "filename": "clip_04_rain_wet_road.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "rain_wet",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_3_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_05_clean_highway_neg",
+    "filename": "clip_05_clean_highway_neg.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "highway",
+    "events": []
+  },
+  {
+    "clip_id": "clip_06_tree_shadow_neg",
+    "filename": "clip_06_tree_shadow_neg.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "shadows",
+    "road_type": "urban",
+    "events": []
+  },
+  {
+    "clip_id": "clip_07_manhole_cluster_neg",
+    "filename": "clip_07_manhole_cluster_neg.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "urban",
+    "events": []
+  },
+  {
+    "clip_id": "clip_08_alligator_crack_pass",
+    "filename": "clip_08_alligator_crack_pass.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "suburban",
+    "events": [
+      {
+        "track_id": "event_7_crack",
+        "class_name": "CRACK_ALLIGATOR",
+        "start_frame": 10,
+        "end_frame": 40,
+        "target_bbox": [
+          200,
+          280,
+          440,
+          360
+        ],
+        "severity": "Moderate"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_09_longitudinal_crack_pass",
+    "filename": "clip_09_longitudinal_crack_pass.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_8_crack",
+        "class_name": "CRACK_LONGITUDINAL",
+        "start_frame": 10,
+        "end_frame": 40,
+        "target_bbox": [
+          200,
+          280,
+          440,
+          360
+        ],
+        "severity": "Moderate"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_10_severe_crater_approach",
+    "filename": "clip_10_severe_crater_approach.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "rural",
+    "events": [
+      {
+        "track_id": "event_9_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Critical"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_11_multiple_pothole_cluster",
+    "filename": "clip_11_multiple_pothole_cluster.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "urban",
+    "events": [
+      {
+        "track_id": "event_10_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_12_glare_low_sun",
+    "filename": "clip_12_glare_low_sun.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "glare",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_11_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_13_rough_gravel_patch",
+    "filename": "clip_13_rough_gravel_patch.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "rough",
+    "road_type": "rural",
+    "events": []
+  },
+  {
+    "clip_id": "clip_14_speed_breaker_neg",
+    "filename": "clip_14_speed_breaker_neg.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "urban",
+    "events": []
+  },
+  {
+    "clip_id": "clip_15_wet_puddle_reflection",
+    "filename": "clip_15_wet_puddle_reflection.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "wet_puddle",
+    "road_type": "suburban",
+    "events": [
+      {
+        "track_id": "event_14_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_16_bridge_expansion_joint_neg",
+    "filename": "clip_16_bridge_expansion_joint_neg.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "bridge",
+    "events": []
+  },
+  {
+    "clip_id": "clip_17_night_headlights",
+    "filename": "clip_17_night_headlights.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "night",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_16_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_18_rural_unpaved_track",
+    "filename": "clip_18_rural_unpaved_track.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "unpaved",
+    "events": []
+  },
+  {
+    "clip_id": "clip_19_urban_traffic_occlusion",
+    "filename": "clip_19_urban_traffic_occlusion.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "traffic",
+    "road_type": "city",
+    "events": [
+      {
+        "track_id": "event_18_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  },
+  {
+    "clip_id": "clip_20_return_pass_verification",
+    "filename": "clip_20_return_pass_verification.mp4",
+    "duration_seconds": 6.0,
+    "fps": 10.0,
+    "total_frames": 60,
+    "condition": "daylight",
+    "road_type": "highway",
+    "events": [
+      {
+        "track_id": "event_19_pothole",
+        "class_name": "POTHOLE",
+        "start_frame": 15,
+        "end_frame": 45,
+        "target_bbox": [
+          220,
+          260,
+          380,
+          390
+        ],
+        "severity": "Severe"
+      }
+    ]
+  }
+]
