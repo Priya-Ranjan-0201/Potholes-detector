@@ -1,0 +1,10 @@
+# Evaluation Failure Cases — Ground Truth Notes
+# Format: filename: expected defects, expected classification, key issues
+
+case_01_pothole_nh44.jpg: 1 primary pothole centered in roadway, severe depression. Current pipeline gave 0 detections (total false negative).
+case_02_civil_distress_diagram.jpg: NOT A ROAD SCENE (infographic diagram / illustration). Expected: 0 detections or rejected as non-road image. Current pipeline gave 4 false positive detections (2 potholes, 2 longitudinal cracks).
+case_03_alligator_cracks.jpg: 1 prominent alligator crack cluster / fatigue cracking across asphalt. Expected: CRACK_ALLIGATOR. Current pipeline misclassified as CRACK_LONGITUDINAL.
+case_04_bengaluru_potholes.jpg: Complex urban road scene with vehicles and multiple road surface depressions. Expected: 3-4 localized potholes, vehicle masking without false obstacle occlusion of road surface. Current pipeline: 27 obstacle blocks masking valid road area.
+case_05_asphalt_crater.jpg: 1 massive central asphalt crater / pothole. Expected: 1 large POTHOLE with accurate bounding box and polygon contour. Current pipeline: fragmented detections and edge clipping.
+case_06_mumbai_potholes.avif: AVIF format road image. Expected: decoded cleanly, detect true road potholes. Current pipeline: cv2.imdecode fails on AVIF format with 0 bytes.
+case_07_user_tested_potholes.jpg: Multiple potholes on distressed road section. Expected: individual distinct potholes. Current pipeline: 12 detections with redundant boxes and inconsistent severity.

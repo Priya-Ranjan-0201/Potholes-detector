@@ -1,0 +1,14 @@
+{
+  "phase": "PHASE_1_FORENSICS",
+  "status": "COMPLETED",
+  "branch": "v13/global-fix",
+  "baseline_tag": "before-v13",
+  "completed_tag": "v13-phase-1-done",
+  "evidence_paths": {
+    "forensics_report": "docs/FORENSICS.md",
+    "forensics_dir": "docs/forensics",
+    "eval_failures": "eval_failures"
+  },
+  "gate_passed": true,
+  "next_action": "Phase 2: Build a Trustworthy Evaluation Set (images AND video)"
+}

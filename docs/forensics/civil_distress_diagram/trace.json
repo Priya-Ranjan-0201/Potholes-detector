@@ -1,0 +1,248 @@
+{
+  "file": "civil_distress_diagram.jpg",
+  "input_path": "web\\public\\samples\\civil_distress_diagram.jpg",
+  "image_shape": [
+    501,
+    399,
+    3
+  ],
+  "stages": {
+    "obstacles_conf_0_12": [
+      [
+        361.8623046875,
+        0.054511453956365585,
+        396.2132263183594,
+        16.734195709228516
+      ]
+    ],
+    "kept_70_after_filters": [
+      {
+        "box": [
+          55.35,
+          332.14,
+          248.78,
+          491.12
+        ],
+        "conf": 0.6793
+      },
+      {
+        "box": [
+          288.46,
+          228.89,
+          375.42,
+          335.05
+        ],
+        "conf": 0.5325
+      },
+      {
+        "box": [
+          60.23,
+          334.35,
+          244.27,
+          471.15
+        ],
+        "conf": 0.3234
+      },
+      {
+        "box": [
+          37.03,
+          384.16,
+          198.35,
+          496.75
+        ],
+        "conf": 0.3653
+      },
+      {
+        "box": [
+          173.71,
+          150.2,
+          245.74,
+          182.61
+        ],
+        "conf": 0.2335
+      }
+    ]
+  },
+  "raw_detections": {
+    "dfine": [
+      {
+        "box": [
+          55.35,
+          332.14,
+          248.78,
+          491.12
+        ],
+        "conf": 0.6793,
+        "src": "D-FINE Large (70% Weight)"
+      },
+      {
+        "box": [
+          288.46,
+          228.89,
+          375.42,
+          335.05
+        ],
+        "conf": 0.5325,
+        "src": "D-FINE Large (70% Weight)"
+      },
+      {
+        "box": [
+          60.23,
+          334.35,
+          244.27,
+          471.15
+        ],
+        "conf": 0.3234,
+        "src": "D-FINE Large (70% Weight)"
+      }
+    ],
+    "pyresearch": [
+      {
+        "box": [
+          37.03,
+          384.16,
+          198.35,
+          496.75
+        ],
+        "conf": 0.3653,
+        "src": "PyResearch YOLOv12 (70% Weight)"
+      }
+    ],
+    "yolov8n_seg": [
+      {
+        "box": [
+          173.71,
+          150.2,
+          245.74,
+          182.61
+        ],
+        "conf": 0.2335,
+        "src": "YOLOv8-Seg (70% Weight)"
+      }
+    ],
+    "edge_yolo11n": [
+      {
+        "box": [
+          36.15,
+          322.8,
+          290.26,
+          500.91
+        ],
+        "conf": 0.332,
+        "cls": "POTHOLE"
+      }
+    ],
+    "crack_model": [
+      {
+        "box": [
+          136.35,
+          263.53,
+          200.68,
+          339.91
+        ],
+        "conf": 0.722,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          202.33,
+          180.73,
+          249.9,
+          253.52
+        ],
+        "conf": 0.6129,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          160.14,
+          209.5,
+          231.76,
+          252.89
+        ],
+        "conf": 0.5735,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          176.65,
+          149.6,
+          251.59,
+          184.44
+        ],
+        "conf": 0.4728,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          160.85,
+          69.21,
+          248.97,
+          98.43
+        ],
+        "conf": 0.341,
+        "cls": "CRACK_LONGITUDINAL"
+      }
+    ]
+  },
+  "filtered_reasons": [],
+  "final_detections": [
+    {
+      "label": "POTHOLE",
+      "confidence": 0.625,
+      "box": [
+        13.9,
+        66.3,
+        48.5,
+        31.7
+      ],
+      "severity": "Critical",
+      "score": 95,
+      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg)",
+      "has_poly": true
+    },
+    {
+      "label": "POTHOLE",
+      "confidence": 0.453,
+      "box": [
+        72.3,
+        45.7,
+        21.8,
+        21.2
+      ],
+      "severity": "Critical",
+      "score": 83,
+      "model_source": "D-FINE Large (70% Weight)",
+      "has_poly": true
+    },
+    {
+      "label": "CRACK_LONGITUDINAL",
+      "confidence": 0.722,
+      "box": [
+        34.2,
+        52.6,
+        16.1,
+        15.2
+      ],
+      "severity": "Moderate",
+      "score": 32,
+      "model_source": "RDD2022 Distress Multi-Class",
+      "has_poly": true
+    },
+    {
+      "label": "CRACK_LONGITUDINAL",
+      "confidence": 0.613,
+      "box": [
+        50.7,
+        36.1,
+        11.9,
+        14.5
+      ],
+      "severity": "Moderate",
+      "score": 30,
+      "model_source": "RDD2022 Distress Multi-Class",
+      "has_poly": true
+    }
+  ],
+  "cv2_imdecode_failed": false
+}

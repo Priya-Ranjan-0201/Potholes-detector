@@ -1,0 +1,23 @@
+{
+  "file": "pothole_nh44.jpg",
+  "input_path": "web\\public\\samples\\pothole_nh44.jpg",
+  "image_shape": [
+    720,
+    720,
+    3
+  ],
+  "stages": {
+    "obstacles_conf_0_12": [],
+    "kept_70_after_filters": []
+  },
+  "raw_detections": {
+    "dfine": [],
+    "pyresearch": [],
+    "yolov8n_seg": [],
+    "edge_yolo11n": [],
+    "crack_model": []
+  },
+  "filtered_reasons": [],
+  "final_detections": [],
+  "cv2_imdecode_failed": false
+}

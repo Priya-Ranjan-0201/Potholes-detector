@@ -1,0 +1,203 @@
+{
+  "file": "case_03_alligator_cracks.jpg",
+  "input_path": "eval_failures\\case_03_alligator_cracks.jpg",
+  "image_shape": [
+    516,
+    387,
+    3
+  ],
+  "stages": {
+    "obstacles_conf_0_12": [],
+    "kept_70_after_filters": []
+  },
+  "raw_detections": {
+    "dfine": [],
+    "pyresearch": [],
+    "yolov8n_seg": [],
+    "edge_yolo11n": [],
+    "crack_model": [
+      {
+        "box": [
+          241.36,
+          207.86,
+          305.75,
+          271.06
+        ],
+        "conf": 0.7587,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          335.81,
+          101.46,
+          379.06,
+          153.61
+        ],
+        "conf": 0.6098,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          235.25,
+          437.3,
+          306.55,
+          465.96
+        ],
+        "conf": 0.6084,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          271.88,
+          138.78,
+          335.77,
+          183.45
+        ],
+        "conf": 0.593,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          120.15,
+          287.65,
+          194.49,
+          322.82
+        ],
+        "conf": 0.4769,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          173.8,
+          341.76,
+          230.01,
+          370.32
+        ],
+        "conf": 0.4342,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          241.92,
+          70.35,
+          336.92,
+          104.37
+        ],
+        "conf": 0.4191,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          26.25,
+          350.76,
+          88.72,
+          393.26
+        ],
+        "conf": 0.4147,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          103.36,
+          476.9,
+          158.73,
+          509.23
+        ],
+        "conf": 0.4131,
+        "cls": "CRACK_LONGITUDINAL"
+      },
+      {
+        "box": [
+          15.07,
+          430.27,
+          29.46,
+          461.44
+        ],
+        "conf": 0.4072,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          134.27,
+          372.91,
+          184.01,
+          422.79
+        ],
+        "conf": 0.3707,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          307.05,
+          427.1,
+          385.3,
+          450.06
+        ],
+        "conf": 0.3648,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          306.95,
+          362.26,
+          327.12,
+          425.03
+        ],
+        "conf": 0.3447,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          4.19,
+          29.54,
+          61.67,
+          50.07
+        ],
+        "conf": 0.3388,
+        "cls": "POTHOLE"
+      },
+      {
+        "box": [
+          90.57,
+          364.57,
+          127.17,
+          400.59
+        ],
+        "conf": 0.3233,
+        "cls": "POTHOLE"
+      }
+    ]
+  },
+  "filtered_reasons": [],
+  "final_detections": [
+    {
+      "label": "CRACK_LONGITUDINAL",
+      "confidence": 0.759,
+      "box": [
+        62.4,
+        40.3,
+        16.6,
+        12.2
+      ],
+      "severity": "Moderate",
+      "score": 39,
+      "model_source": "RDD2022 Distress Multi-Class",
+      "has_poly": true
+    },
+    {
+      "label": "CRACK_LONGITUDINAL",
+      "confidence": 0.413,
+      "box": [
+        26.7,
+        92.4,
+        14.3,
+        6.3
+      ],
+      "severity": "Moderate",
+      "score": 35,
+      "model_source": "RDD2022 Distress Multi-Class",
+      "has_poly": true
+    }
+  ],
+  "cv2_imdecode_failed": false
+}
