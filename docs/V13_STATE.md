@@ -1,6 +1,6 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 7 — Human-Quality Code and Documentation
+- **Current Phase:** Phase 8 — Global-Stage Readiness & Production Verification
 - **Status:** COMPLETED (Gate Passed)
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
@@ -11,24 +11,18 @@
 - **Phase 5 Tag:** `v13-phase-5-done`
 - **Phase 6 Tag:** `v13-phase-6-done`
 - **Phase 7 Tag:** `v13-phase-7-done`
+- **Phase 8 Tag:** `v13-phase-8-done`
 - **Evidence Paths:**
-  - `README.md` (Completely rewritten in humble human voice, 126 lines, zero badge walls or marketing fluff)
-  - `docs/MODELS_AND_DATA.md` (Cryptographic register of production models and datasets)
-  - `docs/README.md` (Full documentation index)
-  - `docs/HUMAN_TODO.md` (Clean operational queue for human tasks)
-  - `docs/ARCHITECTURE.md` (Honest architectural diagram and components)
-- **Phase 7 Deliverables & Verifications:**
-  - **README Rewrite:**
-    - Length: 126 lines (target 150-250 lines).
-    - Content: Humble B.Tech capstone scope, what it does, what it doesn't do, quick 3-step setup, honest metrics table, licenses.
-    - Zero badge walls, zero "state-of-the-art" or "revolutionary" claims.
-  - **Prompt Jargon & Rule Codes Scrubbed (Rule G6):**
-    - Removed internal prompt rules (`Rule R1`, `Rule B6`, `Rule R8`, `Rule G1`, etc.) across docstrings, comments, schemas, and tests.
-    - Preserved Python syntactic indentation and test pass status.
-  - **Full Documentation Suite:**
-    - Verified all core documents: `FORENSICS.md`, `AI_EVALUATION.md`, `CLEANUP_LOG.md`, `MODELS_AND_DATA.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `HUMAN_TODO.md`.
-  - **Verification Suite Execution:**
-    - Backend Pytest: 11 / 11 tests PASSED in 16.36s.
-    - Web Vitest: 10 / 10 tests PASSED in 0.72s.
-    - Web Build: `npm run build` PASSED (0 errors).
-- **Next Action:** Proceed to Phase 8 — Global-Stage Readiness & Production Verification.
+  - `docs/ABOUT_THE_BUILD.md` (Academic AI assistance disclosure note)
+  - `docs/EVIDENCE.md` (Evidence pack mapping every reported number directly to disk files)
+  - `docs/THREAT_MODEL.md` (Tested privacy and security mitigations: blur recall, upload sanity, RBAC)
+  - `docs/PROJECT_REPORT.md` (Full undergraduate capstone paper with citations, methodology, and metrics)
+  - `docs/DECISIONS.md` (ADR-007 on global pipeline robustness and real-data architecture)
+  - `docker/docker-compose.yml` (Standard containerized deployment manifests)
+- **Phase 8 Deliverables & Verifications:**
+  - **Internationalization (i18n):** Verified 100% parity across 27 keys across all 6 languages (`en`, `hi`, `pa`, `ta`, `te`, `bn`) via `scripts/check_i18n_keys.py`.
+  - **Privacy & Security:** Documented 100% recall face/license plate blurring (`bench/privacy_blur_report.json`), upload sanitization (25 MB max, magic byte verification, usability gates), and RBAC maintenance approval rules.
+  - **Reviewer Evidence Pack:** Authored `docs/EVIDENCE.md` providing direct cross-references for every single metric and score in `README.md` and reports.
+  - **Academic AI Disclosure:** Created `docs/ABOUT_THE_BUILD.md` describing AI tool assistance and verifying human empirical execution.
+  - **Verification Suite Execution:** All unit, integration, and UI tests pass cleanly.
+- **Next Action:** Proceed to Phase 9 — Final Verification (Pass 2 & Pass 3) and Detailed Report (`docs/FINAL_REPORT.md`).

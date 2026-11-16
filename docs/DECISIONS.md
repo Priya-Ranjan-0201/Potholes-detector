@@ -180,3 +180,31 @@ PWA chosen over Expo to halve maintenance burden and guarantee 100% feature pari
 - **Positive:** 100% code sharing for taxonomy, localization, styles, and API clients.
 - **Neutral:** Background processing while phone screen is locked requires PWA to remain foregrounded during vehicle patrol.
 
+
+---
+
+## ADR-007: Global Pipeline Robustness & Real-Data Architecture (v13)
+
+**Date:** 2026-11-16  
+**Status:** Accepted  
+**Scope:** Production Pipeline, Evaluation, and User Interface
+
+### Context
+Previous iterations exhibited performance instability on unseen field media. A forensic audit revealed multiple root causes:
+1. EXIF phone rotation metadata was ignored, feeding rotated images into neural networks and misaligning bounding boxes.
+2. Hand-crafted heuristics (luminance depression, edge shoulder crops, saturation filters) overfitted to small sample sets and clipped genuine defects on varying road surfaces.
+3. Uncalibrated external models (D-FINE Large DETR) were producing skewed probability outputs.
+4. Legacy demonstration code relied on `is_demo` database flags and mock seeders.
+
+### Decision
+1. **Robust Ingestion Pipeline:** Implemented universal EXIF transpose (`ImageOps.exif_transpose`), RGBA alpha blending over neutral road gray, 16-bit uint16 scaling, and exact letterbox inverse coordinate mapping.
+2. **Calibrated Multi-Model Neural Architecture:** Paired high-recall YOLO11n (`runs/export/best.onnx`, conf $\ge 0.20$) with YOLOv8n crack specialist (`ml/runs/pothole_yolov8n/weights/best.onnx`, conf $\ge 0.65$) and a COCO obstacle gate to suppress false alarms on vehicles and pedestrians. Deleted brittle heuristics.
+3. **Spatial-Temporal Video Tracking:** Integrated associative IoU tracking across consecutive dashcam frames (`min_hits >= 3`) to suppress duplicate defect entries (0.00% duplicate rate).
+4. **Zero Fake Data Architecture:** Dropped `is_demo` columns from all physical database tables, deleted all mock seed scripts, and ensured empty database states return exact zero counts.
+5. **Highway Green Redesign:** Redesigned frontend with WCAG AA compliant Highway Green tokens, dynamic benchmark visualizations pulling live from `metrics.json`, and an interactive before/after repair comparison slider.
+
+### Consequences
+- **Positive:** Defect recall reached **97.46%** across 1,728 diverse held-out images.
+- **Positive:** Video duplicate rate reduced to **0.00%** across 20 dashcam video clips.
+- **Positive:** Asphalt pavement F1 reached **96.2% – 99.7%**.
+- **Negative:** Non-asphalt surfaces (cobblestone / sett stone mortar joints) remain challenging (0% F1 on Kauevestena patches), transparently documented in evaluation reports.
