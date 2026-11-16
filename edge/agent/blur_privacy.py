@@ -1,6 +1,6 @@
 """Privacy redaction service for faces and vehicle license plates.
 
-Adheres strictly to Rule R15: Edge-side anonymization of stored and transmitted media.
+Adheres strictly to Edge-side anonymization of stored and transmitted media.
 Detects potential facial features and vehicle license plate regions, applying strong
 Gaussian blur to prevent personal data retention while strictly preserving the road
 surface defect visibility.

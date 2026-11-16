@@ -159,7 +159,7 @@ def test_rbac_citizen_forbidden_on_restricted_actions(client: TestClient) -> Non
 
 
 def test_rbac_contractor_cannot_verify_repairs(client: TestClient) -> None:
-    """Verify contractor cannot self-verify or approve work orders (Rule R8)."""
+    """Verify contractor cannot self-verify or approve work orders."""
     _u_id, contractor_token = _get_user_with_role(
         role_name="contractor",
         email="contractor.sec@roads.in",

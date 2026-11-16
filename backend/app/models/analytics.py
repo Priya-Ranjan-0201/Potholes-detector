@@ -30,7 +30,7 @@ class WeatherRecord(Base, UUIDMixin, TimestampMixin):
 
 
 class Forecast(Base, UUIDMixin, TimestampMixin):
-    """Degradation forecasts strictly distinct from observations (Rule R6)."""
+    """Degradation forecasts strictly distinct from observations."""
 
     __tablename__ = "forecasts"
 

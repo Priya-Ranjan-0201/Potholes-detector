@@ -95,7 +95,7 @@ class RoadDegradationForecaster:
         horizons = horizons_days or self.default_horizons
         now_iso = datetime.now(UTC).isoformat()
 
-        # Rule R6: History too short -> return INSUFFICIENT_DATA
+        # History too short -> return INSUFFICIENT_DATA
         if len(historical_scores) < 2:
             return RoadForecastResult(
                 segment_id=segment_id,

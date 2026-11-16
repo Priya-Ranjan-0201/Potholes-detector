@@ -287,7 +287,7 @@ def generate_verification_pdf(
     elements.append(signoff_table)
     elements.append(Spacer(1, 14))
 
-    # Legal Disclaimer (SPEC v12 Rule V8 & Rule R8)
+    # Legal Disclaimer (Advisory verification notice)
     elements.append(
         Paragraph(
             "Student research project. Not an official government system. Not safety-certified. "

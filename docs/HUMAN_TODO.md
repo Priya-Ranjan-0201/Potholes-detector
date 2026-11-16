@@ -1,6 +1,6 @@
-# ScamRoad — Human Actions & Decision Queue (Rule R15)
+# ScamRoad — Human Actions & Decision Queue
 
-The autonomous agent pauses only for items in this file that strictly require human authorization or physical hardware access. All other development proceeds autonomously.
+The development process tracks items in this file that strictly require human authorization or physical hardware access. All code, evaluation, and documentation proceed systematically.
 
 ---
 

@@ -215,7 +215,7 @@ async def transition_complaint_status(
     current_user: User = Depends(require_role(["engineer", "admin"])),
     db: AsyncSession = Depends(get_db),
 ) -> ComplaintResponse:
-    """Execute state machine transition on complaint (Rule B7)."""
+    """Execute state machine transition on complaint."""
     stmt = (
         select(Complaint)
         .options(selectinload(Complaint.citizen_report), selectinload(Complaint.history))

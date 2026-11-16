@@ -11,7 +11,7 @@ from ml.forecasting.health_index import (
 
 
 def test_forecast_returns_insufficient_data_when_history_too_short() -> None:
-    """Rule R6: Observations != forecasts.
+    """Observations != forecasts.
 
     History < 2 points must return INSUFFICIENT_DATA.
     """
@@ -72,7 +72,7 @@ def test_compute_segment_health_bounded_and_calibrated() -> None:
 
 
 def test_compute_segment_health_uninspected_returns_none() -> None:
-    """Rule R7: Uninspected segment returns score=None, never synthetic score."""
+    """Uninspected segment returns score=None, never synthetic score."""
     res = compute_segment_health("seg-004", [], length_km=1.0, has_recent_inspection=False)
 
     assert res.score is None

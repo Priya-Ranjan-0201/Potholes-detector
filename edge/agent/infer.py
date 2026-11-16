@@ -33,7 +33,7 @@ class Detection:
     class_name: str
     confidence: float
     bbox_xyxy: tuple[float, float, float, float]  # (xmin, ymin, xmax, ymax) in pixels
-    relative_area: float  # (box_area / frame_area), Rule R4: normalized percentage only
+    relative_area: float  # (box_area / frame_area), normalized percentage only
     calibrated: bool = False  # Always False for single camera without calibration source
 
 
@@ -144,7 +144,7 @@ class EdgeInferenceEngine:
         if not self.model_path.exists():
             raise ModelNotReadyError(
                 f"Model file not found at: {self.model_path}. "
-                "Per Rule R2, fake/mock inference is forbidden."
+                "Model weights are not ready. Run initialization before inference."
             )
 
         # Setup ONNX Runtime session

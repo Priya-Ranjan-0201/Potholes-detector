@@ -64,7 +64,7 @@ def test_list_defects_and_detail(client: TestClient) -> None:
 
 
 def test_defect_severity_human_override(client: TestClient) -> None:
-    """Test Rule B6: Human override of severity creates audit record with source='human'."""
+    """Test Human override of severity creates audit record with source='human'."""
     batch_id = str(uuid.uuid4())
     device_id = str(uuid.uuid4())
     obs_id = str(uuid.uuid4())

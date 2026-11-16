@@ -1,5 +1,5 @@
 # Checksum manifest for datasets used in ScamRoad
-# Rule R14: All external downloads must verify against SHA-256 before extraction.
+# All external downloads must verify against SHA-256 before extraction.
 
 datasets:
   rdd2022_india:

@@ -42,7 +42,7 @@ def test_nms_boxes() -> None:
 
 
 def test_infer_engine_missing_model_raises_r2(tmp_path: Path) -> None:
-    """Verify Rule R2: Missing model must raise ModelNotReadyError (no fake AI)."""
+    """Verify Missing model must raise ModelNotReadyError (no fake AI)."""
     fake_model_path = tmp_path / "non_existent_model.onnx"
     with pytest.raises(ModelNotReadyError):
         EdgeInferenceEngine(model_path=fake_model_path)

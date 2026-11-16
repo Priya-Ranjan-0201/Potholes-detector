@@ -59,7 +59,7 @@ api_v1_router.include_router(map_router, prefix="", tags=["Maps & GeoJSON"])
 # Analytics & Statistics
 api_v1_router.include_router(stats_router, prefix="/stats", tags=["Analytics & Statistics"])
 
-# Road Health Index & Forecasts (Rule R6)
+# Road Health Index & Forecasts
 api_v1_router.include_router(forecasts_router, prefix="", tags=["Forecasts & Health Index"])
 
 # Municipal Reporting & Exports

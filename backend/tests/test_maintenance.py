@@ -1,4 +1,4 @@
-"""Integration tests for maintenance work orders and human repair verification (Rule R8)."""
+"""Integration tests for maintenance work orders and human repair verification."""
 
 from __future__ import annotations
 
@@ -100,7 +100,7 @@ def test_contractor_and_sla_crud(client: TestClient) -> None:
 
 
 def test_work_order_lifecycle_and_repair_verification(client: TestClient) -> None:
-    """Full work order lifecycle through contractor repair and human verification (Rule R8)."""
+    """Full work order lifecycle through contractor repair and human verification."""
     admin_token = _get_token(client, "admin_wo@example.com", "admin")
     contractor_token = _get_token(client, "contractor_wo@example.com", "contractor")
 
@@ -155,7 +155,7 @@ def test_work_order_lifecycle_and_repair_verification(client: TestClient) -> Non
     assert t1.status_code == 200
     assert t1.json()["status"] == "IN_PROGRESS"
 
-    # 4. Attempt direct jump to VERIFIED via status patch is BLOCKED (Rule R8)
+    # 4. Attempt direct jump to VERIFIED via status patch is BLOCKED
     blocked_jump = client.patch(
         f"/api/v1/work-orders/{wo_id}/status",
         json={"new_status": "VERIFIED"},
@@ -179,7 +179,7 @@ def test_work_order_lifecycle_and_repair_verification(client: TestClient) -> Non
     wo_after_repair = client.get(f"/api/v1/work-orders/{wo_id}").json()
     assert wo_after_repair["status"] == "COMPLETED"
 
-    # 6. Authoritative Human Verification (Rule R8)
+    # 6. Authoritative Human Verification
     verif_resp = client.post(
         f"/api/v1/work-orders/{wo_id}/verify",
         json={

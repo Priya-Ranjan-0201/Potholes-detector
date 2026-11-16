@@ -1,7 +1,7 @@
-"""Analytics, municipal dashboards, and aggregation endpoints (Rule R1).
+"""Analytics, municipal dashboards, and aggregation endpoints.
 
 Every number returned is calculated directly from persistent database records.
-No mock values, no fabricated metrics (Rule R1).
+No mock values, no fabricated metrics.
 """
 
 from __future__ import annotations

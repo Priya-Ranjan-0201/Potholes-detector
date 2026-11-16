@@ -1,4 +1,4 @@
-"""Integration tests for analytics and statistics aggregation endpoints (Rule R1)."""
+"""Integration tests for analytics and statistics aggregation endpoints."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ def _get_token(client: TestClient, email: str, role: str) -> str:
 
 
 def test_stats_overview_and_trends(client: TestClient) -> None:
-    """Validate aggregate counts and trends accurately reflect ingested data (Rule R1)."""
+    """Validate aggregate counts and trends accurately reflect ingested data."""
     citizen_token = _get_token(client, "stat_citizen@example.com", "citizen")
 
     # Ingest 1 observation

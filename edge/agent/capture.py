@@ -1,7 +1,7 @@
 """Camera and video capture with non-blocking ring buffer and quality gating.
 
 Provides threaded frame ingestion into a fixed-capacity ring buffer to ensure
-the camera driver is never blocked by inference latency (Rule B4).
+the camera driver is never blocked by inference latency.
 Includes quality gating for motion blur (Laplacian variance) and exposure levels,
 along with configurable road Region of Interest (ROI) extraction.
 """

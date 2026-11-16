@@ -1,6 +1,6 @@
 """Maintenance, contractor management, SLA policies, and repair verification endpoints.
 
-Strictly enforces Rule R8: AI repair verification is advisory; a human engineer/admin
+Strictly enforces AI repair verification is advisory; a human engineer/admin
 must make the final verification decision.
 """
 
@@ -426,13 +426,13 @@ async def transition_work_order_status(
         )
 
     # Note: Transition to VERIFIED cannot be done directly via status patch;
-    # must use /verify endpoint (Rule R8)
+    # must use /verify endpoint
     if target_status == "VERIFIED":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
                 "Transition to VERIFIED requires human engineer sign-off "
-                "via POST /api/v1/work-orders/{id}/verify (Rule R8)"
+                "via POST /api/v1/work-orders/{id}/verify"
             ),
         )
 
@@ -521,7 +521,7 @@ async def submit_repair_record(
     "/work-orders/{work_order_id}/verify",
     response_model=RepairVerificationResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Authoritative repair verification sign-off (Rule R8)",
+    summary="Authoritative repair verification sign-off",
     tags=["Maintenance & Work Orders"],
 )
 async def verify_repair(
@@ -530,7 +530,7 @@ async def verify_repair(
     current_user: User = Depends(require_role(["engineer", "admin"])),
     db: AsyncSession = Depends(get_db),
 ) -> RepairVerificationResponse:
-    """Human engineer/admin authoritatively approves or rejects repair completion (Rule R8).
+    """Human engineer/admin authoritatively approves or rejects repair completion.
 
     AI recommendation is advisory; AI never closes work orders on its own.
     """

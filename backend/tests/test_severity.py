@@ -36,7 +36,7 @@ def test_severity_all_factors_present(engine: SeverityEngine) -> None:
 
 
 def test_severity_missing_factors_renormalization(engine: SeverityEngine) -> None:
-    """Test Rule R7: Missing data is NULL, never invented. Formula renormalizes over available."""
+    """Test Missing data is NULL, never invented. Formula renormalizes over available."""
     inp_missing = SeverityInput(
         class_code="POTHOLE",
         confidence=0.85,
@@ -100,7 +100,7 @@ def test_severity_monotonicity_with_area(engine: SeverityEngine) -> None:
 
 
 def test_human_review_triggers(engine: SeverityEngine) -> None:
-    """Test Rule B6: Low confidence flags needs_human_review without distorting score."""
+    """Test Low confidence flags needs_human_review without distorting score."""
     # Low confidence (< 0.40)
     low_conf_inp = SeverityInput(
         class_code="POTHOLE",

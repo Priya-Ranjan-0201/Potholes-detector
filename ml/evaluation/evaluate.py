@@ -268,7 +268,7 @@ def generate_evaluation_markdown(metrics: dict[str, Any], output_path: Path) -> 
             "",
             "---",
             "*Report generated automatically by `ml/evaluation/evaluate.py`.*  ",
-            "*Adheres strictly to Rule R1 (Truth over appearance).*",
+            "",
         ]
     )
 

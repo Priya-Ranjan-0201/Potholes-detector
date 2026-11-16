@@ -1,6 +1,6 @@
 """Dataset download, Kaggle retrieval, and SHA-256 verification utility.
 
-Adheres to Rule R14: Checksummed downloads with verified licensing and provenance.
+Adheres to Checksummed downloads with verified licensing and provenance.
 Supports direct HTTP downloads, Kaggle dataset API integration, and sample dataset generation.
 """
 

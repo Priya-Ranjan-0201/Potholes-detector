@@ -1,6 +1,6 @@
 """Sequence-aware, stratified train/val/test dataset splitting module.
 
-Enforces Rule B3.3: Never split individual frames randomly. Group by sequence/drive
+Enforces Never split individual frames randomly. Group by sequence/drive
 to prevent temporal autocorrelation and background feature leakage.
 """
 
@@ -107,7 +107,7 @@ def create_sequence_splits(
                 if lbl_path.exists():
                     shutil.copy2(lbl_path, split_lbl_dir / lbl_path.name)
                 else:
-                    # Write empty label file for negative samples (Rule B3.5)
+                    # Write empty label file for negative samples
                     (split_lbl_dir / (img_path.stem + ".txt")).touch()
 
     # Generate YOLO dataset config yaml

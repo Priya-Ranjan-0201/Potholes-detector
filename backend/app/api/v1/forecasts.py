@@ -55,7 +55,7 @@ class RoadHealthScoreResponse(BaseModel):
     summary="Retrieve road degradation forecast",
     description=(
         "Forecasts future road health over 30, 60, 90-day horizons. "
-        "Returns INSUFFICIENT_DATA if history < 2 points (Rule R6)."
+        "Returns INSUFFICIENT_DATA if history < 2 points."
     ),
 )
 async def get_segment_forecast(

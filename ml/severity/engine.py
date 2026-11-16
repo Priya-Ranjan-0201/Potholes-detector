@@ -1,9 +1,9 @@
 """ScamRoad Severity Scoring Engine.
 
 Adheres strictly to docs/SPEC.md B6 and Rules R5, R6, R7:
-- Rule R5: Detection confidence != severity (scored as distinct weighted factor).
-- Rule R6: Observations != forecasts (computes empirical instant score from sightings).
-- Rule R7: Missing data is NULL, never invented. Renormalizes over available factors.
+- Detection confidence != severity (scored as distinct weighted factor).
+- Observations != forecasts (computes empirical instant score from sightings).
+- Missing data is NULL, never invented. Renormalizes over available factors.
 """
 
 from __future__ import annotations
@@ -247,7 +247,7 @@ class SeverityEngine:
             contribution=w_rain * norm_rain if rain_avail else 0.0,
         )
 
-        # Renormalization over available weights (Rule R7)
+        # Renormalization over available weights
         avail_weight = sum(f.weight for f in factors.values() if f.available)
         raw_weighted = sum(f.contribution for f in factors.values() if f.available)
         score = round(100.0 * (raw_weighted / avail_weight), 2) if avail_weight > 0 else 0.0

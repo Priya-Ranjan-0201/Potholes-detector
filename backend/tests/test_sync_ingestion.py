@@ -79,7 +79,7 @@ def test_sync_batch_ingestion_creates_defects(client: TestClient) -> None:
 
 
 def test_sync_batch_idempotency_replay(client: TestClient) -> None:
-    """Test Rule B4: Replaying identical batch with same idempotency_key returns cached receipt."""
+    """Test Replaying identical batch with same idempotency_key returns cached receipt."""
     batch_id = str(uuid.uuid4())
     device_id = str(uuid.uuid4())
     idemp_key = f"batch-idemp-{batch_id}"
@@ -126,7 +126,7 @@ def test_sync_batch_idempotency_replay(client: TestClient) -> None:
 
 
 def test_spatial_deduplication_auto_merge(client: TestClient) -> None:
-    """Test Rule B5: Second vehicle pass within dynamic radius merges into canonical defect."""
+    """Test Second vehicle pass within dynamic radius merges into canonical defect."""
     device_id = str(uuid.uuid4())
     canonical_lat = 30.90500
     canonical_lon = 75.86000

@@ -105,7 +105,7 @@ class RepairRecord(Base, UUIDMixin, TimestampMixin):
 
 
 class RepairVerification(Base, UUIDMixin, TimestampMixin):
-    """Advisory AI verification and authoritative human sign-off (Rule R8)."""
+    """Advisory AI verification and authoritative human sign-off."""
 
     __tablename__ = "repair_verifications"
 

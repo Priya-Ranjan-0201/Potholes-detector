@@ -31,7 +31,7 @@ class CitizenReport(Base, UUIDMixin, TimestampMixin):
 
 
 class Complaint(Base, UUIDMixin, TimestampMixin):
-    """Citizen complaint lifecycle governed by strict state machine (Rule B7)."""
+    """Citizen complaint lifecycle governed by strict state machine."""
 
     __tablename__ = "complaints"
 

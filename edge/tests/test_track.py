@@ -26,7 +26,7 @@ def test_defect_track_confirmation_and_consolidation() -> None:
 
     track = DefectTrack(track_id=1, initial_obs=obs1, min_hits=3)
     assert not track.is_confirmed
-    assert track.consolidate() is None  # Rejects < min_hits (Rule B5.2)
+    assert track.consolidate() is None  # Rejects < min_hits
 
     # Frame 2
     det2 = Detection(0, "POTHOLE", 0.90, (102.0, 220.0, 152.0, 270.0), 0.025)

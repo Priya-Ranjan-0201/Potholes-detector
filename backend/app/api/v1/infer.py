@@ -11,7 +11,7 @@ Features:
 - Letterbox aspect-ratio preserving preprocessing with exact coordinate inversion
 - Input usability verification (darkness, overexposure, severe blur)
 - Spatial-temporal video tracking consolidating per-frame flickers into unique defect events
-- Zero fake, seeded, or synthetic records (Rule G1)
+- Zero fake, seeded, or synthetic records
 """
 
 from __future__ import annotations

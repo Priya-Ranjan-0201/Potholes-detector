@@ -35,7 +35,7 @@ import imagehash
 import yaml
 from PIL import Image
 
-# Single source of truth class mapping (Rule R14)
+# Single source of truth class mapping
 CANONICAL_CLASS_MAPPING: dict[str, dict[str, Any]] = {
     # RDD2022 codes
     "D40": {"code": "POTHOLE", "index": 0},

@@ -388,7 +388,7 @@ async def create_defect(
     response_model=SeverityAssessmentResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Human override of defect severity",
-    description="Rule B6 compliant human review override with audit tracking.",
+    description="human review override with audit tracking.",
 )
 async def override_severity(
     defect_id: uuid.UUID,

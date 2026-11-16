@@ -3,7 +3,7 @@
 Implements SPEC B8 & Rules R4, R6, R7:
 - Segment-level health score: 100 - min(100, sum(severity_weight * density))
 - Length-weighted rollup across road networks and wards
-- Missing or insufficient coverage returns score=None (Rule R7: never invent data)
+- Missing or insufficient coverage returns score=None (never invent data)
 """
 
 from __future__ import annotations

@@ -40,7 +40,7 @@ async def ingest_sync_batch(
     """Ingest a batch of defect observations with spatial deduplication and idempotency."""
     effective_idempotency_key = x_idempotency_key or batch.idempotency_key
 
-    # 1. Idempotency Check (Rule B4)
+    # 1. Idempotency Check
     stmt = select(AuditLog).where(
         AuditLog.action == "SYNC_BATCH_INGESTED",
         AuditLog.entity_id == effective_idempotency_key,
@@ -107,7 +107,7 @@ async def ingest_sync_batch(
                 mime_type=media_item.mime_type,
                 sha256_hash=media_item.sha256,
                 size_bytes=media_item.size_bytes,
-                is_privacy_blurred=True,  # Redacted on-device before sync (Rule R15)
+                is_privacy_blurred=True,  # Redacted on-device before sync
             )
             db.add(new_media)
             media_registered_count += 1

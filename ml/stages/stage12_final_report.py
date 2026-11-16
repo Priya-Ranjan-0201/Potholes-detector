@@ -262,7 +262,7 @@ def main() -> None:
 - **Stage 9:** ONNX FP32 and Dynamic INT8 exported with $< 10^{-3}$ numerical parity.
 - **Stage 10:** Video tracking consolidation & 0.0 FP/km verified.
 - **Stage 11:** 18-condition robustness corruption suite evaluated with failure boundaries codified.
-- **Stage 12:** Master evaluation report generated; ready for Pass 2 hostile audit.
+- **Stage 12:** Master evaluation report generated; ready for evaluation audit.
 """
     with open(phase_rep_dir / "pass1-stage12.md", "w", encoding="utf-8") as f:
         f.write(rep_md)

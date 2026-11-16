@@ -210,7 +210,7 @@ def generate_comparison_markdown(
         "",
         "---",
         "*Report generated automatically by `edge/benchmarks/run_benchmark.py`.*  ",
-        "*Adheres strictly to Rule R1 (Truth over appearance).*",
+        "",
     ]
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

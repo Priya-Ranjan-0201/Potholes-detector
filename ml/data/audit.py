@@ -231,7 +231,7 @@ def generate_markdown_audit_report(audit_result: dict, output_md_path: Path) -> 
         "# ScamRoad Dataset Audit Report",
         "",
         f"> **Generated at:** {audit_result.get('timestamp')}",
-        "> **Audit Status:** Verified from disk files (Rule R1: Truth over appearance).",
+        "> **Audit Status:** Verified from disk files (Truth over appearance).",
         "",
         "---",
         "",
