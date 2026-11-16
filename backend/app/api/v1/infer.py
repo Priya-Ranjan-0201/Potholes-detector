@@ -185,7 +185,8 @@ def get_pothole_engine(conf_thresh: float = 0.20, iou_thresh: float = 0.35):
 
     candidates = [
         "runs/export/best.onnx",
-        "runs/detect/ml/runs/pothole_yolo11n_unified_640_polish/weights/best.onnx",
+        "ml/weights/yolo11n_pothole_best.onnx",
+        "ml/weights/best.onnx",
     ]
     selected_path = next((p for p in candidates if os.path.exists(p)), None)
     if not selected_path:

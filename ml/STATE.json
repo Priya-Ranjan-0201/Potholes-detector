@@ -1,5 +1,5 @@
 {
-  "phase": "PHASE_5_FRONTEND_REDESIGN",
+  "phase": "PHASE_6_REPOSITORY_CLEANUP",
   "status": "COMPLETED",
   "branch": "v13/global-fix",
   "baseline_tag": "before-v13",
@@ -8,25 +8,19 @@
   "phase_3_tag": "v13-phase-3-done",
   "phase_4_tag": "v13-phase-4-done",
   "phase_5_tag": "v13-phase-5-done",
+  "phase_6_tag": "v13-phase-6-done",
   "evidence_paths": {
-    "index_css": "web/src/index.css",
-    "tailwind_config": "web/tailwind.config.js",
-    "logo_component": "web/src/components/Logo.tsx",
-    "navbar_component": "web/src/components/Navbar.tsx",
-    "footer_component": "web/src/components/Footer.tsx",
-    "landing_page": "web/src/pages/LandingPage.tsx",
-    "about_page": "web/src/pages/AboutPage.tsx",
-    "benchmarks_page": "web/src/pages/ModelBenchmarksPage.tsx",
-    "app_shell": "web/src/App.tsx",
-    "benchmarks_api": "backend/app/api/v1/benchmarks.py"
+    "cleanup_log": "docs/CLEANUP_LOG.md",
+    "docker_dir": "docker/",
+    "production_weights": "ml/weights/"
   },
   "metrics": {
-    "bundle_gzip_kb": 263.45,
-    "bundle_budget_kb": 350.0,
+    "reclaimed_disk_space_mb": 308.7,
+    "staged_items_purged": 20,
+    "regression_tests_passed": 11,
     "build_status": "SUCCESS",
-    "benchmarks_hardcoded": false,
-    "regression_tests_passed": 11
+    "sample_inference_images_processed": 50
   },
   "gate_passed": true,
-  "next_action": "Phase 6: Repository Cleanup"
+  "next_action": "Phase 7: Human-Quality Code and Documentation"
 }

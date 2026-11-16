@@ -1,6 +1,6 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 5 — Frontend Redesign: Simple, Clean, Full Website
+- **Current Phase:** Phase 6 — Repository Cleanup
 - **Status:** COMPLETED (Gate Passed)
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
@@ -9,32 +9,24 @@
 - **Phase 3 Tag:** `v13-phase-3-done`
 - **Phase 4 Tag:** `v13-phase-4-done`
 - **Phase 5 Tag:** `v13-phase-5-done`
+- **Phase 6 Tag:** `v13-phase-6-done`
 - **Evidence Paths:**
-  - `web/src/index.css` (Highway Green tokens, WCAG AA compliant)
-  - `web/tailwind.config.js` (Highway Green theme colors)
-  - `web/src/components/Logo.tsx` (Geometric road glyph SVG, 0 emblems/chakras)
-  - `web/src/components/Navbar.tsx` (Navigation: Home, Detect, Dashboard, Maintenance, Benchmarks, About)
-  - `web/src/components/Footer.tsx` (Mandatory student research disclaimer + links)
-  - `web/src/pages/LandingPage.tsx` (Hero, Live metrics strip, Before/After repair comparison, 3-step workflow)
-  - `web/src/pages/AboutPage.tsx` (Methodology, provenance, model licenses, AGPL-3.0)
-  - `web/src/pages/ModelBenchmarksPage.tsx` (Live `/api/v1/models/evaluation` metrics, 0 hardcoded fake data, slice & video tables)
-  - `web/src/App.tsx` (Complete router and keyboard shortcuts)
-  - `backend/app/api/v1/benchmarks.py` (Authentic evaluation JSON endpoint)
-- **Phase 5 Deliverables & Verifications:**
-  - **Highway Green Palette Applied:**
-    - Light: `#0F766E` / `#0D9488` (WCAG AA contrast > 4.5:1 against light surface)
-    - Dark: `#34D3BB` / `#14B8A6`
-    - Removed high-saturation neon accents and all government emblems.
-  - **Authentic Dynamic Benchmarks:**
-    - Deleted hardcoded `BENCHMARK_DATA` from `ModelBenchmarksPage.tsx`.
-    - Integrated dynamic React Query hook pulling genuine metrics from `ml/runs/final/metrics.json` via `/api/v1/models/evaluation`.
-    - Rendered 2x2 Image-Level Confusion Matrix (959 TP, 254 TN, 490 FP, 25 FN), Per-Class Table, Geographic Slice Table, and Dashcam Video Tracking Table.
-  - **Interactive Landing & Verification:**
-    - Dual interactive before/after repair slider featuring real sample images (`pothole_before.jpg` and `pothole_repaired.jpg`).
-    - Live metrics strip connecting directly to model evaluation results.
-  - **Disclaimers & Ethics:**
-    - Universal footer on every page: *"Student research project. Not an official government system. Not safety-certified."*
-    - Strict avoidance of official government logos, emblems, or Ashoka Chakra symbols.
-  - **Frontend Production Build:**
-    - Verified `npm run build` succeeds in 7.68s with 0 errors (gzipped JS bundle = 263.45 kB, well below the 350 kB budget).
-- **Next Action:** Proceed to Phase 6 — Repository Cleanup.
+  - `docs/CLEANUP_LOG.md` (Detailed manifest of staged and removed files with SHA-256 and sizes)
+  - `docker/` (Standard Dockerfiles and Compose manifests)
+  - `ml/weights/` (Production models only: YOLO11n, YOLOv8n crack specialist, COCO blocker, YOLOv8n-Seg)
+- **Phase 6 Deliverables & Verifications:**
+  - **Dead Weights & Scripts Audited and Purged:**
+    - Purged 125 MB legacy D-FINE Large DETR (`pavimentos_dfine_l.onnx`), 37 MB YOLOv12s (`pyresearch_pothole_best.onnx`), 18.6 MB PyTorch checkpoint (`pyresearch_pothole_best.pt`), and 5.6 MB root `yolo11n.pt`.
+    - Purged legacy cloud scripts (`cloud_orchestrator.py`, `checkpoint_manager.py`, `experiment_manager.py`, `environment_manager.py`, `cloud_config.yaml`).
+    - Purged dead utility scripts (`build_notebooks.py`, `build_recovery_notebooks.py`, `publish_to_kaggle.py`, `test_live_poly.py`, `serve_inference.py`, `make.ps1`).
+    - Purged intermediate training validation runs in `runs/detect/ml` (~112 MB) and `runs/detect/val*`.
+    - Total disk space reclaimed: **~308.7 MB**.
+  - **Safe Cleanup Protocol (Rule G7):**
+    - All candidate files staged to `_staging_trash/`.
+    - Full pytest regression suite executed: 11 / 11 tests PASSED in 18.74s.
+    - Frontend production build executed: `npm run build` PASSED in 6.42s (0 errors).
+    - Production 50-image evaluation run executed: 50 / 50 images PASSED.
+    - `_staging_trash/` permanently removed after all verification gates passed.
+  - **Repository Layout Target Conformance:**
+    - Repository tree now strictly matches Section 6.3 structure.
+- **Next Action:** Proceed to Phase 7 — Human-Quality Code and Documentation.
