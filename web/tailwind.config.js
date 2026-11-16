@@ -8,7 +8,6 @@ export default {
         sans: [
           '"Inter"',
           '"Plus Jakarta Sans"',
-          '"Noto Sans Devanagari"',
           '-apple-system',
           'BlinkMacSystemFont',
           'sans-serif',
@@ -18,6 +17,7 @@ export default {
       },
       colors: {
         bg: "var(--bg)",
+        "bg-subtle": "var(--bg-subtle)",
         "bg-raised": "var(--bg-raised)",
         surface: "var(--surface)",
         "surface-solid": "var(--surface-solid)",
@@ -31,11 +31,14 @@ export default {
           hover: "var(--primary-hover)",
           contrast: "var(--primary-contrast)",
         },
-        accent: {
-          teal: "var(--accent-teal)",
-          indigo: "var(--accent-indigo)",
-          magenta: "var(--accent-magenta)",
-          saffron: "var(--accent-saffron)",
+        sky: {
+          accent: "var(--accent-sky)",
+        },
+        status: {
+          success: "var(--success)",
+          warn: "var(--warn)",
+          danger: "var(--danger)",
+          info: "var(--info)",
         },
         severity: {
           minor: "var(--sev-minor)",
@@ -52,10 +55,6 @@ export default {
           muted: "var(--theme-muted)",
           primary: "var(--theme-primary)",
         },
-      },
-      borderRadius: {
-        data: "10px",
-        atmosphere: "16px",
       },
     },
   },

@@ -135,105 +135,104 @@ export interface DefectDetailResponse {
   assessments?: DefectSeverityHistoryItem[];
 }
 
+export interface EvaluationSlice {
+  total: number;
+  defect_count: number;
+  negative_count: number;
+  accuracy: number;
+  precision: number;
+  recall: number;
+  f1: number;
+}
+
 export interface ModelEvaluationResponse {
-  timestamp_utc: string;
-  model_version: string;
-  checkpoint: string;
-  sha256: string;
-  file_size_mb: number;
-  dataset_name: string;
-  test_images_count: number;
-  test_instances_total: number;
-  test_instances_by_class: Record<string, number>;
-  overall: {
-    mAP50: number;
-    mAP50_95: number;
-    precision: number;
-    recall: number;
-    f1: number;
-    ece: number;
-  };
-  per_class: Record<
-    string,
-    {
-      instances: number;
+  timestamp: string;
+  images: {
+    dataset_sample_size: number;
+    defect_images: number;
+    hard_negatives: number;
+    image_level: {
+      accuracy: number;
+      accuracy_95ci: [number, number];
       precision: number;
       recall: number;
       f1: number;
-      mAP50: number;
-      mAP50_95: number;
-    }
-  >;
-  confusion_matrix: {
-    classes: string[];
-    counts: number[][];
-    normalized: number[][];
+      f1_95ci: [number, number];
+      specificity: number;
+      confusion_matrix: {
+        true_positives: number;
+        true_negatives: number;
+        false_positives: number;
+        false_negatives: number;
+      };
+    };
+    per_class: Record<
+      string,
+      {
+        precision: number;
+        recall: number;
+        f1: number;
+        ground_truth_count: number;
+        true_positives: number;
+        false_positives: number;
+        false_negatives: number;
+      }
+    >;
+    slices: Record<string, EvaluationSlice>;
+    failure_gallery?: Array<{
+      file_path: string;
+      pred_boxes: number;
+      gt_boxes: number;
+      slice: string;
+      error_type: string;
+    }>;
+    latency_ms?: {
+      p50: number;
+      p95: number;
+      mean: number;
+      min: number;
+      max: number;
+    };
   };
-  inference_latency: {
-    host_os: string;
-    host_processor: string;
-    device: string;
-    execution_provider: string;
-    imgsz: number;
-    p50_ms: number;
-    p95_ms: number;
-    p99_ms: number;
-    throughput_fps: number;
-    test_iterations: number;
-  };
-  confidence_calibration: {
-    ece: number;
-    num_bins: number;
-    bins: Array<{
-      bin_idx: number;
-      bin_range: [number, number];
-      count: number;
-      mean_conf: number;
-      accuracy: number;
-      error: number;
+  video: {
+    total_video_clips: number;
+    total_duration_seconds: number;
+    ground_truth_events: number;
+    matched_events: number;
+    false_alarm_events: number;
+    event_precision: number;
+    event_recall: number;
+    event_f1: number;
+    false_alarms_per_minute: number;
+    duplicate_rate: number;
+    clips?: Array<{
+      clip_path: string;
+      fps: number;
+      total_frames: number;
+      duration_seconds: number;
+      gt_events: number;
+      detected_tracks: number;
+      matched_events: number;
+      false_alarms: number;
+      duplicates: number;
+      recall: number;
     }>;
   };
-  failure_gallery: Array<{
-    id: string;
-    type: string;
-    predicted_class: string;
-    ground_truth: string;
-    confidence: number;
-    image_id: string;
-    root_cause: string;
-    mitigation: string;
-  }>;
-  device_matrix?: Array<{
+  models?: Record<
+    string,
+    {
+      path: string;
+      sha256: string | null;
+      size_mb: number | null;
+      role: string;
+    }
+  >;
+  inference_hardware?: {
     device: string;
-    status: string;
-    fps: number | null;
-    latency_p50_ms: number | null;
-    notes?: string;
-  }>;
-  model_comparisons?: Array<{
-    name: string;
-    family: string;
-    tier: string;
-    params_m: number;
-    size_mb: number;
-    latency_ms?: number;
-    mean_latency_ms?: number;
+    provider: string;
+    p50_latency_ms: number;
+    p95_latency_ms: number;
     fps: number;
-    precision: number;
-    recall: number;
-    mAP50: number;
-    mAP50_95: number;
-  }>;
-  quantization?: {
-    fp32_size_mb: number;
-    int8_size_mb: number;
-    compression_percentage: number;
-  };
-  dataset_splits?: {
-    train?: number;
-    val?: number;
-    test?: number;
-    total?: number;
   };
   limitations_note?: string;
 }

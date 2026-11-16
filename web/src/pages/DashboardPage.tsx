@@ -115,7 +115,7 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <Link
             to="/scanner"
-            className="px-3 py-1.5 rounded-md text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 rounded-md text-xs font-semibold bg-primary-700 hover:bg-primary-800 text-white flex items-center gap-1.5 transition-colors shadow-sm"
           >
             <Camera className="w-3.5 h-3.5" />
             <span>Open Scanner</span>
@@ -216,7 +216,7 @@ export const DashboardPage: React.FC = () => {
                   <Bar
                     dataKey="count"
                     name="Detections"
-                    fill="#2563EB"
+                    fill="#0F766E"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={42}
                     isAnimationActive={!isReduced}

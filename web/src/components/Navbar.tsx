@@ -3,8 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import {
   Compass,
   Camera,
+  Activity,
   ClipboardList,
   BarChart3,
+  Info,
   Menu,
   X,
   Globe,
@@ -36,10 +38,12 @@ export const Navbar: React.FC = () => {
   }, [location.pathname]);
 
   const navLinks = [
-    { to: "/", label: t("navOverview"), icon: Compass },
-    { to: "/scanner", label: t("navScanner"), icon: Camera },
+    { to: "/", label: t("navHome"), icon: Compass },
+    { to: "/scanner", label: t("navDetect"), icon: Camera },
+    { to: "/dashboard", label: t("navDashboard"), icon: Activity },
     { to: "/maintenance", label: t("navMaintenance"), icon: ClipboardList },
     { to: "/benchmarks", label: t("navBenchmarks"), icon: BarChart3 },
+    { to: "/about", label: t("navAbout"), icon: Info },
   ];
 
   return (

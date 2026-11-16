@@ -1,5 +1,5 @@
 {
-  "phase": "PHASE_4_REMOVE_FAKE_DATA",
+  "phase": "PHASE_5_FRONTEND_REDESIGN",
   "status": "COMPLETED",
   "branch": "v13/global-fix",
   "baseline_tag": "before-v13",
@@ -7,20 +7,26 @@
   "phase_2_tag": "v13-phase-2-done",
   "phase_3_tag": "v13-phase-3-done",
   "phase_4_tag": "v13-phase-4-done",
+  "phase_5_tag": "v13-phase-5-done",
   "evidence_paths": {
-    "evaluation_samples_script": "scripts/run_evaluation_samples.py",
-    "no_fake_data_tests": "backend/tests/test_no_fake_data.py",
-    "defect_model": "backend/app/models/defect.py",
-    "complaint_model": "backend/app/models/complaint.py",
-    "maintenance_model": "backend/app/models/maintenance.py",
-    "client_api": "web/src/api/client.ts"
+    "index_css": "web/src/index.css",
+    "tailwind_config": "web/tailwind.config.js",
+    "logo_component": "web/src/components/Logo.tsx",
+    "navbar_component": "web/src/components/Navbar.tsx",
+    "footer_component": "web/src/components/Footer.tsx",
+    "landing_page": "web/src/pages/LandingPage.tsx",
+    "about_page": "web/src/pages/AboutPage.tsx",
+    "benchmarks_page": "web/src/pages/ModelBenchmarksPage.tsx",
+    "app_shell": "web/src/App.tsx",
+    "benchmarks_api": "backend/app/api/v1/benchmarks.py"
   },
   "metrics": {
-    "is_demo_occurrences_in_app": 0,
-    "demo_scripts_removed": ["scripts/demo.py", "scripts/live_sync_demo.py", "scripts/seed/"],
-    "fresh_install_counts": 0,
-    "no_fake_data_tests_passed": 3
+    "bundle_gzip_kb": 263.45,
+    "bundle_budget_kb": 350.0,
+    "build_status": "SUCCESS",
+    "benchmarks_hardcoded": false,
+    "regression_tests_passed": 11
   },
   "gate_passed": true,
-  "next_action": "Phase 5: Frontend Redesign: Simple, Clean, Full Website"
+  "next_action": "Phase 6: Repository Cleanup"
 }

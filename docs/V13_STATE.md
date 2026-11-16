@@ -1,6 +1,6 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 4 — Remove All Fake Data
+- **Current Phase:** Phase 5 — Frontend Redesign: Simple, Clean, Full Website
 - **Status:** COMPLETED (Gate Passed)
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
@@ -8,28 +8,33 @@
 - **Phase 2 Tag:** `v13-phase-2-done`
 - **Phase 3 Tag:** `v13-phase-3-done`
 - **Phase 4 Tag:** `v13-phase-4-done`
+- **Phase 5 Tag:** `v13-phase-5-done`
 - **Evidence Paths:**
-  - `scripts/run_evaluation_samples.py`
-  - `backend/tests/test_no_fake_data.py`
-  - `backend/app/models/defect.py`
-  - `backend/app/models/complaint.py`
-  - `backend/app/models/maintenance.py`
-  - `backend/app/schemas/maintenance.py`
-  - `web/src/context/AuthContext.tsx`
-  - `web/src/api/client.ts`
-- **Phase 4 Deliverables & Verifications:**
-  - **Removed All Fake/Demo Plumbing:**
-    - `is_demo` columns dropped from physical database tables (`defects`, `complaints`, `citizen_reports`, `work_orders`).
-    - `is_demo` removed from all SQLAlchemy models, Pydantic schemas, and API service layers.
-    - `DemoBadge.tsx` and `DemoBadge` exports completely removed from `web/src/ui/`.
-    - `switchDemoRole` and hardcoded demo credentials removed from `AuthContext.tsx`.
-    - Deleted synthetic demo seeder scripts (`scripts/demo.py`, `scripts/live_sync_demo.py`, `scripts/seed/`).
-  - **Provided "Run on Evaluation Samples":**
-    - `scripts/run_evaluation_samples.py`: Ingests authentic images through the real ONNX pipeline, records true defect detections, marks location as "Unknown" when no EXIF GPS exists, and attaches verified dataset provenance and license ("CC BY-SA 4.0").
-  - **Clean Fresh Install:**
-    - Verified that an empty database returns 0 defects, 0 work orders, 0 complaints, and empty lists for unconfigured wards/contractors.
-  - **Automated Regression & Static Scans (`backend/tests/test_no_fake_data.py`):**
-    - `test_fresh_install_empty_states`: PASSED.
-    - `test_real_action_count_equality`: PASSED.
-    - `test_no_mock_data_in_production_code`: PASSED (zero occurrences of `is_demo`, `seed_demo_data`, `switchDemoRole`, or `DemoBadge` in production source code).
-- **Next Action:** Proceed to Phase 5 — Frontend Redesign: Simple, Clean, Full Website ("Highway Green" palette).
+  - `web/src/index.css` (Highway Green tokens, WCAG AA compliant)
+  - `web/tailwind.config.js` (Highway Green theme colors)
+  - `web/src/components/Logo.tsx` (Geometric road glyph SVG, 0 emblems/chakras)
+  - `web/src/components/Navbar.tsx` (Navigation: Home, Detect, Dashboard, Maintenance, Benchmarks, About)
+  - `web/src/components/Footer.tsx` (Mandatory student research disclaimer + links)
+  - `web/src/pages/LandingPage.tsx` (Hero, Live metrics strip, Before/After repair comparison, 3-step workflow)
+  - `web/src/pages/AboutPage.tsx` (Methodology, provenance, model licenses, AGPL-3.0)
+  - `web/src/pages/ModelBenchmarksPage.tsx` (Live `/api/v1/models/evaluation` metrics, 0 hardcoded fake data, slice & video tables)
+  - `web/src/App.tsx` (Complete router and keyboard shortcuts)
+  - `backend/app/api/v1/benchmarks.py` (Authentic evaluation JSON endpoint)
+- **Phase 5 Deliverables & Verifications:**
+  - **Highway Green Palette Applied:**
+    - Light: `#0F766E` / `#0D9488` (WCAG AA contrast > 4.5:1 against light surface)
+    - Dark: `#34D3BB` / `#14B8A6`
+    - Removed high-saturation neon accents and all government emblems.
+  - **Authentic Dynamic Benchmarks:**
+    - Deleted hardcoded `BENCHMARK_DATA` from `ModelBenchmarksPage.tsx`.
+    - Integrated dynamic React Query hook pulling genuine metrics from `ml/runs/final/metrics.json` via `/api/v1/models/evaluation`.
+    - Rendered 2x2 Image-Level Confusion Matrix (959 TP, 254 TN, 490 FP, 25 FN), Per-Class Table, Geographic Slice Table, and Dashcam Video Tracking Table.
+  - **Interactive Landing & Verification:**
+    - Dual interactive before/after repair slider featuring real sample images (`pothole_before.jpg` and `pothole_repaired.jpg`).
+    - Live metrics strip connecting directly to model evaluation results.
+  - **Disclaimers & Ethics:**
+    - Universal footer on every page: *"Student research project. Not an official government system. Not safety-certified."*
+    - Strict avoidance of official government logos, emblems, or Ashoka Chakra symbols.
+  - **Frontend Production Build:**
+    - Verified `npm run build` succeeds in 7.68s with 0 errors (gzipped JS bundle = 263.45 kB, well below the 350 kB budget).
+- **Next Action:** Proceed to Phase 6 — Repository Cleanup.

@@ -18,6 +18,7 @@ import { ModelBenchmarksPage } from "./pages/ModelBenchmarksPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
+import { AboutPage } from "./pages/AboutPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,18 +64,24 @@ const AppShell: React.FC = () => {
       if (keySequenceRef.current[0] === "g") {
         const nextKey = e.key.toLowerCase();
         keySequenceRef.current = [];
-        if (nextKey === "o") {
+        if (nextKey === "o" || nextKey === "h") {
           e.preventDefault();
           navigate("/");
         } else if (nextKey === "s") {
           e.preventDefault();
           navigate("/scanner");
+        } else if (nextKey === "d") {
+          e.preventDefault();
+          navigate("/dashboard");
         } else if (nextKey === "m") {
           e.preventDefault();
           navigate("/maintenance");
         } else if (nextKey === "b") {
           e.preventDefault();
           navigate("/benchmarks");
+        } else if (nextKey === "a") {
+          e.preventDefault();
+          navigate("/about");
         }
       }
     };
@@ -123,17 +130,21 @@ const AppShell: React.FC = () => {
         <AnimatePresence mode="wait">
           <PageTransition key={location.pathname}>
             <Routes location={location}>
-              {/* 4 Primary Navigation Routes */}
-              <Route path="/" element={<DashboardPage />} />
+              {/* Primary Navigation Routes */}
+              <Route path="/" element={<LandingPage />} />
               <Route path="/scanner" element={<ScannerPage />} />
+              <Route path="/detect" element={<Navigate to="/scanner" replace />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/maintenance" element={<MaintenancePage />} />
               <Route path="/benchmarks" element={<ModelBenchmarksPage />} />
+              <Route path="/about" element={<AboutPage />} />
 
-              {/* Public Atmosphere Pages */}
-              <Route path="/landing" element={<LandingPage />} />
+              {/* Authentication */}
               <Route path="/login" element={<LoginPage />} />
 
               {/* Compatibility Redirects */}
+              <Route path="/landing" element={<Navigate to="/" replace />} />
+              <Route path="/overview" element={<Navigate to="/dashboard" replace />} />
               <Route path="/defects" element={<Navigate to="/maintenance?tab=defects" replace />} />
               <Route path="/complaints" element={<Navigate to="/maintenance?tab=reports" replace />} />
               <Route path="/models" element={<Navigate to="/benchmarks" replace />} />
