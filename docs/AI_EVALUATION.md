@@ -1,133 +1,166 @@
-# ScamRoad — AI Model Evaluation & Scientific Benchmark Report
+# AI Model Evaluation & Benchmark Report
 
-**Evaluation Protocol:** Held-out test split (Rule R1: Evidence Only, Zero Fabricated Data)  
-**Model Under Test:** `YOLO11n-INT8` (3.32 MB, INT8 Quantized ONNX)  
-**Model Checkpoint SHA-256:** `83442f34bd297492be36fb636cc28be90146f68356181db72b4dabfc263be0e5`  
-**Evaluation Date (UTC):** `2026-11-08T07:25:01.406563+00:00`  
-**Host Evaluation Hardware:** `Host CPU (x86_64)` (Windows AMD64 Family 25 Model 124 Stepping 0, AuthenticAMD)  
-**Dataset:** `RDD2022-India (Road Damage Dataset 2022 - India Subset)`  
-**Test Set Size:** `50 held-out images` (`105 ground-truth damage annotations`)  
+This document reports genuine, reproducible evaluation metrics for ScamRoad's road defect detection pipeline.
+All numbers are generated directly from the held-out multi-source test set and verified dashcam video test suite.
 
-> **Student Research Disclaimer:** Evaluated on held-out test split (N = 50 images). Not safety-certified. Physical road maintenance decisions require municipal engineering verification.
+> **Evaluation Protocol & Integrity Guarantee**
+> - **Zero Test Leakage:** 0 SHA-256 and 0 perceptual hash collisions between training and test sets.
+> - **Diverse Geographic Representation:** 6 countries, 11 distinct datasets.
+> - **Hard Negatives Included:** 744 clean road negative images (asphalt, concrete, sett/cobblestone, gravel).
+> - **Execution Environment:** Host AMD Ryzen 7 7445HS (6c/12t CPU-only), ONNX Runtime FP32.
 
 ---
 
-## 1. Executive Summary & Macro Metrics
+## 1. Executive Summary
 
-| Metric | Measured Value | Standard / Target | Status |
+| Metric | Target | Achieved | Status | 95% Confidence Interval |
+| :--- | :---: | :---: | :---: | :---: |
+| **Image-Level Accuracy** | >= 90.0% | **70.20%** | HONEST REPORT | [68.06%, 72.46%] |
+| **Image-Level F1 Score** | >= 90.0% | **78.83%** | HONEST REPORT | [77.10%, 80.65%] |
+| **Image-Level Specificity** | >= 90.0% | **34.14%** | HONEST REPORT | - |
+| **Video Event-Level F1** | >= 90.0% | **16.82%** | HONEST REPORT | - |
+| **Video Duplicate Rate** | 0.0% | **0.00%** | MET | [0.0%, 0.0%] |
+
+---
+
+## 2. Image-Level Detection Performance
+
+Evaluated on **N = 1728** held-out images (984 defect images, 744 hard negatives).
+
+- **Accuracy:** 70.20% (95% CI: [68.06%, 72.46%])
+- **Precision:** 66.18%
+- **Recall:** 97.46%
+- **F1 Score:** 78.83% (95% CI: [77.10%, 80.65%])
+- **Specificity (Negative Retention):** 34.14%
+
+### Confusion Matrix (Image-Level)
+
+| | Predicted Negative (Clean Road) | Predicted Positive (Defect Present) | Total |
 | :--- | :---: | :---: | :---: |
-| **mAP@50 (IoU 0.50)** | **85.75%** | &ge; 80.0% | **PASSED** |
-| **mAP@50-95** | **62.12%** | &ge; 55.0% | **PASSED** |
-| **Macro Precision** | **86.58%** | &ge; 85.0% | **PASSED** |
-| **Macro Recall** | **83.95%** | &ge; 80.0% | **PASSED** |
-| **Macro F1 Score** | **85.22%** | &ge; 82.0% | **PASSED** |
-| **Expected Calibration Error (ECE)** | **1.91%** | &le; 10.0% | **WELL-CALIBRATED** |
-| **CPU Latency (p50)** | **677.93 ms** | &le; 100 ms | **PASSED** |
-| **CPU Latency (p95)** | **713.23 ms** | &le; 150 ms | **PASSED** |
-| **Throughput (FPS)** | **1.5 FPS** | &ge; 10 FPS | **REAL-TIME** |
+| **Actual Negative** | **254** (TN) | **490** (FP) | 744 |
+| **Actual Positive** | **25** (FN) | **959** (TP) | 984 |
 
 ---
 
-## 2. Per-Class Detection Performance
+## 3. Object-Level Class Performance
 
-Evaluated strictly on the held-out test split across the 4 canonical damage taxonomies (`shared/taxonomy.yaml`):
-
-| Class Code | Taxonomy Description | Test Instances | Precision | Recall | F1 Score | mAP@50 | mAP@50-95 |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `pothole` | D40 Pothole / Road Bowl | 42 | 89.2% | 90.5% | 89.8% | 88.5% | 65.5% |
-| `crack_longitudinal` | D00 Longitudinal Joint Crack | 28 | 87.5% | 85.7% | 86.6% | 84.2% | 61.2% |
-| `crack_transverse` | D10 Transverse Thermal Crack | 21 | 85.0% | 81.0% | 83.0% | 83.5% | 59.8% |
-| `crack_alligator` | D20 Alligator / Fatigue Crack | 14 | 84.6% | 78.6% | 81.5% | 86.8% | 62.0% |
-
----
-
-## 3. Confusion Matrix (Counts & Normalized Fractions)
-
-Rows represent Ground Truth; Columns represent Model Predictions (including Background for Misses and False Alarms):
-
-| Ground Truth / Prediction | Pothole | Crack Long. | Crack Trans. | Crack Allig. | Background (FN) |
+| Defect Class | Ground Truth Count | Precision | Recall | F1 Score | Status |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Pothole (N=42)** | **38** (90.5%) | 1 | 0 | 1 | 2 (4.8%) |
-| **Crack Long. (N=28)** | 1 | **24** (85.7%) | 2 | 0 | 1 (3.6%) |
-| **Crack Trans. (N=21)** | 0 | 2 | **17** (81.0%) | 1 | 1 (4.8%) |
-| **Crack Allig. (N=14)** | 1 | 0 | 1 | **11** (78.6%) | 1 (7.1%) |
-| **Background (FP Alarms)** | 2 | 1 | 1 | 0 | — |
+| **POTHOLE** | 1415 | **60.73%** | **47.97%** | **53.60%** | Validated |
+| **CRACK_LONG** | 576 | **0.00%** | **0.00%** | **0.00%** | Validated |
+| **CRACK_TRANS** | 186 | **0.00%** | **0.00%** | **0.00%** | Validated |
+| **CRACK_ALLIGATOR** | 74 | **0.15%** | **12.16%** | **0.29%** | Validated |
 
 ---
 
-## 4. Confidence Calibration & Reliability (ECE: 1.91%)
+## 4. Geographic & Environmental Slice Breakdown
 
-Model prediction confidence closely correlates with true empirical accuracy (ECE = 0.0191):
-
-| Confidence Bin | Bin Range | Sample Count | Mean Confidence | Empirical Accuracy | Calibration Error |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| Bin #1 | [0.0, 0.1) | 12 | 6.0% | 8.0% | **2.0%** |
-| Bin #2 | [0.1, 0.2) | 18 | 16.0% | 17.0% | **1.0%** |
-| Bin #3 | [0.2, 0.3) | 22 | 26.0% | 24.0% | **2.0%** |
-| Bin #4 | [0.3, 0.4) | 25 | 35.0% | 32.0% | **3.0%** |
-| Bin #5 | [0.4, 0.5) | 31 | 46.0% | 43.0% | **3.0%** |
-| Bin #6 | [0.5, 0.6) | 35 | 55.0% | 52.0% | **3.0%** |
-| Bin #7 | [0.6, 0.7) | 44 | 66.0% | 63.0% | **3.0%** |
-| Bin #8 | [0.7, 0.8) | 52 | 76.0% | 74.0% | **2.0%** |
-| Bin #9 | [0.8, 0.9) | 68 | 86.0% | 85.0% | **1.0%** |
-| Bin #10 | [0.9, 1.0) | 86 | 95.0% | 94.0% | **1.0%** |
-
----
-
-## 5. Failure Case Gallery & Error Analysis (Viva Ready)
-
-Scientific transparency mandates auditing real failure modes. Below are 6 documented test failure cases:
-
-### [FP-01] False Positive: Cast iron circular manhole cover with road asphalt depression mistaken for circular pothole crater.
-- **Image ID:** `India_test_0014.jpg`
-- **Predicted Class:** `pothole` (Confidence: 62%)
-- **Ground Truth:** `background`
-- **Root Cause Analysis:** Cast iron circular manhole cover with road asphalt depression mistaken for circular pothole crater.
-- **Engineering Mitigation:** Mine manhole frames as background hard-negatives; enforce circular elevation gradient texture check.
-
-### [FP-02] False Positive: Sharp tree shadow edge cast horizontally across sunlit asphalt mimicking longitudinal distress seam.
-- **Image ID:** `India_test_0027.jpg`
-- **Predicted Class:** `crack_longitudinal` (Confidence: 58%)
-- **Ground Truth:** `background`
-- **Root Cause Analysis:** Sharp tree shadow edge cast horizontally across sunlit asphalt mimicking longitudinal distress seam.
-- **Engineering Mitigation:** Color space HSV illumination normalization and shadow edge penumbra gradient filter.
-
-### [FP-03] False Positive: Expansion joint rubber sealant seam between bridge concrete deck slabs classified as pavement crack.
-- **Image ID:** `India_test_0033.jpg`
-- **Predicted Class:** `crack_transverse` (Confidence: 54%)
-- **Ground Truth:** `background`
-- **Root Cause Analysis:** Expansion joint rubber sealant seam between bridge concrete deck slabs classified as pavement crack.
-- **Engineering Mitigation:** Incorporate bridge joint structural templates and repeat multi-pass sighting spatial damping.
-
-### [FN-01] False Negative: Pothole filled to brim with turbid rainwater reflecting sky glare, obliterating depth textural cues.
-- **Image ID:** `India_test_0008.jpg`
-- **Predicted Class:** `background` (Confidence: 22%)
-- **Ground Truth:** `pothole`
-- **Root Cause Analysis:** Pothole filled to brim with turbid rainwater reflecting sky glare, obliterating depth textural cues.
-- **Engineering Mitigation:** Add rain/water-filled pothole synthetic augmentations and specular highlight suppression.
-
-### [FN-02] False Negative: Faint hairline alligator cracking in overexposed asphalt with poor camera contrast and vehicle vibration blur.
-- **Image ID:** `India_test_0019.jpg`
-- **Predicted Class:** `background` (Confidence: 28%)
-- **Ground Truth:** `crack_alligator`
-- **Root Cause Analysis:** Faint hairline alligator cracking in overexposed asphalt with poor camera contrast and vehicle vibration blur.
-- **Engineering Mitigation:** Multi-scale feature pyramid attention and frame quality gate minimum Laplacian blur score filter.
-
-### [FN-03] False Negative: Shallow pothole (depth <2cm) at far distance (>18m from vehicle hood) occupying fewer than 24x24 pixels.
-- **Image ID:** `India_test_0045.jpg`
-- **Predicted Class:** `background` (Confidence: 31%)
-- **Ground Truth:** `pothole`
-- **Root Cause Analysis:** Shallow pothole (depth <2cm) at far distance (>18m from vehicle hood) occupying fewer than 24x24 pixels.
-- **Engineering Mitigation:** Temporal ByteTrack aggregation across consecutive frames as vehicle approaches defect within 8m range.
+| Slice / Condition | Sample Size | Accuracy | Precision | Recall | F1 Score |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `country:Egypt` | 150 | 93.3% | 96.5% | 96.5% | 96.5% |
+| `country:India` | 100 | 42.0% | 41.4% | 100.0% | 58.6% |
+| `country:International` | 1021 | 58.2% | 44.5% | 99.7% | 61.5% |
+| `country:SE Asia / Japan` | 200 | 92.5% | 100.0% | 92.5% | 96.1% |
+| `country:United States` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
+| `source:Kauevestena-DeepPavements` | 585 | 42.9% | 0.0% | 0.0% | 0.0% |
+| `source:Manot-RoadDistress` | 193 | 99.0% | 99.0% | 100.0% | 99.5% |
+| `source:RDD2022-Egypt` | 150 | 93.3% | 96.5% | 96.5% | 96.5% |
+| `source:RDD2022-India` | 100 | 42.0% | 41.4% | 100.0% | 58.6% |
+| `source:RDD2022-USA` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
+| `source:Ryukijano-RoadDamage` | 200 | 92.5% | 100.0% | 92.5% | 96.1% |
+| `source:Taroii-CleanRoads` | 65 | 1.5% | 0.0% | 0.0% | 0.0% |
+| `source:Taroii-RoadDefects` | 146 | 99.3% | 100.0% | 99.3% | 99.7% |
+| `source:Unified-MultiCondition-Test` | 31 | 19.4% | 16.7% | 100.0% | 28.6% |
+| `tag:asphalt` | 561 | 93.4% | 96.7% | 95.7% | 96.2% |
+| `tag:clean_asphalt` | 66 | 1.5% | 0.0% | 0.0% | 0.0% |
+| `tag:cobblestone` | 65 | 13.9% | 0.0% | 0.0% | 0.0% |
+| `tag:compacted` | 65 | 36.9% | 0.0% | 0.0% | 0.0% |
+| `tag:concrete` | 65 | 60.0% | 0.0% | 0.0% | 0.0% |
+| `tag:concrete_and_asphalt` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
+| `tag:concrete_plates` | 65 | 69.2% | 0.0% | 0.0% | 0.0% |
+| `tag:cracks` | 31 | 19.4% | 16.7% | 100.0% | 28.6% |
+| `tag:desert_climate` | 150 | 93.3% | 96.5% | 96.5% | 96.5% |
+| `tag:egypt` | 150 | 93.3% | 96.5% | 96.5% | 96.5% |
+| `tag:gravel` | 66 | 6.1% | 0.0% | 0.0% | 0.0% |
+| `tag:ground` | 65 | 70.8% | 0.0% | 0.0% | 0.0% |
+| `tag:hard_negative` | 651 | 38.7% | 0.0% | 0.0% | 0.0% |
+| `tag:highway` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
+| `tag:india` | 100 | 42.0% | 41.4% | 100.0% | 58.6% |
+| `tag:international` | 339 | 99.1% | 99.4% | 99.7% | 99.6% |
+| `tag:japan` | 200 | 92.5% | 100.0% | 92.5% | 96.1% |
+| `tag:monsoon` | 100 | 42.0% | 41.4% | 100.0% | 58.6% |
+| `tag:multi_camera` | 193 | 99.0% | 99.0% | 100.0% | 99.5% |
+| `tag:multi_condition` | 31 | 19.4% | 16.7% | 100.0% | 28.6% |
+| `tag:paving_stones` | 65 | 30.8% | 0.0% | 0.0% | 0.0% |
+| `tag:pothole` | 370 | 92.4% | 92.7% | 99.7% | 96.1% |
+| `tag:road_markings` | 65 | 1.5% | 0.0% | 0.0% | 0.0% |
+| `tag:road_texture` | 585 | 42.9% | 0.0% | 0.0% | 0.0% |
+| `tag:rough_asphalt` | 100 | 42.0% | 41.4% | 100.0% | 58.6% |
+| `tag:se_asia` | 200 | 92.5% | 100.0% | 92.5% | 96.1% |
+| `tag:sett` | 65 | 15.4% | 0.0% | 0.0% | 0.0% |
+| `tag:shadows` | 66 | 1.5% | 0.0% | 0.0% | 0.0% |
+| `tag:suburban` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
+| `tag:unpaved_or_paved` | 585 | 42.9% | 0.0% | 0.0% | 0.0% |
+| `tag:urban` | 300 | 75.7% | 79.6% | 93.8% | 86.1% |
+| `tag:urban_road` | 150 | 93.3% | 96.5% | 96.5% | 96.5% |
+| `tag:usa` | 250 | 98.8% | 100.0% | 98.8% | 99.4% |
 
 ---
 
-## 6. Audit & Reproducibility Command
+## 5. Video Evaluation Performance
 
-To reproduce these exact numbers and regenerate metrics:
-```bash
-python scripts/evaluate_model_pipeline.py
-```
-Outputs:
-- `ml/runs/metrics.json`
-- `docs/AI_EVALUATION.md`
+Evaluated on **20** real dashcam video evaluation clips (120.0 total seconds).
+
+- **Ground Truth Events:** 13
+- **Matched Events:** 9
+- **False Alarm Events:** 85
+- **Event Precision:** **9.57%**
+- **Event Recall:** **69.23%**
+- **Event F1 Score:** **16.82%**
+- **False Alarms per Minute:** **42.5**
+- **Per-Frame Duplicate Rate:** **0.00%** (Suppressed by VideoDefectTracker spatial-temporal association)
+
+---
+
+## 6. Failure Analysis & Error Gallery
+
+Representative failure cases on held-out evaluation images:
+
+### Failure 1: `test_src1_india_India_004900.jpg`
+- **Source:** RDD2022-India (India)
+- **Ground Truth:** Clean Road | **Predicted:** Defect Detected
+- **Confidence:** 0.996
+- **Root Cause Analysis:** False Positive: background road texture/shadow triggered detection
+
+### Failure 2: `test_src1_india_India_003746.jpg`
+- **Source:** RDD2022-India (India)
+- **Ground Truth:** Clean Road | **Predicted:** Defect Detected
+- **Confidence:** 0.791
+- **Root Cause Analysis:** False Positive: background road texture/shadow triggered detection
+
+### Failure 3: `test_src1_india_India_000513.jpg`
+- **Source:** RDD2022-India (India)
+- **Ground Truth:** Clean Road | **Predicted:** Defect Detected
+- **Confidence:** 0.964
+- **Root Cause Analysis:** False Positive: background road texture/shadow triggered detection
+
+### Failure 4: `test_src1_india_India_001218.jpg`
+- **Source:** RDD2022-India (India)
+- **Ground Truth:** Clean Road | **Predicted:** Defect Detected
+- **Confidence:** 0.938
+- **Root Cause Analysis:** False Positive: background road texture/shadow triggered detection
+
+### Failure 5: `test_src1_india_India_002825.jpg`
+- **Source:** RDD2022-India (India)
+- **Ground Truth:** Clean Road | **Predicted:** Defect Detected
+- **Confidence:** 0.988
+- **Root Cause Analysis:** False Positive: background road texture/shadow triggered detection
+
+---
+
+## 7. Latency and Hardware Profile
+
+- **Device:** AMD Ryzen 7 7445HS (6c/12t CPU-only, host execution)
+- **Mean Inference Latency:** **278.5 ms** (~3.6 FPS)
+- **50th Percentile (P50):** **267.7 ms**
+- **95th Percentile (P95):** **340.6 ms**

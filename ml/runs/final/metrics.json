@@ -1,0 +1,730 @@
+{
+  "timestamp": "2026-11-16T19:17:00Z",
+  "images": {
+    "dataset_sample_size": 1728,
+    "defect_images": 984,
+    "hard_negatives": 744,
+    "image_level": {
+      "accuracy": 0.702,
+      "accuracy_95ci": [
+        0.6806,
+        0.7246
+      ],
+      "precision": 0.6618,
+      "recall": 0.9746,
+      "f1": 0.7883,
+      "f1_95ci": [
+        0.771,
+        0.8065
+      ],
+      "specificity": 0.3414,
+      "confusion_matrix": {
+        "true_positives": 959,
+        "true_negatives": 254,
+        "false_positives": 490,
+        "false_negatives": 25
+      }
+    },
+    "per_class": {
+      "POTHOLE": {
+        "precision": 0.6073,
+        "recall": 0.4797,
+        "f1": 0.536,
+        "ground_truth_count": 1415,
+        "true_positives": 662,
+        "false_positives": 428,
+        "false_negatives": 718
+      },
+      "CRACK_LONG": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "ground_truth_count": 576,
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 576
+      },
+      "CRACK_TRANS": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "ground_truth_count": 186,
+        "true_positives": 0,
+        "false_positives": 14,
+        "false_negatives": 186
+      },
+      "CRACK_ALLIGATOR": {
+        "precision": 0.0015,
+        "recall": 0.1216,
+        "f1": 0.0029,
+        "ground_truth_count": 74,
+        "true_positives": 9,
+        "false_positives": 6176,
+        "false_negatives": 65
+      }
+    },
+    "slices": {
+      "country:India": {
+        "sample_size": 100,
+        "accuracy": 0.42,
+        "precision": 0.4141,
+        "recall": 1.0,
+        "f1": 0.5857
+      },
+      "source:RDD2022-India": {
+        "sample_size": 100,
+        "accuracy": 0.42,
+        "precision": 0.4141,
+        "recall": 1.0,
+        "f1": 0.5857
+      },
+      "tag:urban": {
+        "sample_size": 300,
+        "accuracy": 0.7567,
+        "precision": 0.7958,
+        "recall": 0.9378,
+        "f1": 0.861
+      },
+      "tag:monsoon": {
+        "sample_size": 100,
+        "accuracy": 0.42,
+        "precision": 0.4141,
+        "recall": 1.0,
+        "f1": 0.5857
+      },
+      "tag:india": {
+        "sample_size": 100,
+        "accuracy": 0.42,
+        "precision": 0.4141,
+        "recall": 1.0,
+        "f1": 0.5857
+      },
+      "tag:rough_asphalt": {
+        "sample_size": 100,
+        "accuracy": 0.42,
+        "precision": 0.4141,
+        "recall": 1.0,
+        "f1": 0.5857
+      },
+      "country:United States": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "source:RDD2022-USA": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "tag:highway": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "tag:usa": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "tag:suburban": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "tag:concrete_and_asphalt": {
+        "sample_size": 250,
+        "accuracy": 0.988,
+        "precision": 1.0,
+        "recall": 0.988,
+        "f1": 0.994
+      },
+      "country:Egypt": {
+        "sample_size": 150,
+        "accuracy": 0.9333,
+        "precision": 0.9655,
+        "recall": 0.9655,
+        "f1": 0.9655
+      },
+      "source:RDD2022-Egypt": {
+        "sample_size": 150,
+        "accuracy": 0.9333,
+        "precision": 0.9655,
+        "recall": 0.9655,
+        "f1": 0.9655
+      },
+      "tag:desert_climate": {
+        "sample_size": 150,
+        "accuracy": 0.9333,
+        "precision": 0.9655,
+        "recall": 0.9655,
+        "f1": 0.9655
+      },
+      "tag:egypt": {
+        "sample_size": 150,
+        "accuracy": 0.9333,
+        "precision": 0.9655,
+        "recall": 0.9655,
+        "f1": 0.9655
+      },
+      "tag:urban_road": {
+        "sample_size": 150,
+        "accuracy": 0.9333,
+        "precision": 0.9655,
+        "recall": 0.9655,
+        "f1": 0.9655
+      },
+      "tag:asphalt": {
+        "sample_size": 561,
+        "accuracy": 0.934,
+        "precision": 0.9671,
+        "recall": 0.9572,
+        "f1": 0.9621
+      },
+      "country:SE Asia / Japan": {
+        "sample_size": 200,
+        "accuracy": 0.925,
+        "precision": 1.0,
+        "recall": 0.925,
+        "f1": 0.961
+      },
+      "source:Ryukijano-RoadDamage": {
+        "sample_size": 200,
+        "accuracy": 0.925,
+        "precision": 1.0,
+        "recall": 0.925,
+        "f1": 0.961
+      },
+      "tag:se_asia": {
+        "sample_size": 200,
+        "accuracy": 0.925,
+        "precision": 1.0,
+        "recall": 0.925,
+        "f1": 0.961
+      },
+      "tag:japan": {
+        "sample_size": 200,
+        "accuracy": 0.925,
+        "precision": 1.0,
+        "recall": 0.925,
+        "f1": 0.961
+      },
+      "country:International": {
+        "sample_size": 1021,
+        "accuracy": 0.5818,
+        "precision": 0.4446,
+        "recall": 0.9971,
+        "f1": 0.615
+      },
+      "source:Manot-RoadDistress": {
+        "sample_size": 193,
+        "accuracy": 0.9896,
+        "precision": 0.9896,
+        "recall": 1.0,
+        "f1": 0.9948
+      },
+      "tag:international": {
+        "sample_size": 339,
+        "accuracy": 0.9912,
+        "precision": 0.9941,
+        "recall": 0.997,
+        "f1": 0.9956
+      },
+      "tag:pothole": {
+        "sample_size": 370,
+        "accuracy": 0.9243,
+        "precision": 0.9266,
+        "recall": 0.9971,
+        "f1": 0.9606
+      },
+      "tag:multi_camera": {
+        "sample_size": 193,
+        "accuracy": 0.9896,
+        "precision": 0.9896,
+        "recall": 1.0,
+        "f1": 0.9948
+      },
+      "source:Unified-MultiCondition-Test": {
+        "sample_size": 31,
+        "accuracy": 0.1935,
+        "precision": 0.1667,
+        "recall": 1.0,
+        "f1": 0.2857
+      },
+      "tag:multi_condition": {
+        "sample_size": 31,
+        "accuracy": 0.1935,
+        "precision": 0.1667,
+        "recall": 1.0,
+        "f1": 0.2857
+      },
+      "tag:cracks": {
+        "sample_size": 31,
+        "accuracy": 0.1935,
+        "precision": 0.1667,
+        "recall": 1.0,
+        "f1": 0.2857
+      },
+      "source:Taroii-RoadDefects": {
+        "sample_size": 146,
+        "accuracy": 0.9932,
+        "precision": 1.0,
+        "recall": 0.9932,
+        "f1": 0.9966
+      },
+      "source:Taroii-CleanRoads": {
+        "sample_size": 65,
+        "accuracy": 0.0154,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:clean_asphalt": {
+        "sample_size": 66,
+        "accuracy": 0.0152,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:hard_negative": {
+        "sample_size": 651,
+        "accuracy": 0.3871,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:road_markings": {
+        "sample_size": 65,
+        "accuracy": 0.0154,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:shadows": {
+        "sample_size": 66,
+        "accuracy": 0.0152,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:gravel": {
+        "sample_size": 66,
+        "accuracy": 0.0606,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "source:Kauevestena-DeepPavements": {
+        "sample_size": 585,
+        "accuracy": 0.4291,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:road_texture": {
+        "sample_size": 585,
+        "accuracy": 0.4291,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:unpaved_or_paved": {
+        "sample_size": 585,
+        "accuracy": 0.4291,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:cobblestone": {
+        "sample_size": 65,
+        "accuracy": 0.1385,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:concrete": {
+        "sample_size": 65,
+        "accuracy": 0.6,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:sett": {
+        "sample_size": 65,
+        "accuracy": 0.1538,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:compacted": {
+        "sample_size": 65,
+        "accuracy": 0.3692,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:ground": {
+        "sample_size": 65,
+        "accuracy": 0.7077,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:concrete_plates": {
+        "sample_size": 65,
+        "accuracy": 0.6923,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "tag:paving_stones": {
+        "sample_size": 65,
+        "accuracy": 0.3077,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "failure_gallery": [
+      {
+        "filename": "test_src1_india_India_004900.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 7,
+        "peak_confidence": 0.996,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_003746.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.791,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_000513.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 7,
+        "peak_confidence": 0.964,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_001218.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 4,
+        "peak_confidence": 0.938,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_002825.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 7,
+        "peak_confidence": 0.988,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_005156.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 4,
+        "peak_confidence": 0.901,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_009388.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.823,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_002273.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.846,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_001183.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 4,
+        "peak_confidence": 0.82,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_008831.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 4,
+        "peak_confidence": 0.84,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_006718.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 5,
+        "peak_confidence": 0.876,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_007879.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.785,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_007341.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.865,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_009763.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 4,
+        "peak_confidence": 0.777,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      },
+      {
+        "filename": "test_src1_india_India_009179.jpg",
+        "country": "India",
+        "source": "RDD2022-India",
+        "has_defect_gt": false,
+        "has_defect_pred": true,
+        "detected_count": 3,
+        "peak_confidence": 0.9,
+        "reason": "False Positive: background road texture/shadow triggered detection"
+      }
+    ],
+    "latency_ms": {
+      "mean": 278.5,
+      "p50": 267.7,
+      "p95": 340.6,
+      "device": "AMD Ryzen 7 7445HS (6c/12t CPU-only, host execution)"
+    }
+  },
+  "video": {
+    "total_video_clips": 20,
+    "total_duration_seconds": 120.0,
+    "ground_truth_events": 13,
+    "matched_events": 9,
+    "false_alarm_events": 85,
+    "event_precision": 0.0957,
+    "event_recall": 0.6923,
+    "event_f1": 0.1682,
+    "false_alarms_per_minute": 42.5,
+    "duplicate_rate": 0.0,
+    "clips": [
+      {
+        "clip_id": "clip_01_day_highway",
+        "condition": "daylight",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_02_day_urban",
+        "condition": "daylight",
+        "road_type": "urban",
+        "gt_events": 1,
+        "pred_events": 0,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_03_dusk_suburban",
+        "condition": "dusk",
+        "road_type": "suburban",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_04_rain_wet_road",
+        "condition": "rain_wet",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 2,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_05_clean_highway_neg",
+        "condition": "daylight",
+        "road_type": "highway",
+        "gt_events": 0,
+        "pred_events": 7,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_06_tree_shadow_neg",
+        "condition": "shadows",
+        "road_type": "urban",
+        "gt_events": 0,
+        "pred_events": 14,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_07_manhole_cluster_neg",
+        "condition": "daylight",
+        "road_type": "urban",
+        "gt_events": 0,
+        "pred_events": 3,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_08_alligator_crack_pass",
+        "condition": "daylight",
+        "road_type": "suburban",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_09_longitudinal_crack_pass",
+        "condition": "daylight",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 3,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_10_severe_crater_approach",
+        "condition": "daylight",
+        "road_type": "rural",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_11_multiple_pothole_cluster",
+        "condition": "daylight",
+        "road_type": "urban",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_12_glare_low_sun",
+        "condition": "glare",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_13_rough_gravel_patch",
+        "condition": "rough",
+        "road_type": "rural",
+        "gt_events": 0,
+        "pred_events": 15,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_14_speed_breaker_neg",
+        "condition": "daylight",
+        "road_type": "urban",
+        "gt_events": 0,
+        "pred_events": 16,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_15_wet_puddle_reflection",
+        "condition": "wet_puddle",
+        "road_type": "suburban",
+        "gt_events": 1,
+        "pred_events": 3,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_16_bridge_expansion_joint_neg",
+        "condition": "daylight",
+        "road_type": "bridge",
+        "gt_events": 0,
+        "pred_events": 11,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_17_night_headlights",
+        "condition": "night",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_18_rural_unpaved_track",
+        "condition": "daylight",
+        "road_type": "unpaved",
+        "gt_events": 0,
+        "pred_events": 9,
+        "matched": 0
+      },
+      {
+        "clip_id": "clip_19_urban_traffic_occlusion",
+        "condition": "traffic",
+        "road_type": "city",
+        "gt_events": 1,
+        "pred_events": 1,
+        "matched": 1
+      },
+      {
+        "clip_id": "clip_20_return_pass_verification",
+        "condition": "daylight",
+        "road_type": "highway",
+        "gt_events": 1,
+        "pred_events": 3,
+        "matched": 1
+      }
+    ]
+  }
+}

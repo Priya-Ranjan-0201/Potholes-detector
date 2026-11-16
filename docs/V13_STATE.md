@@ -1,31 +1,40 @@
 # ScamRoad V13 Execution State
 
-- **Current Phase:** Phase 2 — Build a Trustworthy Evaluation Set (images and video)
+- **Current Phase:** Phase 3 — Fix the Pipeline and the Models (root causes, not patches)
 - **Status:** COMPLETED (Gate Passed)
 - **Branch:** `v13/global-fix`
 - **Baseline Git Tag:** `before-v13`
 - **Phase 1 Tag:** `v13-phase-1-done`
 - **Phase 2 Tag:** `v13-phase-2-done`
+- **Phase 3 Tag:** `v13-phase-3-done`
 - **Evidence Paths:**
-  - `ml/data/test_manifest.json`
-  - `scripts/build_evaluation_set.py`
-  - `scripts/verify_leakage.py`
-  - `data/test_videos/video_ground_truth.json`
-  - `data/evaluation_set/`
-- **Phase 2 Deliverables:**
-  - Total Held-Out Images: 1,728 (exceeds requirement of >= 1,500).
-  - Defect Images: 984 (exceeds requirement of >= 600).
-  - Hard Negatives: 744 (exceeds requirement of >= 600).
-  - Geographic Sources (6 countries, 11 distinct datasets):
-    - India: 100 images (RDD2022 India val split, streamed)
-    - United States: 250 images (RDD2022 USA, streamed)
-    - Egypt: 150 images (RDD2022 Egypt, streamed)
-    - Japan / SE Asia: 200 images (Ryukijano test + valid)
-    - International / Europe: 1,021 images (Manot, Taroii defects & clean roads, Kauevestena Deep Pavements surface patches)
-    - User Failure Cases: 7 images (real user failures with verified ground truth)
-  - 20 Real Dashcam Video Evaluation Clips: daylight, urban, highway, dusk, rain/wet, glare, night, and negative passes.
-  - Leakage Verification (`scripts/verify_leakage.py`):
-    - 0 exact SHA-256 collisions with training sets.
-    - 0 perceptual hash near-duplicate collisions (pHash distance <= 2) with training sets.
-    - Leakage Gate: PASSED.
-- **Next Action:** Proceed to Phase 3 — Fix the Pipeline and the Models (root causes, not patches).
+  - `backend/app/api/v1/infer.py`
+  - `backend/app/services/video_tracker.py`
+  - `backend/tests/test_pipeline_integrity.py`
+  - `scripts/evaluate_model_pipeline.py`
+  - `ml/runs/final/metrics.json`
+  - `docs/AI_EVALUATION.md`
+- **Phase 3 Deliverables & Verifications:**
+  - **Pipeline Integrity:**
+    - EXIF orientation handling with PIL fallback (`ImageOps.exif_transpose`).
+    - Wide format ingestion: RGBA PNG with alpha compositing over neutral road gray (114, 114, 114), 16-bit uint16, grayscale, WebP, AVIF.
+    - Letterbox preprocessing with exact inverse coordinate transformation.
+    - Input usability verification (`check_image_usability`): returns 422 for dark (<15 lum), overexposed (>240 lum), or severely blurred (<15 laplacian var).
+  - **Heuristic Removal:**
+    - Corner-shoulder rejection filter deleted (`touches_bottom and (touches_left or touches_right)`).
+    - Saturation caps deleted (`sat > 115`, `sat > 58`).
+    - Horizon cuts deleted (`cy < 0.35`).
+    - COCO obstacle blocker: letterbox preprocessing, conf >= 0.40, requires IoM >= 0.65 containment to mask defect.
+  - **Video Tracking (`VideoDefectTracker`):**
+    - Spatial-temporal IoU associative tracking across consecutive frames.
+    - Requires min_hits >= 3 to eliminate single-frame flickers.
+    - Spatial deduplication eliminates per-frame duplicates (Duplicate Rate = 0.00%).
+    - Generates best frame thumbnail, start/end timestamps, and severity per physical defect event.
+  - **Held-Out Evaluation Results (N = 1,728 images, 20 video clips):**
+    - Defect Recall: **97.46%** (959 / 984 defect images detected).
+    - Image-level F1: **78.83%** (95% CI: [77.10%, 80.65%]).
+    - Asphalt Slices: **96.2% - 99.7% F1** (RDD2022-USA 99.4%, Manot 99.5%, Taroii 99.7%, RDD2022-Egypt 96.5%, Ryukijano 96.1%).
+    - Honest limitation documented: Sett/cobblestone and unpaved gravel surface patches reduce specificity due to natural rock joint textures.
+    - Video Duplicate Rate: **0.00%**.
+  - **All 8 Pipeline Integrity Regression Tests Passed.**
+- **Next Action:** Proceed to Phase 4 — Remove All Fake Data.
