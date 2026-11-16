@@ -38,8 +38,15 @@ router = APIRouter()
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 _ENGINE_CACHE: dict = {}
 
-# Obstacle classes (vehicles and pedestrians)
-_VEHICLE_AND_PEDESTRIAN_CLASSES = frozenset({0, 1, 2, 3, 5, 7})
+# Obstacle classes (COCO indices: vehicles, pedestrians, signs, chairs, benches, plants)
+# 0: person, 1: bicycle, 2: car, 3: motorcycle, 5: bus, 7: truck, 9: traffic light,
+# 11: stop sign, 13: bench, 56: chair, 58: potted plant
+_OBSTACLE_CLASSES = frozenset({0, 1, 2, 3, 5, 7, 9, 11, 13, 56, 58})
+_VEHICLE_AND_PEDESTRIAN_CLASSES = _OBSTACLE_CLASSES  # backwards-compatibility alias
+
+# Phase T3: Configurable Road-Region Guard (suppresses upper-scene false alarms: sky, trees, signboards)
+ENABLE_ROAD_REGION_GUARD: bool = os.getenv("SCAMROAD_ROAD_REGION_GUARD", "true").lower() in ("true", "1", "yes")
+ROAD_REGION_MIN_Y: float = float(os.getenv("SCAMROAD_ROAD_REGION_MIN_Y", "0.33"))
 
 
 def resolve_candidate_path(candidates: List[str]) -> Optional[str]:
@@ -157,7 +164,7 @@ def decode_image_bytes(contents: bytes) -> np.ndarray:
 
 
 def check_image_usability(img: np.ndarray) -> Tuple[bool, str]:
-    """Validate image usability per Section 3.4.
+    """Validate image usability per Section 3.4 and Phase T5 input gate.
 
     Returns (is_usable, message).
     """
@@ -172,6 +179,30 @@ def check_image_usability(img: np.ndarray) -> Tuple[bool, str]:
     laplacian_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
     if laplacian_var < 15.0:
         return False, "Image is severely blurred or out of focus (Laplacian variance < 15.0). Please stabilize camera."
+
+    # Phase T5: Input Gate for non-road infographics / diagrams / documents
+    # Detect composite multi-panel diagrams with high-density text labels and graphic title banners
+    h, w = gray.shape
+    top_band = gray[: max(10, int(h * 0.10)), :]
+    if top_band.size > 0 and h > 200:
+        top_std = float(np.std(top_band))
+        top_mean = float(np.mean(top_band))
+        b, g, r = img[:, :, 0], img[:, :, 1], img[:, :, 2]
+        chroma = float(np.mean(np.abs(r.astype(float) - g.astype(float)) + np.abs(g.astype(float) - b.astype(float))))
+
+        if (top_mean < 115.0 and top_std > 60.0) and chroma < 16.0:
+            _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+            nl, _, stats, _ = cv2.connectedComponentsWithStats(thresh)
+            glyphs = sum(
+                1 for i in range(1, nl)
+                if 7 <= stats[i, 3] <= 32 and 3 <= stats[i, 2] <= 32 and 15 <= stats[i, 4] <= 450
+            )
+            if glyphs >= 80:
+                return (
+                    False,
+                    "This image does not appear to be a camera road photograph. "
+                    "ScamRoad operates on camera images of road pavement surfaces."
+                )
 
     return True, "ok"
 
@@ -338,13 +369,40 @@ def detect_non_road_obstacles(img: np.ndarray, conf_thresh: float = 0.40) -> Lis
         return []
 
 
-def is_occluded_by_obstacle(box: List[float], obstacles: List[List[float]], iom_thresh: float = 0.65) -> bool:
-    """Return True if defect candidate is genuinely occluded by a vehicle or pedestrian."""
+def self_test_obstacle_blocker() -> bool:
+    """Verify COCO scene blocker ONNX session is functional at startup (Phase T4)."""
+    try:
+        sess = _get_ort_session("coco_blocker", "ml/weights/coco_scene_blocker.onnx")
+        if sess is None:
+            return False
+        dummy = np.zeros((640, 640, 3), dtype=np.uint8)
+        dummy[100:300, 100:300] = 255
+        inp = np.transpose(dummy.astype(np.float32) / 255.0, (2, 0, 1))[None, ...]
+        out = sess.run(None, {"images": inp})
+        return out is not None and len(out) > 0
+    except Exception as e:
+        print(f"[AI ENGINE] Obstacle blocker self-test failed: {e}", flush=True)
+        return False
+
+
+def is_occluded_by_obstacle(
+    box: List[float],
+    obstacles: List[List[float]],
+    iom_thresh: float = 0.50,
+    iou_thresh: float = 0.30,
+) -> bool:
+    """Return True if defect candidate is occluded by or located on an obstacle object (Phase T4)."""
     if not obstacles:
         return False
+    cx = (box[0] + box[2]) / 2.0
+    cy = (box[1] + box[3]) / 2.0
     for obs in obstacles:
-        # Defect is substantially contained inside vehicle or pedestrian
+        # Defect center falls inside obstacle box (e.g. vehicle body, sign, chair)
+        if obs[0] <= cx <= obs[2] and obs[1] <= cy <= obs[3]:
+            return True
         if compute_iom_xyxy(box, obs) >= iom_thresh:
+            return True
+        if compute_iou_xyxy(box, obs) >= iou_thresh:
             return True
     return False
 
@@ -437,6 +495,7 @@ def run_pipeline_on_image(
     conf_thresh: float = 0.20,
     iou_thresh: float = 0.35,
     extract_polygons: bool = True,
+    crack_floor: Optional[float] = None,
 ) -> List[DetectionBox]:
     """Execute multi-model inference pipeline on a decoded BGR image array."""
     h, w = img.shape[:2]
@@ -449,7 +508,8 @@ def run_pipeline_on_image(
     raw_potholes = pothole_eng.predict(img) if pothole_eng else []
 
     # 3. Crack detections from YOLOv8n crack specialist (calibrated threshold)
-    crack_floor = max(0.65, conf_thresh + 0.30)
+    if crack_floor is None:
+        crack_floor = max(0.38, conf_thresh)
     crack_eng = get_crack_engine(conf_thresh=crack_floor, iou_thresh=iou_thresh)
     raw_cracks = crack_eng.predict(img) if crack_eng else []
 
@@ -461,6 +521,9 @@ def run_pipeline_on_image(
         bx = [float(v) for v in p.bbox_xyxy]
         cls_name = getattr(p, "class_name", "").upper()
         if "POTHOLE" not in cls_name and cls_name != "0":
+            continue
+        # Phase T3: Road-region guard (reject detections located entirely in sky/canopy/overhead region)
+        if ENABLE_ROAD_REGION_GUARD and bx[3] < (ROAD_REGION_MIN_Y * h):
             continue
         if is_occluded_by_obstacle(bx, obstacles):
             continue
@@ -480,6 +543,11 @@ def run_pipeline_on_image(
         bx = [float(v) for v in c.bbox_xyxy]
         cls_name = getattr(c, "class_name", "").upper()
         if "CRACK" not in cls_name:
+            continue
+        # Phase T3: Road-region guard for cracks (road distress is on pavement surface, not signboards/awnings)
+        if ENABLE_ROAD_REGION_GUARD and (
+            bx[3] < (ROAD_REGION_MIN_Y + 0.03) * h or (bx[1] + bx[3]) / 2.0 < ROAD_REGION_MIN_Y * h
+        ):
             continue
         if is_occluded_by_obstacle(bx, obstacles):
             continue
@@ -580,7 +648,7 @@ def run_pipeline_on_image(
 @router.post("/infer", response_model=InferenceResponse)
 async def infer_road_defects(
     file: UploadFile = File(...),
-    conf_thresh: float = Query(0.20, ge=0.05, le=0.95),
+    conf_thresh: float = Query(0.35, ge=0.05, le=0.95),
     iou_thresh: float = Query(0.35, ge=0.1, le=0.9),
 ):
     """Run real-time road defect inference on an uploaded image file."""
@@ -595,6 +663,9 @@ async def infer_road_defects(
 
     h, w = img.shape[:2]
     detections = run_pipeline_on_image(img, conf_thresh=conf_thresh, iou_thresh=iou_thresh)
+
+    # Phase T7: Cap maximum rendered bounding boxes to 25 to prevent canvas visual clutter
+    detections = detections[:25]
 
     pothole_cnt = sum(1 for d in detections if "POTHOLE" in d.label)
     crack_cnt = sum(1 for d in detections if "CRACK" in d.label)
@@ -670,9 +741,14 @@ async def infer_road_defects_video(
             processed_count += 1
             timestamp_s = float(frame_idx / orig_fps)
 
-            # Run detection on sampled frame
+            # Run detection on sampled frame (using video-calibrated crack threshold to prevent flicker noise)
+            video_crack_floor = max(0.65, conf_thresh + 0.30)
             dets = run_pipeline_on_image(
-                frame, conf_thresh=conf_thresh, iou_thresh=iou_thresh, extract_polygons=False
+                frame,
+                conf_thresh=conf_thresh,
+                iou_thresh=iou_thresh,
+                extract_polygons=False,
+                crack_floor=video_crack_floor,
             )
             det_dicts = [
                 {

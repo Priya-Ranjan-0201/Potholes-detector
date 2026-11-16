@@ -208,3 +208,30 @@ Previous iterations exhibited performance instability on unseen field media. A f
 - **Positive:** Video duplicate rate reduced to **0.00%** across 20 dashcam video clips.
 - **Positive:** Asphalt pavement F1 reached **96.2% – 99.7%**.
 - **Negative:** Non-asphalt surfaces (cobblestone / sett stone mortar joints) remain challenging (0% F1 on Kauevestena patches), transparently documented in evaluation reports.
+
+---
+
+## ADR-008: Hardware Tier A Execution Protocol & V15 Architecture
+
+**Date:** 2026-11-17  
+**Status:** Accepted  
+**Scope:** Master Fix v15 Protocol, Compute Planning, Emergency Triage
+
+### Context
+Execution protocol Rule P5 requires detecting available hardware upfront, selecting an execution tier, and recording the choice. System probing confirmed:
+- **Host Platform:** Windows 11 AMD64 (AMD Ryzen 7 7445HS, 6 cores / 12 threads)
+- **Host RAM:** 15.2 GB physical memory
+- **GPU Accelerator:** No host CUDA acceleration detected (`torch.cuda.is_available() == False`).
+
+### Decision
+Operate under **Tier A (Laptop CPU / Host Execution)**:
+1. All local inference and verification runs execute via multi-threaded CPU ONNX Runtime (`CPUExecutionProvider`), configured with `OPENBLAS_NUM_THREADS=2`, `OMP_NUM_THREADS=2`, and `MKL_NUM_THREADS=2`.
+2. Heavy multi-seed deep neural network training jobs are authored as self-contained reproducible Google Colab / Kaggle T4 notebooks under `scripts/colab/` rather than stalling local development.
+3. Every phase maintains persistent checkpoints under `docs/checkpoints/` so execution state survives context refreshes.
+4. Emergency Triage (Phase T) implements minimal, reversible configuration flags and guards to prevent false alarms on non-road clutter, people, vehicles, and infographics before long-cycle training commences.
+
+### Consequences
+- **Positive:** Immediate, reproducible local verification without requiring remote GPU dependencies for triage, evaluation, and frontend redesign.
+- **Positive:** Zero risk of out-of-memory crashes on host memory.
+- **Negative:** Full multi-epoch training studies are exported to Colab/Kaggle and documented transparently.
+

@@ -57,7 +57,7 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
     const color = getColor(d.label, d.severity);
     const shortName = getDefectName(d.label);
     const labelText = `${shortName} ${Math.round(d.confidence * 100)}%`;
-    const labelWidth = Math.max(10.5, Math.min(20, labelText.length * 0.9 + 2.0));
+    const labelWidth = Math.max(12.0, Math.min(24.0, labelText.length * 1.05 + 2.5));
 
     const candidates = [
       { x, y: y - labelHeight - 0.3 },

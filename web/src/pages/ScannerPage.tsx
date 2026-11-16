@@ -75,7 +75,7 @@ const formatDefectTitle = (label: string) => {
 export const ScannerPage: React.FC = () => {
   const [inputMode, setInputMode] = useState<InputMode>("image");
   const [showBoxes, setShowBoxes] = useState<boolean>(true);
-  const [confThresh, setConfThresh] = useState<number>(0.30);
+  const [confThresh, setConfThresh] = useState<number>(0.40);
   const [selectedSampleId, setSelectedSampleId] = useState<string>("capture-bengaluru");
   const [activeImageSrc, setActiveImageSrc] = useState<string>("/samples/bengaluru_potholes.jpg");
   const [activeRoadName, setActiveRoadName] = useState<string>("Bengaluru Arterial Road");
@@ -360,12 +360,12 @@ export const ScannerPage: React.FC = () => {
               </div>
             ) : (
               <div className="relative w-full h-[460px] flex items-center justify-center select-none">
-                <div className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-md bg-slate-900/90 border border-slate-700 text-white text-xs font-medium pointer-events-none flex items-center gap-1.5">
+                <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-md bg-slate-900/90 border border-slate-700 text-white text-xs font-medium pointer-events-none flex items-center gap-2 max-w-[85%] shadow-sm">
                   <span
-                    className={`w-2 h-2 rounded-full ${inspection.boxes.length > 0 ? "bg-emerald-400" : "bg-slate-400"
+                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${inspection.boxes.length > 0 ? "bg-emerald-400" : "bg-slate-400"
                       }`}
                   />
-                  <span>
+                  <span className="truncate">
                     {isScanning
                       ? "Scanning..."
                       : inspection.boxes.length > 0
@@ -384,7 +384,7 @@ export const ScannerPage: React.FC = () => {
                   <ScanLine isScanning={isScanning} stage={scanStage} />
                   {showBoxes && (
                     <BoxOverlay
-                      detections={inspection.boxes}
+                      detections={inspection.boxes.slice(0, 25)}
                       activeId={hoveredBoxId ?? selectedBoxId}
                       onHover={(id) => setHoveredBoxId(id)}
                       onSelect={(id) => setSelectedBoxId((prev) => (prev === id ? null : id))}
@@ -396,13 +396,13 @@ export const ScannerPage: React.FC = () => {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <span>{t("sensitivity")}</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">{t("sensitivity")}</span>
               <input
                 type="range"
-                min="0.10"
-                max="0.75"
+                min="0.15"
+                max="0.80"
                 step="0.05"
                 value={confThresh}
                 onChange={(e) => setConfThresh(parseFloat(e.target.value))}
@@ -413,9 +413,23 @@ export const ScannerPage: React.FC = () => {
               </span>
             </div>
 
-            <span className="font-mono">
-              {inspection.latencyMs > 0 ? `${(inspection.latencyMs / 1000).toFixed(2)}s` : "Ready"}
-            </span>
+            <div className="flex items-center gap-2 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+              <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold">
+                Model v2.0.1
+              </span>
+              <span>·</span>
+              <span>Preset: Standard</span>
+              {inspection.boxes.length > 25 && (
+                <>
+                  <span>·</span>
+                  <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                    {inspection.boxes.length - 25} detections capped
+                  </span>
+                </>
+              )}
+              <span>·</span>
+              <span>{inspection.latencyMs > 0 ? `${(inspection.latencyMs / 1000).toFixed(2)}s` : "Ready"}</span>
+            </div>
           </div>
         </div>
 

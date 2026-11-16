@@ -67,6 +67,12 @@ def create_application() -> FastAPI:
     # Include versioned API router under /api/v1
     app.include_router(api_v1_router, prefix=settings.API_V1_STR)
 
+    @app.on_event("startup")
+    async def startup_event() -> None:
+        from backend.app.api.v1.infer import self_test_obstacle_blocker
+        ok = self_test_obstacle_blocker()
+        print(f"[AI ENGINE] COCO scene obstacle blocker self-test: {'PASSED' if ok else 'FAILED'}", flush=True)
+
     return app
 
 
