@@ -35,7 +35,6 @@ class Defect(Base, UUIDMixin, TimestampMixin):
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
     times_seen: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     observations: Mapped[list["DefectObservation"]] = relationship(
         "DefectObservation", back_populates="defect"

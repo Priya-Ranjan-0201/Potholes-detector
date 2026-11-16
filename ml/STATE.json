@@ -1,32 +1,26 @@
 {
-  "phase": "PHASE_3_PIPELINE_FIXES",
+  "phase": "PHASE_4_REMOVE_FAKE_DATA",
   "status": "COMPLETED",
   "branch": "v13/global-fix",
   "baseline_tag": "before-v13",
   "phase_1_tag": "v13-phase-1-done",
   "phase_2_tag": "v13-phase-2-done",
   "phase_3_tag": "v13-phase-3-done",
+  "phase_4_tag": "v13-phase-4-done",
   "evidence_paths": {
-    "infer_api": "backend/app/api/v1/infer.py",
-    "video_tracker": "backend/app/services/video_tracker.py",
-    "integrity_tests": "backend/tests/test_pipeline_integrity.py",
-    "evaluation_script": "scripts/evaluate_model_pipeline.py",
-    "metrics_json": "ml/runs/final/metrics.json",
-    "evaluation_report": "docs/AI_EVALUATION.md"
+    "evaluation_samples_script": "scripts/run_evaluation_samples.py",
+    "no_fake_data_tests": "backend/tests/test_no_fake_data.py",
+    "defect_model": "backend/app/models/defect.py",
+    "complaint_model": "backend/app/models/complaint.py",
+    "maintenance_model": "backend/app/models/maintenance.py",
+    "client_api": "web/src/api/client.ts"
   },
   "metrics": {
-    "total_images": 1728,
-    "defect_recall": 0.9746,
-    "image_f1": 0.7883,
-    "image_f1_ci": [0.771, 0.8065],
-    "image_accuracy": 0.702,
-    "image_accuracy_ci": [0.6806, 0.7246],
-    "asphalt_slice_f1": 0.962,
-    "video_clips": 20,
-    "video_event_f1": 0.1682,
-    "video_duplicate_rate": 0.0,
-    "regression_tests_passed": 8
+    "is_demo_occurrences_in_app": 0,
+    "demo_scripts_removed": ["scripts/demo.py", "scripts/live_sync_demo.py", "scripts/seed/"],
+    "fresh_install_counts": 0,
+    "no_fake_data_tests_passed": 3
   },
   "gate_passed": true,
-  "next_action": "Phase 4: Remove All Fake Data"
+  "next_action": "Phase 5: Frontend Redesign: Simple, Clean, Full Website"
 }

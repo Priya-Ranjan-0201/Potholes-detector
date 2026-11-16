@@ -82,7 +82,6 @@ export interface DefectItem {
   first_seen: string;
   last_seen: string;
   times_seen: number;
-  is_demo: boolean;
   severity_level?: string | null;
   latest_severity_level?: string | null;
   normalized_score?: number | null;

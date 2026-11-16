@@ -22,7 +22,6 @@ class CitizenReport(Base, UUIDMixin, TimestampMixin):
     )
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     media_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     complaints: Mapped[list["Complaint"]] = relationship(
         "Complaint", back_populates="citizen_report"
@@ -52,7 +51,6 @@ class Complaint(Base, UUIDMixin, TimestampMixin):
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     rejection_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     citizen_report: Mapped["CitizenReport"] = relationship(
         "CitizenReport", back_populates="complaints"

@@ -179,7 +179,6 @@ async def verify_road_repair(
                     "new_defects": assessment.new_defects,
                 }
             ),
-            is_demo=False,
         )
         db.add(db_record)
         await db.commit()

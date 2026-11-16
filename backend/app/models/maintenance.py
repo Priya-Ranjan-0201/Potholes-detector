@@ -61,7 +61,6 @@ class WorkOrder(Base, UUIDMixin, TimestampMixin):
     deadline: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, index=True
     )
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
 
 class WorkOrderHistory(Base, UUIDMixin, TimestampMixin):
@@ -187,5 +186,4 @@ class RepairVerificationRecord(Base, UUIDMixin, TimestampMixin):
 
     explanation: Mapped[str] = mapped_column(Text, nullable=False)
     details_json: Mapped[str | None] = mapped_column(Text, nullable=True)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 

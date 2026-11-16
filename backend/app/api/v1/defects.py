@@ -350,7 +350,6 @@ async def create_defect(
         first_seen=datetime.utcnow(),
         last_seen=datetime.utcnow(),
         times_seen=1,
-        is_demo=False,
     )
     db.add(defect)
     await db.flush()
@@ -380,7 +379,7 @@ async def create_defect(
         last_seen=defect.last_seen,
         latest_severity_score=payload.normalized_score,
         latest_severity_level=payload.severity_level,
-        road_name="NH-44 Sector 12",
+        road_name=None,
     )
 
 

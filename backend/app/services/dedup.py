@@ -164,7 +164,6 @@ class DeduplicationService:
             first_seen=observed_at,
             last_seen=observed_at,
             times_seen=1,
-            is_demo=False,
         )
         session.add(canonical_defect)
         await session.flush()
