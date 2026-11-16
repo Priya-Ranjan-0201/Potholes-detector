@@ -1,12 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type ThemeMode = "light" | "dark";
+export type PaletteTheme = "survey-paper" | "chalk-kerb" | "slate-brick";
 
 interface ThemeContextType {
   theme: ThemeMode;
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
   toggleTheme: () => void;
+  palette: PaletteTheme;
+  setPalette: (p: PaletteTheme) => void;
   reducedMotion: boolean;
   setReducedMotion: (reduce: boolean) => void;
 }
@@ -17,7 +20,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [mode, setModeState] = useState<ThemeMode>(() => {
     const saved = localStorage.getItem("scamroad_theme");
     if (saved === "light" || saved === "dark") return saved;
-    return "dark";
+    return "light"; // Default to light "Survey Paper"
+  });
+
+  const [palette, setPaletteState] = useState<PaletteTheme>(() => {
+    const saved = localStorage.getItem("scamroad_palette");
+    if (saved === "survey-paper" || saved === "chalk-kerb" || saved === "slate-brick") return saved;
+    return "survey-paper";
   });
 
   const [reducedMotion, setReducedMotionState] = useState<boolean>(() => {
@@ -33,13 +42,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     localStorage.setItem("scamroad_theme", mode);
 
+    root.setAttribute("data-theme", palette);
+    localStorage.setItem("scamroad_palette", palette);
+
     if (reducedMotion) {
       root.classList.add("reduce-motion");
     } else {
       root.classList.remove("reduce-motion");
     }
     localStorage.setItem("scamroad_reduced_motion", String(reducedMotion));
-  }, [mode, reducedMotion]);
+  }, [mode, palette, reducedMotion]);
 
   const toggleTheme = () => {
     setModeState((prev) => (prev === "light" ? "dark" : "light"));
@@ -52,6 +64,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         mode,
         setMode: setModeState,
         toggleTheme,
+        palette,
+        setPalette: setPaletteState,
         reducedMotion,
         setReducedMotion: setReducedMotionState,
       }}

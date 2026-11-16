@@ -106,7 +106,9 @@ desktop.ini
 !.env.example
 kaggle.json
 access_token
-*token*
+*.token
+*token*.json
+!web/src/styles/tokens.css
 *.pem
 *.key
 *.crt

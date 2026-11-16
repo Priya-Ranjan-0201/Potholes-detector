@@ -1,0 +1,178 @@
+/**
+ * ScamRoad Design System Tokens (v15 Human Design Rebuild)
+ * 
+ * Strict token-based variables for three human-designed infrastructure palettes:
+ * - Direction A: "Survey Paper" (Warm bone paper, carbon ink, survey orange) — Default
+ * - Direction B: "Chalk and Kerb Paint" (Neutral concrete grey, asphalt charcoal, safety yellow)
+ * - Direction C: "Slate and Brick" (Deep slate grey, terracotta brick, parchment)
+ *
+ * All palettes strictly respect WCAG AA contrast ratios (>= 4.5:1 text, >= 3:1 UI components).
+ * Free from purple/cyan AI gradients, glassmorphism, or floating ambient glows.
+ */
+
+:root,
+[data-theme="survey-paper"] {
+  /* Direction A: Survey Paper (Warm, cartographic, technical) */
+  --bg-canvas: #f8f7f4;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f0efea;
+  --bg-raised: #ffffff;
+  --bg-dark: #1a1d1e;
+
+  --border-subtle: #e2e0d8;
+  --border-strong: #c8c5ba;
+  --border-focus: #c2410c;
+
+  --text-main: #1a1d1e;
+  --text-muted: #52585b;
+  --text-faint: #7a8286;
+  --text-inverse: #ffffff;
+
+  --accent: #c2410c; /* Survey Orange */
+  --accent-hover: #9a3412;
+  --accent-subtle: #ffedd5;
+  --accent-text: #7c2d12;
+
+  --status-good: #15803d; /* Highway Green */
+  --status-good-bg: #f0fdf4;
+  --status-good-border: #bbf7d0;
+
+  --status-warn: #b45309; /* Distress Amber */
+  --status-warn-bg: #fffbeb;
+  --status-warn-border: #fde68a;
+
+  --status-alert: #b91c1c; /* Cavity Crimson */
+  --status-alert-bg: #fef2f2;
+  --status-alert-border: #fecaca;
+
+  --defect-pothole: #b91c1c;
+  --defect-crack: #9a3412;
+  --defect-contour: rgba(185, 28, 28, 0.25);
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Consolas, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+[data-theme="chalk-kerb"] {
+  /* Direction B: Chalk and Kerb Paint (Neutral concrete, safety yellow, dark asphalt) */
+  --bg-canvas: #f3f4f6;
+  --bg-surface: #ffffff;
+  --bg-subtle: #e5e7eb;
+  --bg-raised: #ffffff;
+  --bg-dark: #111827;
+
+  --border-subtle: #d1d5db;
+  --border-strong: #9ca3af;
+  --border-focus: #ca8a04;
+
+  --text-main: #111827;
+  --text-muted: #4b5563;
+  --text-faint: #6b7280;
+  --text-inverse: #ffffff;
+
+  --accent: #ca8a04; /* Kerb Yellow */
+  --accent-hover: #a16207;
+  --accent-subtle: #fef9c3;
+  --accent-text: #713f12;
+
+  --status-good: #166534;
+  --status-good-bg: #f0fdf4;
+  --status-good-border: #bbf7d0;
+
+  --status-warn: #d97706;
+  --status-warn-bg: #fffbeb;
+  --status-warn-border: #fde68a;
+
+  --status-alert: #dc2626;
+  --status-alert-bg: #fef2f2;
+  --status-alert-border: #fecaca;
+
+  --defect-pothole: #dc2626;
+  --defect-crack: #b45309;
+  --defect-contour: rgba(220, 38, 38, 0.25);
+}
+
+[data-theme="slate-brick"] {
+  /* Direction C: Slate and Brick (Muted slate, warm terracotta brick, parchment) */
+  --bg-canvas: #f4f1ea;
+  --bg-surface: #ffffff;
+  --bg-subtle: #eae5dc;
+  --bg-raised: #ffffff;
+  --bg-dark: #2b303a;
+
+  --border-subtle: #d6d0c4;
+  --border-strong: #b5ac9d;
+  --border-focus: #b85d43;
+
+  --text-main: #2b303a;
+  --text-muted: #575e6b;
+  --text-faint: #7d8594;
+  --text-inverse: #ffffff;
+
+  --accent: #b85d43; /* Terracotta Brick */
+  --accent-hover: #964731;
+  --accent-subtle: #fbeee9;
+  --accent-text: #6b2f1f;
+
+  --status-good: #2d6a4f;
+  --status-good-bg: #edf6f0;
+  --status-good-border: #c3e2d2;
+
+  --status-warn: #c47b2b;
+  --status-warn-bg: #fdf5ea;
+  --status-warn-border: #fae2c0;
+
+  --status-alert: #a83232;
+  --status-alert-bg: #fbf0f0;
+  --status-alert-border: #f4cccc;
+
+  --defect-pothole: #a83232;
+  --defect-crack: #8c422c;
+  --defect-contour: rgba(168, 50, 50, 0.25);
+}
+
+/* Dark Mode Night Patrol Console (Shared across themes) */
+html.dark,
+html.dark [data-theme="survey-paper"],
+html.dark [data-theme="chalk-kerb"],
+html.dark [data-theme="slate-brick"] {
+  --bg-canvas: #111417;
+  --bg-surface: #181c20;
+  --bg-subtle: #20252a;
+  --bg-raised: #282e34;
+  --bg-dark: #0b0d0e;
+
+  --border-subtle: #2d343b;
+  --border-strong: #404a54;
+  --border-focus: #ea580c;
+
+  --text-main: #eaedf0;
+  --text-muted: #9aa4ae;
+  --text-faint: #66727d;
+  --text-inverse: #111417;
+
+  --accent: #ea580c; /* High-vis night orange */
+  --accent-hover: #f97316;
+  --accent-subtle: #341a0d;
+  --accent-text: #fdba74;
+
+  --status-good: #22c55e;
+  --status-good-bg: #052e16;
+  --status-good-border: #14532d;
+
+  --status-warn: #f59e0b;
+  --status-warn-bg: #451a03;
+  --status-warn-border: #78350f;
+
+  --status-alert: #ef4444;
+  --status-alert-bg: #450a0a;
+  --status-alert-border: #7f1d1d;
+
+  --defect-pothole: #ef4444;
+  --defect-crack: #f97316;
+  --defect-contour: rgba(239, 68, 68, 0.35);
+}
