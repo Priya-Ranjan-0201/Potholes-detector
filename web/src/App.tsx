@@ -5,9 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { ToastProvider } from "./context/ToastContext";
+import { InspectionProvider } from "./context/InspectionContext";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
-import { ScannerPage } from "./pages/ScannerPage";
+import { RoadScannerPage } from "./pages/RoadScannerPage";
+import { RoadAuditReportPage } from "./pages/RoadAuditReportPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,28 +43,32 @@ const AppShell: React.FC = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden bg-amber-500/10 border-b border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs py-2 px-4 text-center font-mono"
+            className="overflow-hidden bg-[#FF5A00]/20 border-b border-[#FF5A00]/40 text-[#FFD200] text-xs py-2 px-4 text-center font-mono font-bold"
             role="status"
           >
-            Offline Mode: Server unreachable.
+            Offline Notice: Device currently disconnected from network.
           </motion.div>
         )}
       </AnimatePresence>
 
       <Navbar />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-5">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <Routes>
-          <Route path="/" element={<ScannerPage />} />
-          <Route path="/scanner" element={<ScannerPage />} />
+          {/* Dedicated 2-Page Website Routes */}
+          <Route path="/" element={<RoadScannerPage />} />
+          <Route path="/scanner" element={<RoadScannerPage />} />
+          <Route path="/report" element={<RoadAuditReportPage />} />
+
+          {/* Legacy redirects all cleanly funneling into the 2 pages */}
           <Route path="/analyse" element={<Navigate to="/" replace />} />
           <Route path="/detect" element={<Navigate to="/" replace />} />
           <Route path="/surveys" element={<Navigate to="/" replace />} />
-          <Route path="/priority-list" element={<Navigate to="/" replace />} />
+          <Route path="/priority-list" element={<Navigate to="/report" replace />} />
           <Route path="/benchmarks" element={<Navigate to="/" replace />} />
           <Route path="/about" element={<Navigate to="/" replace />} />
-          <Route path="/dashboard" element={<Navigate to="/" replace />} />
-          <Route path="/maintenance" element={<Navigate to="/" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/report" replace />} />
+          <Route path="/maintenance" element={<Navigate to="/report" replace />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -79,9 +85,11 @@ function App() {
       <ThemeProvider>
         <LanguageProvider>
           <ToastProvider>
-            <BrowserRouter>
-              <AppShell />
-            </BrowserRouter>
+            <InspectionProvider>
+              <BrowserRouter>
+                <AppShell />
+              </BrowserRouter>
+            </InspectionProvider>
           </ToastProvider>
         </LanguageProvider>
       </ThemeProvider>

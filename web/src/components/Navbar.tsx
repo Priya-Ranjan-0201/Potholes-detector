@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Globe } from "./Icons";
 import { useLanguage, LANGUAGES } from "../context/LanguageContext";
 import { ThemeToggle } from "./ThemeToggle";
@@ -11,6 +11,7 @@ export const Navbar: React.FC = () => {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [serverHealthy, setServerHealthy] = useState<boolean | null>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,11 +43,14 @@ export const Navbar: React.FC = () => {
     };
   }, []);
 
+  const isScannerActive = location.pathname === "/" || location.pathname === "/scanner";
+  const isReportActive = location.pathname === "/report";
+
   return (
     <header className="sticky top-0 z-40 w-full bg-[#121820] border-b border-[#283545] shadow-md backdrop-blur-md">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-4">
-          {/* Brand Logo & High-Vis Title */}
+          {/* Brand Logo & Road Title */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none group">
             <div className="p-1 rounded bg-[#FF5A00] text-white shadow-sm group-hover:scale-105 transition-transform">
               <Logo showWordmark={false} size="sm" />
@@ -56,33 +60,58 @@ export const Navbar: React.FC = () => {
                 RoadSurvey AI
               </span>
               <span className="hidden sm:inline-block text-[11px] font-mono font-bold text-[#FFD200]">
-                Road Damage Detector
+                Road Damage Inspector
               </span>
             </div>
           </Link>
 
-          {/* Center Engine Status Badge (Charcoal + Bright Dot) */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155]">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                serverHealthy === true
-                  ? "bg-[#10B981] animate-pulse"
-                  : serverHealthy === false
-                  ? "bg-[#FF5A00]"
-                  : "bg-[#FFD200]"
+          {/* 2-Page Website Navigation Bar */}
+          <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner">
+            <Link
+              to="/"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isScannerActive
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
               }`}
-            />
-            <span className="text-[11px] text-white font-medium">
-              {serverHealthy === true
-                ? "AI Engine Live (YOLO11n-Rescue · Port 8001)"
-                : serverHealthy === false
-                ? "Backend Offline"
-                : "Connecting..."}
-            </span>
-          </div>
+            >
+              <span>🛣️ Road Scanner</span>
+            </Link>
 
-          {/* Right Controls: Language & Theme */}
-          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              to="/report"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isReportActive
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
+              }`}
+            >
+              <span>📋 Audit Report &amp; PDF</span>
+            </Link>
+          </nav>
+
+          {/* Right Controls: AI Status & Language / Theme */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Center Engine Status Badge (Charcoal + Bright Dot) */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155]">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  serverHealthy === true
+                    ? "bg-[#10B981] animate-pulse"
+                    : serverHealthy === false
+                    ? "bg-[#FF5A00]"
+                    : "bg-[#FFD200]"
+                }`}
+              />
+              <span className="text-[11px] text-white font-medium">
+                {serverHealthy === true
+                  ? "AI Engine Live (YOLO11n-Rescue)"
+                  : serverHealthy === false
+                  ? "Backend Offline"
+                  : "Connecting..."}
+              </span>
+            </div>
+
             <div className="relative" ref={langDropdownRef}>
               <button
                 type="button"
