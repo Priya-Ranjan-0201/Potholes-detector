@@ -9,7 +9,7 @@ from backend.app.core.config import settings
 from backend.app.schemas.health import ErrorDetail, ErrorResponse
 from fastapi import FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 
 def create_application() -> FastAPI:
@@ -63,6 +63,30 @@ def create_application() -> FastAPI:
 
     # Include root /health endpoint directly (for load balancers and docker compose)
     app.include_router(health_router, prefix="", tags=["Health"])
+
+    # Root service descriptor and user-friendly documentation redirects
+    @app.get("/", tags=["Root"])
+    async def root_index() -> JSONResponse:
+        return JSONResponse({
+            "service": "ScamRoad AI Backend API",
+            "version": settings.VERSION,
+            "status": "online",
+            "docs_url": f"{settings.API_V1_STR}/docs",
+            "health_url": "/api/v1/health",
+            "web_app": "http://localhost:3000",
+        })
+
+    @app.get("/docs", include_in_schema=False)
+    async def docs_redirect() -> RedirectResponse:
+        return RedirectResponse(url=f"{settings.API_V1_STR}/docs")
+
+    @app.get("/redoc", include_in_schema=False)
+    async def redoc_redirect() -> RedirectResponse:
+        return RedirectResponse(url=f"{settings.API_V1_STR}/redoc")
+
+    @app.get("/openapi.json", include_in_schema=False)
+    async def openapi_redirect() -> RedirectResponse:
+        return RedirectResponse(url=f"{settings.API_V1_STR}/openapi.json")
 
     # Include versioned API router under /api/v1
     app.include_router(api_v1_router, prefix=settings.API_V1_STR)

@@ -646,6 +646,7 @@ def run_pipeline_on_image(
 
 
 @router.post("/infer", response_model=InferenceResponse)
+@router.post("/infer/image", response_model=InferenceResponse, include_in_schema=False)
 async def infer_road_defects(
     file: UploadFile = File(...),
     conf_thresh: float = Query(0.35, ge=0.05, le=0.95),
