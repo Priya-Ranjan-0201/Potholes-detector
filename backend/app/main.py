@@ -17,7 +17,7 @@ def create_application() -> FastAPI:
     app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.VERSION,
-        description="Edge AI Road Damage Tracking Backend API",
+        description="AI-Powered Road and Infrastructure Damage Detection and Severity Assessment Backend API",
         openapi_url=f"{settings.API_V1_STR}/openapi.json",
         docs_url=f"{settings.API_V1_STR}/docs",
         redoc_url=f"{settings.API_V1_STR}/redoc",
@@ -68,7 +68,7 @@ def create_application() -> FastAPI:
     @app.get("/", tags=["Root"])
     async def root_index() -> JSONResponse:
         return JSONResponse({
-            "service": "ScamRoad AI Backend API",
+            "service": "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment API",
             "version": settings.VERSION,
             "status": "online",
             "docs_url": f"{settings.API_V1_STR}/docs",

@@ -1,0 +1,19 @@
+{
+  "case": "case_01_pothole_nh44",
+  "pipeline": "ML2 Harmonized Detector Pipeline",
+  "is_road": true,
+  "rejection_reason": "ok",
+  "detections_count": 1,
+  "detections": [
+    {
+      "box": [
+        632.1882934570312,
+        545.364990234375,
+        720.0,
+        720.0
+      ],
+      "conf": 0.3933565616607666,
+      "label": "POTHOLE"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ export const LANGUAGES: LanguageOption[] = [
 export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   en: {
     govtBanner: "Student Research Project | Road and Infrastructure Damage Detection (Academic Capstone)",
-    standardsNotice: "Severity rubric informed by common pavement-condition practice",
+    standardsNotice: "Severity rubric inspired by common pavement-condition practice",
     footerNotice: "Student research project. Not an official government system. Not safety-certified.",
     navHome: "Home",
     navDetect: "Detect",

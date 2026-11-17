@@ -1,8 +1,8 @@
 {
-  "name": "scamroad-web",
+  "name": "roadsurvey-web",
   "private": true,
   "version": "0.1.0",
-  "description": "ScamRoad — Road defect monitoring dashboard",
+  "description": "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment",
   "type": "module",
   "scripts": {
     "dev": "vite",

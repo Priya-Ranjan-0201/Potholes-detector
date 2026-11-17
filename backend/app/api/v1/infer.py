@@ -241,12 +241,29 @@ def decode_image_bytes(contents: bytes) -> np.ndarray:
         return img
 
 
+_ML2_PIPELINE: Optional[Any] = None
+
+
+def get_ml2_pipeline():
+    """Retrieve or initialize the singleton ML2DetectorPipeline instance."""
+    global _ML2_PIPELINE
+    if _ML2_PIPELINE is None:
+        from ml2.pipeline.detector import ML2DetectorPipeline
+        _ML2_PIPELINE = ML2DetectorPipeline()
+    return _ML2_PIPELINE
+
+
 def check_image_usability(img: np.ndarray) -> Tuple[bool, str]:
-    """Validate image usability per Section 3.4 and Guard B input gate.
+    """Validate image usability per Stage 5 InputGate.
 
     Returns (is_usable, message).
     """
-    return is_road_image(img)
+    try:
+        pipeline = get_ml2_pipeline()
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        return pipeline.input_gate.evaluate(img_rgb)
+    except Exception:
+        return is_road_image(img)
 
 
 def _get_ort_session(cache_key: str, path: str):
@@ -541,76 +558,18 @@ def run_pipeline_on_image(
     crack_floor: Optional[float] = None,
     preset: str = "balanced",
 ) -> List[DetectionBox]:
-    """Execute unified rescued YOLO11 inference pipeline with Guard A road prior on a decoded BGR image array."""
+    """Execute unified rescued ML2 road damage detector pipeline on a decoded BGR image array."""
     h, w = img.shape[:2]
+    pipeline = get_ml2_pipeline()
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    is_road, reason, valid_candidates = pipeline.predict(img_rgb, preset=preset)
+    if not is_road:
+        return []
 
-    # Preset calibration
-    if preset == "high_precision":
-        active_conf = max(0.40, conf_thresh)
-    elif preset == "high_recall":
-        active_conf = min(0.15, conf_thresh)
-    else:  # balanced
-        active_conf = conf_thresh
-
-    # 1. Detect obstacles with COCO blocker (conf >= 0.40)
-    obstacles = detect_non_road_obstacles(img, conf_thresh=0.40)
-
-    # 2. Guard A: Extract drivable road surface mask
-    road_mask = compute_road_surface_mask(img) if ENABLE_ROAD_REGION_GUARD else None
-
-    # 3. Defect detections from unified modern YOLO11n detector
-    det_eng = get_pothole_engine(conf_thresh=active_conf, iou_thresh=iou_thresh)
-    raw_dets = det_eng.predict(img) if det_eng else []
-
-    # Filter out obstacles, off-road candidates, and sanity bounds
-    valid_candidates: List[dict] = []
-
-    for d in raw_dets:
-        bx = [float(v) for v in d.bbox_xyxy]
-        cls_name = getattr(d, "class_name", "").upper()
-        
-        # Standardize class name
-        if "POTHOLE" in cls_name or cls_name == "0":
-            clean_label = "POTHOLE"
-        elif "LONG" in cls_name or cls_name == "1":
-            clean_label = "CRACK_LONGITUDINAL"
-        elif "TRANS" in cls_name or cls_name == "2":
-            clean_label = "CRACK_TRANSVERSE"
-        elif "ALLIGATOR" in cls_name or cls_name == "3":
-            clean_label = "CRACK_ALLIGATOR"
-        else:
-            clean_label = cls_name or "POTHOLE"
-
-        # Guard A: Filter out detections whose center and bottom are outside drivable road surface
-        if road_mask is not None:
-            cx = int(np.clip((bx[0] + bx[2]) / 2.0, 0, w - 1))
-            cy_c = int(np.clip((bx[1] + bx[3]) / 2.0, 0, h - 1))
-            cy_b = int(np.clip(bx[3] - 2, 0, h - 1))
-            if road_mask[cy_c, cx] == 0 and road_mask[cy_b, cx] == 0:
-                continue
-
-        # Obstacle occlusion check
-        if is_occluded_by_obstacle(bx, obstacles):
-            continue
-
-        # Sanity bounds
-        bw, bh = bx[2] - bx[0], bx[3] - bx[1]
-        if bw < 4 or bh < 4:
-            continue
-
-        valid_candidates.append({
-            "box": bx,
-            "conf": float(d.confidence),
-            "label": clean_label,
-            "source": "Unified YOLO11n-Rescue + Guarded Surface Prior",
-        })
-
-    fused = valid_candidates
-
-    # Build final DetectionBox objects
     detections: List[DetectionBox] = []
-    cluster_size = len(fused)
-    for d in fused:
+    cluster_size = len(valid_candidates)
+
+    for d in valid_candidates:
         bx = d["box"]
         bw = max(1.0, bx[2] - bx[0])
         bh = max(1.0, bx[3] - bx[1])
@@ -661,7 +620,7 @@ def run_pipeline_on_image(
                 severity_breakdown=breakdown,
                 repair_status="Open",
                 priority_score=score,
-                model_source=d["source"],
+                model_source="ML2 Harmonized YOLO11 Detector",
             )
         )
 
@@ -781,6 +740,7 @@ async def infer_road_defects_video(
                 iou_thresh=iou_thresh,
                 extract_polygons=False,
                 crack_floor=video_crack_floor,
+                preset="high_recall" if conf_thresh <= 0.20 else "balanced",
             )
             det_dicts = [
                 {

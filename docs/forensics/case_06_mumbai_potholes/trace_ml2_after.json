@@ -1,0 +1,19 @@
+{
+  "case": "case_06_mumbai_potholes",
+  "pipeline": "ML2 Harmonized Detector Pipeline",
+  "is_road": true,
+  "rejection_reason": "ok",
+  "detections_count": 1,
+  "detections": [
+    {
+      "box": [
+        12.163289070129395,
+        192.0211181640625,
+        83.2046890258789,
+        223.01271057128906
+      ],
+      "conf": 0.3853054344654083,
+      "label": "POTHOLE"
+    }
+  ]
+}

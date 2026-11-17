@@ -1,0 +1,19 @@
+{
+  "case": "case_05_asphalt_crater",
+  "pipeline": "ML2 Harmonized Detector Pipeline",
+  "is_road": true,
+  "rejection_reason": "ok",
+  "detections_count": 1,
+  "detections": [
+    {
+      "box": [
+        210.35829162597656,
+        55.28336715698242,
+        488.0986022949219,
+        339.5050354003906
+      ],
+      "conf": 0.7927695512771606,
+      "label": "POTHOLE"
+    }
+  ]
+}

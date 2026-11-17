@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     )
 
     # Project Info
-    PROJECT_NAME: str = "ScamRoad"
+    PROJECT_NAME: str = "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment"
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api/v1"
     ENVIRONMENT: str = "development"

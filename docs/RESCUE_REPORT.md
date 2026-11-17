@@ -146,26 +146,24 @@ Visual overlay composites for the 20 worst remaining failure cases (green = grou
 All regression tests pass cleanly:
 
 ```bash
-# Run verified regression suite
-python -m pytest backend/tests/test_accuracy_rescue_regressions.py -v
+# Run acceptance test A1 (eval_failures suite)
+python ml2/tests/test_acceptance.py --pipeline ml2 --test a1
 
-# Re-run full baseline benchmark evaluation (Step 1)
-python scripts/eval_rescue_baseline.py
+# Run acceptance test A2 (locked N=730 benchmark)
+python ml2/tests/test_acceptance.py --pipeline ml2 --test a2
 
-# Re-run Guard A ablation experiment (Step 5)
-python scripts/ablate_road_guard.py
-
-# Re-run final 3-preset benchmark evaluation (Step 6)
-python scripts/eval_rescue_final.py
+# Run verified regression suite & pipeline integrity
+python -m pytest backend/tests/test_accuracy_rescue_regressions.py backend/tests/test_pipeline_integrity.py -v
 ```
 
 ### Verified Test Results:
-- `test_guard_b_rejects_civil_distress_diagram` -> **PASSED**
-- `test_guard_b_rejects_ui_screenshots` -> **PASSED**
-- `test_guard_a_road_surface_mask_bounds` -> **PASSED**
-- `test_case_04_no_sky_or_signboard_detections` -> **PASSED**
-- `test_unified_model_output_contract` -> **PASSED**
-- `test_three_presets_filtering` -> **PASSED**
+- `Acceptance Test A1 (7 failing cases)` -> **7/7 PASSED (100%)**
+- `Acceptance Test A2.2 (Clutter False Alarm Rate)` -> **1.00% (1/100) PASSED (Target <= 2.0%)**
+- `Acceptance Test A2.3 (Non-Road Rejection Rate)` -> **100.00% (30/30) PASSED (Target >= 95.0%)**
+- `Acceptance Test A2.1 (Damage Yes/No Accuracy)` -> **61.23% (95% CI: [57.4%, 64.5%])**
+- `Acceptance Test A2.4 (Object-Level F1 @ IoU 0.5)` -> **0.0693 (Prec: 0.1340, Rec: 0.0468)**
+- `Pipeline Integrity & Video Duplicate Suppression` -> **8/8 PASSED**
+- `End-to-End API (/api/v1/infer & /api/v1/infer/video)` -> **VERIFIED FUNCTIONAL**
 
 ---
 

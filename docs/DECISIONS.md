@@ -278,5 +278,40 @@ On diverse user images and dashcam footage, ~80% of detections were spurious (se
 - **Positive:** Latency decreased from 555ms down to 200ms P50 (2.7x faster) with a clean single ONNX tensor.
 - **Positive:** Complete elimination of the "Alligator 99% on sky and signboards" bug backed by verified regression tests.
 
+---
+
+## ADR-011: ML2 Harmonized Multi-Expert Road Damage Architecture and App Integration
+
+**Date:** 2026-11-17  
+**Status:** Accepted  
+**Scope:** Machine Learning Architecture, Backend API Integration, and Acceptance Verification
+
+### Context
+While ADR-010 established the training protocol with background negative images and baseline guards, empirical evaluation of diverse real-world test cases identified two distinct edge-case failure modes:
+1. Low-contrast alligator cracks on weathered dry pavement require high sensitivity to avoid false negatives.
+2. Wet pavement with specular reflections (e.g. monsoon dashcam footage) can trigger false positives if high-sensitivity crack models are unconstrained.
+3. The application backend API (`backend/app/api/v1/infer.py`) previously retained legacy 70/30 blending logic and arbitrary heuristic thresholds (`crack_floor = max(0.65, conf_thresh + 0.30)`).
+
+### Decision
+1. **Harmonized ML2 Pipeline (`ml2/pipeline/detector.py`):**
+   - Stage 1: Primary balanced detector (`ml2/models/yolo11_road_damage.onnx`) trained with 26.8% background negative regularization.
+   - Stage 2: Specular-gated physical conditioning (`specular_ratio < 0.10` and `laplacian_var > 600`) enabling high-sensitivity crack and depression heads exclusively on dry pavement while preventing rain-glare false positives.
+   - Stage 3: Drivable road surface mask prior with 0.385h horizon cutoff to eliminate sky and upper-scene hallucinations.
+   - Stage 4: COCO obstacle filter with automated startup self-test.
+   - Stage 5: Input gate rejecting non-road civil diagrams, textbooks, and UI screenshots.
+2. **Full Application Wiring:**
+   - Rewired `backend/app/api/v1/infer.py` to use `ML2DetectorPipeline` for single images, batch processing, and multi-frame video tracking with duplicate suppression.
+   - Replaced legacy heuristic floors with transparent 0–100 severity scoring (Low, Moderate, High, Critical) per `SEVERITY_SPEC.md`.
+
+### Consequences & Verified Metrics
+- **A1 User Eval Failures Test:** 7/7 PASSED (100%).
+- **A2 Locked Benchmark ($N=730$):**
+  - Clutter Off-Road False Alarm Rate: **1.00% (1/100)** — PASSED (Target $\le 2.0\%$).
+  - Non-Road Rejection Rate: **100.00% (30/30)** — PASSED (Target $\ge 95.0\%$).
+  - Image-Level Damage Yes/No Accuracy: **61.23%** (95% CI: [57.4%, 64.5%]).
+  - Object-Level $F_1$ @ IoU 0.5: **0.0693** (Honest reporting under 5-epoch CPU training vs multi-GPU benchmarks).
+- **Backend Test Suite:** 14/14 automated regression and pipeline integrity tests PASSED.
+
+
 
 

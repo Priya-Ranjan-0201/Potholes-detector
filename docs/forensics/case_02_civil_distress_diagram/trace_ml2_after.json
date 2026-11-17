@@ -1,0 +1,8 @@
+{
+  "case": "case_02_civil_distress_diagram",
+  "pipeline": "ML2 Harmonized Detector Pipeline",
+  "is_road": false,
+  "rejection_reason": "Not a road photograph (civil engineering diagram detected, glyphs=148).",
+  "detections_count": 0,
+  "detections": []
+}

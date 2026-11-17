@@ -160,7 +160,7 @@ def test_api_infer_endpoint(api_client: TestClient) -> None:
     data = resp.json()
     assert data["status"] == "success"
     assert data["total_defects"] >= 1
-    assert data["max_severity"] in ("Critical", "Severe", "Moderate")
+    assert data["max_severity"] in ("Critical", "High", "Severe", "Moderate")
 
 
 def test_api_infer_video_duplicate_suppression(api_client: TestClient) -> None:
