@@ -15,6 +15,82 @@ import {
 
 export const RoadOverviewPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("section-hero");
+  const [activeFrameIndex, setActiveFrameIndex] = useState<number>(0);
+
+  const showcaseFrames = [
+    {
+      id: "asphalt-crater",
+      name: "State Highway Crater",
+      title: "State Highway 17 Pavement Crater · KM 88.2",
+      src: "/samples/asphalt_crater.jpg",
+      pci: "PCI 38/100 (Critical)",
+      pciColor: "text-[#FF5A00]",
+      boxes: [
+        {
+          top: "14%",
+          left: "36%",
+          width: "48%",
+          height: "72%",
+          label: "ASPHALT CRATER 79% · CRITICAL",
+          color: "border-[#FF5A00] bg-[#FF5A00]/15 shadow-[0_0_20px_rgba(255,90,0,0.5)]",
+          badgeBg: "bg-[#FF5A00] text-white",
+          subtext: "Wheelpath High Risk",
+        },
+      ],
+    },
+    {
+      id: "alligator-cracks",
+      name: "Fatigue Alligator Cracks",
+      title: "MDR-04 Fatigue Alligator Pavement · KM 12.1",
+      src: "/samples/alligator_cracks.jpg",
+      pci: "PCI 44/100 (Poor)",
+      pciColor: "text-amber-400",
+      boxes: [
+        {
+          top: "38%",
+          left: "22%",
+          width: "56%",
+          height: "42%",
+          label: "ALLIGATOR CRACK 80% · SEVERE",
+          color: "border-[#FFD200] bg-[#FFD200]/15 shadow-[0_0_20px_rgba(255,210,0,0.4)]",
+          badgeBg: "bg-[#FFD200] text-black font-extrabold",
+          subtext: "IRC:82 Sealant Req.",
+        },
+        {
+          top: "76%",
+          left: "7%",
+          width: "38%",
+          height: "22%",
+          label: "POTHOLE 58% · CRITICAL",
+          color: "border-[#FF5A00] bg-[#FF5A00]/15 shadow-[0_0_15px_rgba(255,90,0,0.4)]",
+          badgeBg: "bg-[#FF5A00] text-white",
+          subtext: "Base Layer Collapse",
+        },
+      ],
+    },
+    {
+      id: "nh44",
+      name: "NH-44 Highway",
+      title: "National Highway 44 (NH-44) · KM 312.4",
+      src: "/samples/pothole_nh44.jpg",
+      pci: "PCI 62/100 (Fair)",
+      pciColor: "text-[#FFD200]",
+      boxes: [
+        {
+          top: "72%",
+          left: "78%",
+          width: "20%",
+          height: "25%",
+          label: "POTHOLE 76% · HIGH",
+          color: "border-[#FF5A00] bg-[#FF5A00]/15 shadow-[0_0_15px_rgba(255,90,0,0.4)]",
+          badgeBg: "bg-[#FF5A00] text-white",
+          subtext: "Lane Shoulder Void",
+        },
+      ],
+    },
+  ];
+
+  const currentFrame = showcaseFrames[activeFrameIndex];
 
   const scrollTo = (id: string) => {
     setActiveSection(id);
@@ -290,74 +366,78 @@ export const RoadOverviewPage: React.FC = () => {
           {/* Live Interactive Highway Inspection Teaser Display */}
           <div className="pt-6 max-w-4xl mx-auto">
             <div className="relative rounded-2xl overflow-hidden bg-[#090D12] border-2 border-[#283545] shadow-2xl group">
-              {/* Telemetry Header Strip */}
-              <div className="bg-[#121820] border-b border-[#283545] px-4 py-2 flex items-center justify-between text-xs font-mono">
+              {/* Telemetry Header Strip with Frame Switcher */}
+              <div className="bg-[#121820] border-b border-[#283545] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5A00] animate-pulse" />
-                  <span className="font-bold text-white">LIVE CAMERA SCANNER PREVIEW</span>
-                  <span className="hidden sm:inline text-slate-500">|</span>
-                  <span className="hidden sm:inline text-[#FFD200]">Bengaluru Outer Ring Road · KM 24.6</span>
+                  <span className="font-bold text-white uppercase text-[11px] tracking-wider">LIVE HIGHWAY INSPECTION</span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-[#FFD200] font-bold">{currentFrame.title}</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-400">
-                  <span className="text-emerald-400 font-bold">● Neural Inference Active</span>
-                  <span className="hidden sm:inline">60 FPS</span>
+
+                {/* Corridor Switcher Pills */}
+                <div className="flex items-center gap-1.5 bg-[#0B0F14] p-1 rounded-lg border border-[#283545]">
+                  {showcaseFrames.map((frame, idx) => (
+                    <button
+                      key={frame.id}
+                      type="button"
+                      onClick={() => setActiveFrameIndex(idx)}
+                      className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                        activeFrameIndex === idx
+                          ? "bg-[#FF5A00] text-white shadow-sm"
+                          : "text-slate-400 hover:text-white hover:bg-[#1E293B]"
+                      }`}
+                    >
+                      {frame.name}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               {/* Highway Canvas with Defect Overlays */}
-              <div className="relative max-h-[360px] overflow-hidden flex items-center justify-center bg-black">
+              <div className="relative max-h-[380px] overflow-hidden flex items-center justify-center bg-black">
                 <img
-                  src="/samples/bengaluru_potholes.jpg"
-                  alt="Bengaluru Highway Sample Inspection"
-                  className="w-full h-auto object-cover opacity-90 select-none"
-                  style={{ maxHeight: "360px" }}
+                  src={currentFrame.src}
+                  alt={currentFrame.title}
+                  className="w-full h-auto object-cover opacity-95 select-none transition-all duration-300"
+                  style={{ maxHeight: "380px" }}
                 />
 
                 {/* Simulated Radar Scanline */}
                 <div
-                  className="absolute inset-0 pointer-events-none opacity-40"
+                  className="absolute inset-0 pointer-events-none opacity-30"
                   style={{
                     background: "linear-gradient(to bottom, transparent, rgba(255, 90, 0, 0.25) 50%, transparent)",
                   }}
                 />
 
-                {/* Bounding Box 1: Pothole */}
-                <div
-                  className="absolute border-2 border-[#FF5A00] bg-[#FF5A00]/15 rounded shadow-[0_0_15px_rgba(255,90,0,0.5)] flex flex-col justify-between p-1"
-                  style={{ top: "35%", left: "28%", width: "24%", height: "26%" }}
-                >
-                  <span className="px-1.5 py-0.5 rounded bg-[#FF5A00] text-white text-[10px] font-mono font-bold w-fit shadow">
-                    POTHOLE 96% · CRITICAL
-                  </span>
-                  <span className="text-[9px] font-mono text-[#FFD200] font-bold self-end bg-black/70 px-1 rounded">
-                    Wheelpath Zone
-                  </span>
-                </div>
-
-                {/* Bounding Box 2: Alligator Crack */}
-                <div
-                  className="absolute border-2 border-[#FFD200] bg-[#FFD200]/15 rounded shadow-[0_0_15px_rgba(255,210,0,0.4)] flex flex-col justify-between p-1"
-                  style={{ top: "62%", left: "55%", width: "28%", height: "22%" }}
-                >
-                  <span className="px-1.5 py-0.5 rounded bg-[#FFD200] text-black text-[10px] font-mono font-extrabold w-fit shadow">
-                    FATIGUE CRACK 91% · SEVERE
-                  </span>
-                  <span className="text-[9px] font-mono text-white font-bold self-end bg-black/70 px-1 rounded">
-                    IRC:82 Sealant Req.
-                  </span>
-                </div>
+                {/* Dynamic Bounding Boxes */}
+                {currentFrame.boxes.map((box, bIdx) => (
+                  <div
+                    key={bIdx}
+                    className={`absolute border-2 rounded flex flex-col justify-between p-1.5 transition-all ${box.color}`}
+                    style={{ top: box.top, left: box.left, width: box.width, height: box.height }}
+                  >
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold w-fit shadow-md ${box.badgeBg}`}>
+                      {box.label}
+                    </span>
+                    <span className="text-[9px] font-mono text-white font-bold self-end bg-black/80 px-1.5 py-0.5 rounded border border-white/20">
+                      {box.subtext}
+                    </span>
+                  </div>
+                ))}
 
                 {/* Floating Bottom Telemetry Badge */}
                 <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between p-2.5 rounded-xl bg-[#0B0F14]/90 border border-[#283545] backdrop-blur-md text-xs font-mono">
                   <div className="flex items-center gap-2 text-slate-300">
                     <Activity className="w-4 h-4 text-[#FF5A00]" />
-                    <span>Pavement Index: <strong className="text-amber-400">PCI 48/100 (Poor)</strong></span>
+                    <span>Pavement Index: <strong className={currentFrame.pciColor}>{currentFrame.pci}</strong></span>
                   </div>
                   <Link
                     to="/scanner"
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#FF5A00] hover:bg-[#E04F00] text-white font-bold text-[11px] transition-all"
                   >
-                    <span>Test on Road Scanner →</span>
+                    <span>Inspect Live on Road Scanner →</span>
                   </Link>
                 </div>
               </div>
