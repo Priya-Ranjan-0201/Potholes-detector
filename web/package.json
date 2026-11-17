@@ -1,8 +1,8 @@
 {
-  "name": "roadsurvey-web",
+  "name": "scamroad-web",
   "private": true,
   "version": "0.1.0",
-  "description": "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment",
+  "description": "ScamRoad: AI-Powered Road Distress Inspection & Audit Engine",
   "type": "module",
   "scripts": {
     "dev": "vite",

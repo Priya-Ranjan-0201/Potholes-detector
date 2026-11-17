@@ -48,31 +48,31 @@ export const Navbar: React.FC = () => {
   const isReportActive = location.pathname === "/report";
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#121820]/95 border-b border-[#283545] shadow-lg backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full bg-[#121820]/95 border-b border-[#283545] shadow-xl backdrop-blur-md select-none">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 gap-4">
+        <div className="flex items-center justify-between h-16 gap-3 sm:gap-6">
           {/* Brand Logo & Original Name ScamRoad */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none group">
-            <div className="p-1 rounded bg-[#FF5A00] text-white shadow-sm group-hover:scale-105 transition-transform">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="p-1.5 rounded-lg bg-[#FF5A00] text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
               <Logo showWordmark={false} size="sm" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="font-serif font-extrabold text-base tracking-tight text-white">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+              <span className="font-sans font-black text-lg tracking-tight text-white group-hover:text-[#FFD200] transition-colors">
                 ScamRoad
               </span>
-              <span className="hidden sm:inline-block text-[11px] font-mono font-bold text-[#FFD200]">
-                AI Road Distress Vision
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-[#FFD200] tracking-wide">
+                AI Road Vision
               </span>
             </div>
           </Link>
 
-          {/* Navigation Bar: Overview as Main Page (/) */}
-          <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner">
+          {/* Center Navigation Bar (Spacious, Never Wrapping) */}
+          <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner shrink-0">
             <Link
               to="/"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
                 isOverviewActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
                   : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
               }`}
             >
@@ -81,9 +81,9 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/scanner"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
                 isScannerActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
                   : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
               }`}
             >
@@ -92,9 +92,9 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/report"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
                 isReportActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
                   : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
               }`}
             >
@@ -102,10 +102,10 @@ export const Navbar: React.FC = () => {
             </Link>
           </nav>
 
-          {/* Right Controls: AI Status & Language / Theme */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* Center Engine Status Badge (Charcoal + Bright Dot) */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155]">
+          {/* Right Controls: AI Engine Status + Language + Theme */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* AI Engine Status Badge */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155] shrink-0">
               <span
                 className={`w-2 h-2 rounded-full ${
                   serverHealthy === true
@@ -115,20 +115,21 @@ export const Navbar: React.FC = () => {
                     : "bg-[#FFD200]"
                 }`}
               />
-              <span className="text-[11px] text-white font-medium">
+              <span className="text-[11px] text-white font-medium whitespace-nowrap">
                 {serverHealthy === true
-                  ? "AI Engine Live (YOLO11n-Rescue)"
+                  ? "AI Live (YOLO11n)"
                   : serverHealthy === false
                   ? "Backend Offline"
                   : "Connecting..."}
               </span>
             </div>
 
+            {/* Language Selector */}
             <div className="relative" ref={langDropdownRef}>
               <button
                 type="button"
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs bg-[#1E293B] border border-[#334155] text-white hover:border-[#FF5A00] transition-colors cursor-pointer font-mono"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs bg-[#1E293B] hover:bg-[#283545] border border-[#334155] text-white hover:border-[#FF5A00] transition-colors cursor-pointer font-mono"
                 title="Switch language"
               >
                 <Globe className="w-3.5 h-3.5 text-[#FFD200]" />
@@ -136,7 +137,7 @@ export const Navbar: React.FC = () => {
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-40 bg-[#121820] border border-[#334155] rounded-lg shadow-xl py-1 z-50 text-xs">
+                <div className="absolute right-0 mt-1.5 w-40 bg-[#121820] border border-[#334155] rounded-lg shadow-2xl py-1 z-50 text-xs font-mono">
                   {LANGUAGES.map((opt) => (
                     <button
                       key={opt.code}
@@ -152,13 +153,14 @@ export const Navbar: React.FC = () => {
                       }`}
                     >
                       <span>{opt.nativeName}</span>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase">{opt.code}</span>
+                      <span className="text-[10px] text-slate-400 uppercase">{opt.code}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
+            {/* Theme Toggle (Clean Sun/Moon) */}
             <ThemeToggle />
           </div>
         </div>
