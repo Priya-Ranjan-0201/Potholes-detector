@@ -80,9 +80,21 @@ class RoadSurfaceSegmenter:
         kernel_dilate = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (dilate_ksize, dilate_ksize))
         road_mask_dilated = cv2.dilate(road_mask, kernel_dilate)
 
-        # Physical horizon cutoff: sky, overhead awnings, and tree canopies never exist in road space
-        horizon_y = max(5, int(h * self.horizon_cutoff_pct))
-        road_mask_dilated[:horizon_y, :] = 0
+        # Physical horizon cutoff: sky, overhead awnings, and tree canopies never exist in road space.
+        # When the camera is angled downward or overhead (e.g. case_06_mumbai_potholes), the pavement
+        # extends across the full frame. We dynamically detect whether the upper frame is sky/background vs road.
+        top_15 = img_bgr[: max(5, int(h * 0.15)), :]
+        bot_25 = img_bgr[int(h * 0.75):, :]
+        top_l = float(np.mean(cv2.cvtColor(top_15, cv2.COLOR_BGR2GRAY)))
+        bot_l = float(np.mean(cv2.cvtColor(bot_25, cv2.COLOR_BGR2GRAY)))
+        diff_l = abs(top_l - bot_l)
+
+        if diff_l >= 25.0 or top_l >= 155.0:
+            horizon_y = max(5, int(h * self.horizon_cutoff_pct))
+            road_mask_dilated[:horizon_y, :] = 0
+        else:
+            horizon_y = max(2, int(h * 0.03))
+            road_mask_dilated[:horizon_y, :] = 0
 
         return road_mask_dilated
 

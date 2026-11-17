@@ -364,12 +364,19 @@ export const ScannerPage: React.FC = () => {
               <div className="relative w-full h-[460px] flex items-center justify-center select-none">
                 <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-md bg-slate-900/90 border border-slate-700 text-white text-xs font-medium pointer-events-none flex items-center gap-2 max-w-[85%] shadow-sm">
                   <span
-                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${inspection.boxes.length > 0 ? "bg-emerald-400" : "bg-slate-400"
-                      }`}
+                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                      inspection.error
+                        ? "bg-rose-500"
+                        : inspection.boxes.length > 0
+                        ? "bg-emerald-400"
+                        : "bg-slate-400"
+                    }`}
                   />
                   <span className="truncate">
                     {isScanning
                       ? "Scanning..."
+                      : inspection.error
+                      ? "Inspection Notice"
                       : inspection.boxes.length > 0
                         ? `${inspection.potholeCount} ${t("potholesLabel")} · ${inspection.crackCount} ${t("cracksLabel")}`
                         : t("cleanRoad")}
@@ -518,7 +525,9 @@ export const ScannerPage: React.FC = () => {
                 }`}
               >
                 {inspection.error
-                  ? "Offline"
+                  ? (inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is"))
+                    ? "Notice"
+                    : "Offline"
                   : inspection.boxes.length === 0
                     ? t("goodStatus")
                     : inspection.maxSeverity}
@@ -604,7 +613,9 @@ export const ScannerPage: React.FC = () => {
                 </div>
                 <div className="space-y-1">
                   <div className="font-semibold text-rose-800 dark:text-rose-300">
-                    Inference Server Offline
+                    {inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is")
+                      ? "Image Inspection Notice"
+                      : "Inference Server Offline"}
                   </div>
                   <p className="text-slate-600 dark:text-slate-400 text-[11px] max-w-xs leading-relaxed">
                     {inspection.error}

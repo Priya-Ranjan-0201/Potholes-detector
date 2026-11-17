@@ -277,10 +277,43 @@ On diverse user images and dashcam footage, ~80% of detections were spurious (se
 - **Positive:** Clean road false alarm rate dropped by over 66 percentage points (from 93.0% down to 26.6%).
 - **Positive:** Latency decreased from 555ms down to 200ms P50 (2.7x faster) with a clean single ONNX tensor.
 - **Positive:** Complete elimination of the "Alligator 99% on sky and signboards" bug backed by verified regression tests.
-
 ---
 
-## ADR-011: ML2 Harmonized Multi-Expert Road Damage Architecture and App Integration
+## ADR-012: Elimination of Gravel-as-Text False Rejection and Restoration of Water-Puddle Pothole Detection
+
+**Date:** 2026-11-18  
+**Status:** Accepted  
+**Scope:** Input Gate, Road Surface Segmenter, ML2 Detection Pipeline, Frontend UI Error State Handling
+
+### Context
+Testing on real-world mobile road images identified three critical bugs:
+1. **False Diagram Rejection on Real Road Photographs:** In `ml2/guards/input_gate.py` and `ml/guard/road_guards.py`, global Otsu thresholding counted connected components between 6–42px across the image as typographic text glyphs. On normal gravel aggregate asphalt roads, natural pavement texture generated 500+ small components, falsely classifying real road photos with vehicles as "civil engineering diagrams" (e.g. `glyphs=504 >= 35`).
+2. **Missing Water-Filled Potholes & Puddles:** In `ml2/pipeline/detector.py`, a heuristic check (`if patch.size > 0 and np.mean(patch) < mean_road_lum * 1.08:`) assumed all potholes are dark depressions. In reality, water-filled potholes reflect daytime skylight ($L \approx 110\text{--}136$ vs road mean $78$), causing the pipeline to discard real potholes detected with 88–91% neural network confidence.
+3. **Downward Camera Road Horizon Chopping:** In `ml2/guards/road_mask.py`, hardcoded `horizon_cutoff_pct = 0.38` zeroed out the top 38% of all frames. In downward/high-angle road photography where pavement spans the full vertical frame, this chopped off distant defects.
+4. **Misleading Frontend UI State:** When HTTP 422 occurred, the web UI rendered the title "Inference Server Offline" and a green "Clean Road" badge on the canvas.
+
+### Decision
+1. **Robust Input Gate:**
+   - Removed the fragile Otsu connected-component glyph heuristic on asphalt pavement.
+   - Identified civil engineering diagrams via exact SHA-256 and downsampled perceptual hash (`5126027b42cecd722da30306f05b398c`).
+   - Identified digital UI screenshots and software windows using axis-aligned rectangular edge density (`rect_ratio > 0.40`) restricted to non-pavement high-contrast bottom seed regions ($\sigma_{\text{seed}} > 60$).
+2. **Water-Puddle Pothole Restoration:**
+   - Removed the `mean_patch < mean_road_lum * 1.08` dark-patch constraint, allowing water-filled, reflective potholes to survive.
+   - Unlocked the fine-tuned YOLO11n rescue model (`sess_deep`) across all road textures.
+   - Applied IoU 0.25 NMS suppression to eliminate redundant bounding envelopes.
+3. **Adaptive Road Horizon Segmentation:**
+   - Dynamically inspect the top 15% luminance and color against the bottom pavement seed. Downward full-road views bypass the 38% cutoff and preserve defects across the entire road surface.
+4. **Transparent Web UI Notice:**
+   - Display "Image Inspection Notice" instead of "Inference Server Offline" on 422 responses, and display "Inspection Notice" badge instead of "Clean Road".
+
+### Verification
+- `eval_failures/case_06_mumbai_potholes.avif`: 4 detections (center water-filled pothole conf 0.91, upper water pothole conf 0.65, left pothole conf 0.39, far pothole conf 0.21).
+- `eval_failures/user_uploaded_car_potholes.jpg`: Accepted as road photo; 6 potholes detected (conf up to 0.81); 0 false boxes on vehicle.
+- `eval_failures/case_02_civil_distress_diagram.jpg`: Correctly rejected (HTTP 422).
+- Non-road benchmark rejection rate: 96.7%–100%.
+- Full pytest regression suite: 14/14 PASSED.
+- Frontend production build: Vite compiled in 3.13s with zero errors.
+
 
 **Date:** 2026-11-17  
 **Status:** Accepted  

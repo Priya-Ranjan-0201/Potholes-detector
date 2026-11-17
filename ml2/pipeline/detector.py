@@ -190,8 +190,8 @@ class ML2DetectorPipeline:
                         "label": "CRACK_ALLIGATOR",
                     })
 
-        # --- Stage 2B: Local Road Depression Specialist (Dry road surface only) ---
-        if self.sess_deep is not None and specular_ratio < 0.15 and lap_var > 600:
+        # --- Stage 2B: Rescue Pothole and Distress Specialist ---
+        if self.sess_deep is not None:
             out_d = self.sess_deep.get_outputs()[0].name
             in_d = self.sess_deep.get_inputs()[0].name
             p_dep = self.sess_deep.run([out_d], {in_d: inp})[0][0]
@@ -199,9 +199,8 @@ class ML2DetectorPipeline:
             scores_dep = p_dep[4:, :]
             confs_dep = np.max(scores_dep, axis=0)
             cids_dep = np.argmax(scores_dep, axis=0)
-            mask_dep = (confs_dep >= dep_thresh) & (cids_dep == 0)
+            mask_dep = (confs_dep >= dep_thresh) & ((cids_dep == 0) | (cids_dep == 3))
 
-            mean_road_lum = np.mean(gray)
             for cx, cy, bw, bh, cid, c in zip(
                 p_dep[0, mask_dep],
                 p_dep[1, mask_dep],
@@ -215,23 +214,20 @@ class ML2DetectorPipeline:
                 x2 = max(0.0, min(float(w), ((cx + bw / 2.0) - dx) / scale))
                 y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
                 if (x2 - x1) >= 4 and (y2 - y1) >= 4:
-                    patch = gray[int(y1) : int(y2), int(x1) : int(x2)]
-                    # True pothole depression must not be an elevated high-contrast sign
-                    if patch.size > 0 and np.mean(patch) < mean_road_lum * 1.08:
-                        boxes_nms.append([int(x1), int(y1), int(x2 - x1), int(y2 - y1)])
-                        confs_nms.append(float(c))
-                        candidates.append({
-                            "box": [x1, y1, x2, y2],
-                            "conf": float(c),
-                            "class_id": 0,
-                            "label": "POTHOLE",
-                        })
+                    boxes_nms.append([int(x1), int(y1), int(x2 - x1), int(y2 - y1)])
+                    confs_nms.append(float(c))
+                    candidates.append({
+                        "box": [x1, y1, x2, y2],
+                        "conf": float(c),
+                        "class_id": int(cid),
+                        "label": CLASS_NAMES.get(int(cid), "POTHOLE"),
+                    })
 
         if not candidates:
             return True, "ok", []
 
-        # Unified NMS
-        indices = cv2.dnn.NMSBoxes(boxes_nms, confs_nms, conf_thresh, 0.40)
+        # Unified NMS (IoU 0.25 to cleanly suppress envelope bounding duplicates)
+        indices = cv2.dnn.NMSBoxes(boxes_nms, confs_nms, conf_thresh, 0.25)
         if len(indices) == 0:
             return True, "ok", []
 
