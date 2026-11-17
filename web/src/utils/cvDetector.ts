@@ -161,7 +161,7 @@ export async function detectDefects(
 
     const errorMsg =
       apiRes.status === 404
-        ? "RoadSurvey AI inference backend not reached on port 8000. Ensure python scripts/serve_inference.py is running."
+        ? "RoadSurvey AI inference backend not reached. Ensure python scripts/serve_inference.py is running."
         : apiRes.status === 422
         ? `Image issue: ${detail}`
         : `Backend error (HTTP ${apiRes.status}): ${detail || apiRes.statusText}`;

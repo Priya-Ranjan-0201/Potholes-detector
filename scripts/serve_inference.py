@@ -25,8 +25,8 @@ import uvicorn
 
 
 def main() -> None:
-    port = int(os.environ.get("PORT", "8000"))
-    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", "8001"))
+    host = os.environ.get("HOST", "127.0.0.1")
 
     print("=" * 60)
     print(f"  ScamRoad AI Backend Server starting on http://{host}:{port}")
