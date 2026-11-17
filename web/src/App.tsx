@@ -10,6 +10,7 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { RoadScannerPage } from "./pages/RoadScannerPage";
 import { RoadAuditReportPage } from "./pages/RoadAuditReportPage";
+import { RoadOverviewPage } from "./pages/RoadOverviewPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,18 +56,20 @@ const AppShell: React.FC = () => {
 
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <Routes>
-          {/* Dedicated 2-Page Website Routes */}
+          {/* Main Core Application Routes */}
           <Route path="/" element={<RoadScannerPage />} />
           <Route path="/scanner" element={<RoadScannerPage />} />
           <Route path="/report" element={<RoadAuditReportPage />} />
+          <Route path="/overview" element={<RoadOverviewPage />} />
 
-          {/* Legacy redirects all cleanly funneling into the 2 pages */}
+          {/* Clean legacy aliases and redirects */}
+          <Route path="/about" element={<Navigate to="/overview" replace />} />
+          <Route path="/benchmarks" element={<Navigate to="/overview" replace />} />
+          <Route path="/pipeline" element={<Navigate to="/overview" replace />} />
           <Route path="/analyse" element={<Navigate to="/" replace />} />
           <Route path="/detect" element={<Navigate to="/" replace />} />
           <Route path="/surveys" element={<Navigate to="/" replace />} />
           <Route path="/priority-list" element={<Navigate to="/report" replace />} />
-          <Route path="/benchmarks" element={<Navigate to="/" replace />} />
-          <Route path="/about" element={<Navigate to="/" replace />} />
           <Route path="/dashboard" element={<Navigate to="/report" replace />} />
           <Route path="/maintenance" element={<Navigate to="/report" replace />} />
           <Route path="/login" element={<Navigate to="/" replace />} />

@@ -45,9 +45,10 @@ export const Navbar: React.FC = () => {
 
   const isScannerActive = location.pathname === "/" || location.pathname === "/scanner";
   const isReportActive = location.pathname === "/report";
+  const isOverviewActive = location.pathname === "/overview" || location.pathname === "/about";
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#121820] border-b border-[#283545] shadow-md backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full bg-[#121820]/95 border-b border-[#283545] shadow-lg backdrop-blur-md">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-4">
           {/* Brand Logo & Road Title */}
@@ -65,7 +66,7 @@ export const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* 2-Page Website Navigation Bar */}
+          {/* Navigation Bar */}
           <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner">
             <Link
               to="/"
@@ -87,6 +88,17 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <span>📋 Audit Report &amp; PDF</span>
+            </Link>
+
+            <Link
+              to="/overview"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isOverviewActive
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
+              }`}
+            >
+              <span>⚡ Overview</span>
             </Link>
           </nav>
 

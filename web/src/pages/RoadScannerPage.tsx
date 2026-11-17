@@ -176,6 +176,13 @@ export const RoadScannerPage: React.FC = () => {
               <Camera className="w-4 h-4" />
               <span>{inputMode === "camera" ? "Photo Mode" : "Camera"}</span>
             </button>
+
+            <Link
+              to="/overview"
+              className="px-3.5 py-2.5 rounded-lg text-xs font-mono font-bold border border-[#334155] bg-[#1E293B] text-slate-300 hover:text-white hover:bg-[#283545] transition-all flex items-center gap-1.5"
+            >
+              <span>⚡ Overview</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -501,18 +508,21 @@ export const RoadScannerPage: React.FC = () => {
             )}
           </div>
 
-          {/* Primary CTA: Navigate to Page 2 (Road Audit Report) */}
+          {/* Navigation CTAs */}
           <div className="p-3.5 border-t-2 border-[#283545] bg-[#161F2A] space-y-2">
             <Link
               to="/report"
               className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-[#FF5A00] hover:bg-[#E04F00] text-white transition-all shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2 cursor-pointer border border-[#FF7324] active:scale-95 text-center"
             >
               <FileText className="w-4 h-4 text-white" />
-              <span>Go to Page 2: Audit Report &amp; PDF →</span>
+              <span>Go to Audit Report &amp; PDF →</span>
             </Link>
-            <div className="text-[10px] text-center font-mono text-[#94A3B8]">
-              IRC:82-2015 Road Distress Compliance &amp; Engineering Ledger
-            </div>
+            <Link
+              to="/overview"
+              className="w-full py-2 px-3 rounded-lg text-xs font-mono font-bold bg-[#1E293B] hover:bg-[#283545] text-slate-300 hover:text-white transition-all flex items-center justify-center gap-1.5 border border-[#334155] text-center"
+            >
+              <span>⚡ View System Pipeline &amp; Overview →</span>
+            </Link>
           </div>
         </div>
       </div>
