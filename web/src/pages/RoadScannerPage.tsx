@@ -178,7 +178,7 @@ export const RoadScannerPage: React.FC = () => {
             </button>
 
             <Link
-              to="/overview"
+              to="/"
               className="px-3.5 py-2.5 rounded-lg text-xs font-mono font-bold border border-[#334155] bg-[#1E293B] text-slate-300 hover:text-white hover:bg-[#283545] transition-all flex items-center gap-1.5"
             >
               <span>⚡ Overview</span>
@@ -518,10 +518,10 @@ export const RoadScannerPage: React.FC = () => {
               <span>Go to Audit Report &amp; PDF →</span>
             </Link>
             <Link
-              to="/overview"
+              to="/"
               className="w-full py-2 px-3 rounded-lg text-xs font-mono font-bold bg-[#1E293B] hover:bg-[#283545] text-slate-300 hover:text-white transition-all flex items-center justify-center gap-1.5 border border-[#334155] text-center"
             >
-              <span>⚡ View System Pipeline &amp; Overview →</span>
+              <span>⚡ View ScamRoad Pipeline &amp; Overview →</span>
             </Link>
           </div>
         </div>

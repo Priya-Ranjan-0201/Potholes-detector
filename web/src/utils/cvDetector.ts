@@ -161,12 +161,12 @@ export async function detectDefects(
 
     const errorMsg =
       apiRes.status === 404
-        ? "RoadSurvey AI inference backend not reached. Ensure python scripts/serve_inference.py is running."
+        ? "ScamRoad AI inference backend not reached. Ensure python scripts/serve_inference.py is running."
         : apiRes.status === 422
         ? `Image issue: ${detail}`
         : `Backend error (HTTP ${apiRes.status}): ${detail || apiRes.statusText}`;
 
-    console.error("[RoadSurvey AI] Inference API error:", apiRes.status, detail);
+    console.error("[ScamRoad AI] Inference API error:", apiRes.status, detail);
     return {
       source: "neural_api",
       totalDefects: 0,
@@ -188,7 +188,7 @@ export async function detectDefects(
         ? "Cannot connect to backend server on port 8000. Is python scripts/serve_inference.py running?"
         : err?.message || "Inference failed due to a network connection issue.";
 
-    console.warn("[RoadSurvey AI] Inference API connection issue:", err);
+    console.warn("[ScamRoad AI] Inference API connection issue:", err);
     return {
       source: "neural_api",
       totalDefects: 0,

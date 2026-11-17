@@ -53,7 +53,7 @@ export function generateDistressPDFReport(data: ReportPayload): void {
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
-  doc.text("ROADSURVEY AI — INFRASTRUCTURE DAMAGE AUDIT REPORT", 14, 12);
+  doc.text("SCAMROAD AI — INFRASTRUCTURE DAMAGE AUDIT REPORT", 14, 12);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8.5);
@@ -283,10 +283,10 @@ export function generateDistressPDFReport(data: ReportPayload): void {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6.5);
   doc.setTextColor(148, 163, 184);
-  doc.text("RoadSurvey AI Autonomous Infrastructure Inspection System | Compliant with IRC:82-2015 Road Distress Standards", 14, footerY);
+  doc.text("ScamRoad AI Autonomous Infrastructure Inspection System | Compliant with IRC:82-2015 Road Distress Standards", 14, footerY);
   doc.text(`Page 1 of 1`, pageWidth - 28, footerY);
 
   // Save the PDF
   const cleanName = data.roadName.replace(/[^a-zA-Z0-9_-]/g, "_");
-  doc.save(`RoadSurvey_Audit_Report_${cleanName}_${now.getTime()}.pdf`);
+  doc.save(`ScamRoad_Audit_Report_${cleanName}_${now.getTime()}.pdf`);
 }

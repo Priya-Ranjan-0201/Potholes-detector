@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="mt-auto border-t border-[#283545] bg-[#0B0F14] text-[#94A3B8] text-xs py-5">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full shrink-0 ${
@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
             }`}
           />
           <span className="font-bold text-white tracking-wide">
-            RoadSurvey AI
+            ScamRoad AI
           </span>
           <span className="text-[#64748B]">·</span>
           <span className="text-[11px] text-[#CBD5E1]">

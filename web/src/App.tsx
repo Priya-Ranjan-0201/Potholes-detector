@@ -8,9 +8,9 @@ import { ToastProvider } from "./context/ToastContext";
 import { InspectionProvider } from "./context/InspectionContext";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { RoadOverviewPage } from "./pages/RoadOverviewPage";
 import { RoadScannerPage } from "./pages/RoadScannerPage";
 import { RoadAuditReportPage } from "./pages/RoadAuditReportPage";
-import { RoadOverviewPage } from "./pages/RoadOverviewPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,21 +54,24 @@ const AppShell: React.FC = () => {
 
       <Navbar />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Routes>
-          {/* Main Core Application Routes */}
-          <Route path="/" element={<RoadScannerPage />} />
-          <Route path="/scanner" element={<RoadScannerPage />} />
-          <Route path="/report" element={<RoadAuditReportPage />} />
+          {/* Main Page: Overview is the Main Landing Page at / */}
+          <Route path="/" element={<RoadOverviewPage />} />
           <Route path="/overview" element={<RoadOverviewPage />} />
 
+          {/* Core Functional Modules */}
+          <Route path="/scanner" element={<RoadScannerPage />} />
+          <Route path="/scan" element={<RoadScannerPage />} />
+          <Route path="/report" element={<RoadAuditReportPage />} />
+
           {/* Clean legacy aliases and redirects */}
-          <Route path="/about" element={<Navigate to="/overview" replace />} />
-          <Route path="/benchmarks" element={<Navigate to="/overview" replace />} />
-          <Route path="/pipeline" element={<Navigate to="/overview" replace />} />
-          <Route path="/analyse" element={<Navigate to="/" replace />} />
-          <Route path="/detect" element={<Navigate to="/" replace />} />
-          <Route path="/surveys" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<Navigate to="/" replace />} />
+          <Route path="/benchmarks" element={<Navigate to="/" replace />} />
+          <Route path="/pipeline" element={<Navigate to="/" replace />} />
+          <Route path="/analyse" element={<Navigate to="/scanner" replace />} />
+          <Route path="/detect" element={<Navigate to="/scanner" replace />} />
+          <Route path="/surveys" element={<Navigate to="/scanner" replace />} />
           <Route path="/priority-list" element={<Navigate to="/report" replace />} />
           <Route path="/dashboard" element={<Navigate to="/report" replace />} />
           <Route path="/maintenance" element={<Navigate to="/report" replace />} />

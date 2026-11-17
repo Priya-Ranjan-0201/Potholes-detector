@@ -142,7 +142,7 @@ export const RoadAuditReportPage: React.FC = () => {
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              to="/"
+              to="/scanner"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold text-white bg-[#1E293B] hover:bg-[#283545] border border-[#334155] transition-all"
             >
               <ArrowLeft className="w-4 h-4 text-[#FFD200]" />

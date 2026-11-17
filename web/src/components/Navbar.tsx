@@ -43,33 +43,44 @@ export const Navbar: React.FC = () => {
     };
   }, []);
 
-  const isScannerActive = location.pathname === "/" || location.pathname === "/scanner";
+  const isOverviewActive = location.pathname === "/" || location.pathname === "/overview" || location.pathname === "/about";
+  const isScannerActive = location.pathname === "/scanner" || location.pathname === "/scan";
   const isReportActive = location.pathname === "/report";
-  const isOverviewActive = location.pathname === "/overview" || location.pathname === "/about";
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[#121820]/95 border-b border-[#283545] shadow-lg backdrop-blur-md">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 gap-4">
-          {/* Brand Logo & Road Title */}
+          {/* Brand Logo & Original Name ScamRoad */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none group">
             <div className="p-1 rounded bg-[#FF5A00] text-white shadow-sm group-hover:scale-105 transition-transform">
               <Logo showWordmark={false} size="sm" />
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="font-serif font-bold text-base tracking-tight text-white">
-                RoadSurvey AI
+              <span className="font-serif font-extrabold text-base tracking-tight text-white">
+                ScamRoad
               </span>
               <span className="hidden sm:inline-block text-[11px] font-mono font-bold text-[#FFD200]">
-                Road Damage Inspector
+                AI Road Distress Vision
               </span>
             </div>
           </Link>
 
-          {/* Navigation Bar */}
+          {/* Navigation Bar: Overview as Main Page (/) */}
           <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner">
             <Link
               to="/"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isOverviewActive
+                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
+                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
+              }`}
+            >
+              <span>⚡ Overview</span>
+            </Link>
+
+            <Link
+              to="/scanner"
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 isScannerActive
                   ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
@@ -88,17 +99,6 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <span>📋 Audit Report &amp; PDF</span>
-            </Link>
-
-            <Link
-              to="/overview"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                isOverviewActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-[#FF5A00]/25"
-                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
-              }`}
-            >
-              <span>⚡ Overview</span>
             </Link>
           </nav>
 
