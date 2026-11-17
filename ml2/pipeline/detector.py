@@ -50,6 +50,7 @@ class ML2DetectorPipeline:
         bal_path = PROJECT_ROOT / "ml2" / "models" / "yolo11_road_damage.onnx"
         crk_path = PROJECT_ROOT / "ml2" / "models" / "yolo11_road_damage_prev.onnx"
         dep_path = PROJECT_ROOT / "runs" / "rescue_train" / "yolo11n_rescue" / "weights" / "best.onnx"
+        pot_path = PROJECT_ROOT / "ml" / "weights" / "yolo11n_pothole_best.onnx"
 
         if model_path is not None:
             bal_path = Path(model_path)
@@ -57,6 +58,7 @@ class ML2DetectorPipeline:
         self.sess_balanced = None
         self.sess_crack = None
         self.sess_deep = None
+        self.sess_pothole = None
 
         if bal_path.exists():
             self.sess_balanced = ort.InferenceSession(str(bal_path), opts, providers=["CPUExecutionProvider"])
@@ -68,6 +70,9 @@ class ML2DetectorPipeline:
 
         if dep_path.exists():
             self.sess_deep = ort.InferenceSession(str(dep_path), opts, providers=["CPUExecutionProvider"])
+
+        if pot_path.exists():
+            self.sess_pothole = ort.InferenceSession(str(pot_path), opts, providers=["CPUExecutionProvider"])
 
         self.model_path = str(bal_path)
 
@@ -147,8 +152,12 @@ class ML2DetectorPipeline:
             y1 = max(0.0, min(float(h), ((cy - bh / 2.0) - dy) / scale))
             x2 = max(0.0, min(float(w), ((cx + bw / 2.0) - dx) / scale))
             y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
-            if (x2 - x1) >= 4 and (y2 - y1) >= 4:
-                boxes_nms.append([int(x1), int(y1), int(x2 - x1), int(y2 - y1)])
+            bw_px, bh_px = x2 - x1, y2 - y1
+            area_ratio = (bw_px * bh_px) / (w * h)
+            if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
+                continue
+            if bw_px >= 4 and bh_px >= 4:
+                boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
                 confs_nms.append(float(c))
                 candidates.append({
                     "box": [x1, y1, x2, y2],
@@ -180,8 +189,12 @@ class ML2DetectorPipeline:
                 y1 = max(0.0, min(float(h), ((cy - bh / 2.0) - dy) / scale))
                 x2 = max(0.0, min(float(w), ((cx + bw / 2.0) - dx) / scale))
                 y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
-                if (x2 - x1) >= 4 and (y2 - y1) >= 4:
-                    boxes_nms.append([int(x1), int(y1), int(x2 - x1), int(y2 - y1)])
+                bw_px, bh_px = x2 - x1, y2 - y1
+                area_ratio = (bw_px * bh_px) / (w * h)
+                if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
+                    continue
+                if bw_px >= 4 and bh_px >= 4:
+                    boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
                     confs_nms.append(float(c))
                     candidates.append({
                         "box": [x1, y1, x2, y2],
@@ -213,14 +226,55 @@ class ML2DetectorPipeline:
                 y1 = max(0.0, min(float(h), ((cy - bh / 2.0) - dy) / scale))
                 x2 = max(0.0, min(float(w), ((cx + bw / 2.0) - dx) / scale))
                 y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
-                if (x2 - x1) >= 4 and (y2 - y1) >= 4:
-                    boxes_nms.append([int(x1), int(y1), int(x2 - x1), int(y2 - y1)])
+                bw_px, bh_px = x2 - x1, y2 - y1
+                area_ratio = (bw_px * bh_px) / (w * h)
+                if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
+                    continue
+                if bw_px >= 4 and bh_px >= 4:
+                    boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
                     confs_nms.append(float(c))
                     candidates.append({
                         "box": [x1, y1, x2, y2],
                         "conf": float(c),
                         "class_id": int(cid),
                         "label": CLASS_NAMES.get(int(cid), "POTHOLE"),
+                    })
+
+        # --- Stage 2C: Dedicated Pothole & Puddle Specialist ---
+        if self.sess_pothole is not None:
+            out_p = self.sess_pothole.get_outputs()[0].name
+            in_p = self.sess_pothole.get_inputs()[0].name
+            p_pot = self.sess_pothole.run([out_p], {in_p: inp})[0][0]
+
+            scores_pot = p_pot[4:, :]
+            confs_pot = np.max(scores_pot, axis=0)
+            cids_pot = np.argmax(scores_pot, axis=0)
+            mask_pot = (confs_pot >= conf_thresh) & (cids_pot == 0)
+
+            for cx, cy, bw, bh, cid, c in zip(
+                p_pot[0, mask_pot],
+                p_pot[1, mask_pot],
+                p_pot[2, mask_pot],
+                p_pot[3, mask_pot],
+                cids_pot[mask_pot],
+                confs_pot[mask_pot],
+            ):
+                x1 = max(0.0, min(float(w), ((cx - bw / 2.0) - dx) / scale))
+                y1 = max(0.0, min(float(h), ((cy - bh / 2.0) - dy) / scale))
+                x2 = max(0.0, min(float(w), ((cx + bw / 2.0) - dx) / scale))
+                y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
+                bw_px, bh_px = x2 - x1, y2 - y1
+                area_ratio = (bw_px * bh_px) / (w * h)
+                if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
+                    continue
+                if bw_px >= 4 and bh_px >= 4:
+                    boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
+                    confs_nms.append(float(c))
+                    candidates.append({
+                        "box": [x1, y1, x2, y2],
+                        "conf": float(c),
+                        "class_id": 0,
+                        "label": "POTHOLE",
                     })
 
         if not candidates:
