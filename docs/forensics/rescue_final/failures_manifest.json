@@ -1,0 +1,142 @@
+[
+  {
+    "rank": 1,
+    "filename": "bench_damage_113_test_src2_usa_United_States_000079.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 9 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_01_missed_damage_bench_damage_113_test_src2_usa_United_States_000079.jpg"
+  },
+  {
+    "rank": 2,
+    "filename": "bench_damage_057_test_src2_usa_United_States_000004.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 8 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_02_missed_damage_bench_damage_057_test_src2_usa_United_States_000004.jpg"
+  },
+  {
+    "rank": 3,
+    "filename": "bench_damage_054_test_src3_egypt_Egypt_00341_jpg.rf.5685a9178add9cd7b6fa460567d0e3a3.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 7 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_03_missed_damage_bench_damage_054_test_src3_egypt_Egypt_00341_jpg.rf.5685a9178add9cd7b6fa460567d0e3a3.jpg"
+  },
+  {
+    "rank": 4,
+    "filename": "bench_damage_212_test_src3_egypt_IMG_3992-1-_MOV-0034_jpg.rf.c4b1b9d5733b1ab99e8e31c9842256e2.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 7 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_04_missed_damage_bench_damage_212_test_src3_egypt_IMG_3992-1-_MOV-0034_jpg.rf.c4b1b9d5733b1ab99e8e31c9842256e2.jpg"
+  },
+  {
+    "rank": 5,
+    "filename": "bench_damage_300_test_src2_usa_United_States_000037.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 7 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_05_missed_damage_bench_damage_300_test_src2_usa_United_States_000037.jpg"
+  },
+  {
+    "rank": 6,
+    "filename": "bench_damage_211_test_src3_egypt_Egypt_00293_jpg.rf.f0ee072e19470f5fcf8d515d691bfbf5.jpg",
+    "type": "false_rejection",
+    "reason": "Input gate falsely rejected real road image: Not a road photograph (civil engineering distress diagram detected).",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_06_false_rejection_bench_damage_211_test_src3_egypt_Egypt_00293_jpg.rf.f0ee072e19470f5fcf8d515d691bfbf5.jpg"
+  },
+  {
+    "rank": 7,
+    "filename": "bench_damage_230_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0207_jpg.rf.aa084ea8fbecdee49c788e58960f5186.jpg",
+    "type": "false_rejection",
+    "reason": "Input gate falsely rejected real road image: Not a road photograph (civil engineering distress diagram detected).",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_07_false_rejection_bench_damage_230_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0207_jpg.rf.aa084ea8fbecdee49c788e58960f5186.jpg"
+  },
+  {
+    "rank": 8,
+    "filename": "bench_damage_287_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0231_jpg.rf.a4dc22019da20cced3be0313f96745d8.jpg",
+    "type": "false_rejection",
+    "reason": "Input gate falsely rejected real road image: Not a road photograph (civil engineering distress diagram detected).",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_08_false_rejection_bench_damage_287_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0231_jpg.rf.a4dc22019da20cced3be0313f96745d8.jpg"
+  },
+  {
+    "rank": 9,
+    "filename": "bench_damage_042_test_src2_usa_United_States_000170.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 6 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_09_missed_damage_bench_damage_042_test_src2_usa_United_States_000170.jpg"
+  },
+  {
+    "rank": 10,
+    "filename": "bench_damage_052_test_src2_usa_United_States_000122.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 6 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_10_missed_damage_bench_damage_052_test_src2_usa_United_States_000122.jpg"
+  },
+  {
+    "rank": 11,
+    "filename": "bench_damage_065_test_src2_usa_United_States_000137.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 6 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_11_missed_damage_bench_damage_065_test_src2_usa_United_States_000137.jpg"
+  },
+  {
+    "rank": 12,
+    "filename": "bench_damage_092_test_src3_egypt_Egypt_00267_jpg.rf.f3047e5a4984b0f9bd356c079698126c.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 6 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_12_missed_damage_bench_damage_092_test_src3_egypt_Egypt_00267_jpg.rf.f3047e5a4984b0f9bd356c079698126c.jpg"
+  },
+  {
+    "rank": 13,
+    "filename": "bench_damage_182_test_src3_egypt_IMG_3975-1-_MOV-0451_jpg.rf.cce5d74f6f017ec3875f8479cec2e160.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 6 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_13_missed_damage_bench_damage_182_test_src3_egypt_IMG_3975-1-_MOV-0451_jpg.rf.cce5d74f6f017ec3875f8479cec2e160.jpg"
+  },
+  {
+    "rank": 14,
+    "filename": "bench_damage_013_test_src3_egypt_IMG_3996-1-_MOV-0000_jpg.rf.055c23f913c70c125a76108c689626aa.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_14_missed_damage_bench_damage_013_test_src3_egypt_IMG_3996-1-_MOV-0000_jpg.rf.055c23f913c70c125a76108c689626aa.jpg"
+  },
+  {
+    "rank": 15,
+    "filename": "bench_damage_024_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0244_jpg.rf.0d0aa2bfb5cdd69d892ddb1df135b5b5.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_15_missed_damage_bench_damage_024_test_src3_egypt_WhatsApp-Video-2024-03-22-at-14_38_09_mp4-0244_jpg.rf.0d0aa2bfb5cdd69d892ddb1df135b5b5.jpg"
+  },
+  {
+    "rank": 16,
+    "filename": "bench_damage_025_test_src3_egypt_Egypt_00519_jpg.rf.4ec88fbfaca84cae0b424e0b2c8c0d29.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_16_missed_damage_bench_damage_025_test_src3_egypt_Egypt_00519_jpg.rf.4ec88fbfaca84cae0b424e0b2c8c0d29.jpg"
+  },
+  {
+    "rank": 17,
+    "filename": "bench_damage_034_test_src2_usa_United_States_000236.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_17_missed_damage_bench_damage_034_test_src2_usa_United_States_000236.jpg"
+  },
+  {
+    "rank": 18,
+    "filename": "bench_damage_044_test_src2_usa_United_States_000048.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_18_missed_damage_bench_damage_044_test_src2_usa_United_States_000048.jpg"
+  },
+  {
+    "rank": 19,
+    "filename": "bench_damage_083_test_src3_egypt_IMG_3973-1-_MOV-0295_jpg.rf.0e96839d726ec15873c3f239cbe65672.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_19_missed_damage_bench_damage_083_test_src3_egypt_IMG_3973-1-_MOV-0295_jpg.rf.0e96839d726ec15873c3f239cbe65672.jpg"
+  },
+  {
+    "rank": 20,
+    "filename": "bench_damage_104_test_src2_usa_United_States_000180.jpg",
+    "type": "missed_damage",
+    "reason": "Missed all 5 true defects on road damage image",
+    "overlay_path": "docs/forensics/rescue_final\\remaining_failure_20_missed_damage_bench_damage_104_test_src2_usa_United_States_000180.jpg"
+  }
+]

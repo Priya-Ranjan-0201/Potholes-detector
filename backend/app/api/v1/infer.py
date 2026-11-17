@@ -31,6 +31,7 @@ from PIL import Image, ImageOps
 from pydantic import BaseModel
 
 from backend.app.services.video_tracker import VideoDefectEvent, VideoDefectTracker
+from ml.guard.road_guards import is_road_image, compute_road_surface_mask, filter_boxes_by_road_mask
 
 router = APIRouter()
 
@@ -241,47 +242,11 @@ def decode_image_bytes(contents: bytes) -> np.ndarray:
 
 
 def check_image_usability(img: np.ndarray) -> Tuple[bool, str]:
-    """Validate image usability per Section 3.4 and Phase T5 input gate.
+    """Validate image usability per Section 3.4 and Guard B input gate.
 
     Returns (is_usable, message).
     """
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    mean_lum = float(np.mean(gray))
-
-    if mean_lum < 15.0:
-        return False, "Image is too dark for defect analysis (mean luminance < 15.0). Please provide better lighting."
-    if mean_lum > 240.0:
-        return False, "Image is overexposed or washed out (mean luminance > 240.0). Please adjust exposure."
-
-    laplacian_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
-    if laplacian_var < 15.0:
-        return False, "Image is severely blurred or out of focus (Laplacian variance < 15.0). Please stabilize camera."
-
-    # Phase T5: Input Gate for non-road infographics / diagrams / documents
-    # Detect composite multi-panel diagrams with high-density text labels and graphic title banners
-    h, w = gray.shape
-    top_band = gray[: max(10, int(h * 0.10)), :]
-    if top_band.size > 0 and h > 200:
-        top_std = float(np.std(top_band))
-        top_mean = float(np.mean(top_band))
-        b, g, r = img[:, :, 0], img[:, :, 1], img[:, :, 2]
-        chroma = float(np.mean(np.abs(r.astype(float) - g.astype(float)) + np.abs(g.astype(float) - b.astype(float))))
-
-        if (top_mean < 115.0 and top_std > 60.0) and chroma < 16.0:
-            _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-            nl, _, stats, _ = cv2.connectedComponentsWithStats(thresh)
-            glyphs = sum(
-                1 for i in range(1, nl)
-                if 7 <= stats[i, 3] <= 32 and 3 <= stats[i, 2] <= 32 and 15 <= stats[i, 4] <= 450
-            )
-            if glyphs >= 80:
-                return (
-                    False,
-                    "This image does not appear to be a camera road photograph. "
-                    "ScamRoad operates on camera images of road pavement surfaces."
-                )
-
-    return True, "ok"
+    return is_road_image(img)
 
 
 def _get_ort_session(cache_key: str, path: str):
@@ -305,10 +270,11 @@ def _get_ort_session(cache_key: str, path: str):
 
 
 def get_pothole_engine(conf_thresh: float = 0.20, iou_thresh: float = 0.35):
-    """Retrieve fine-tuned YOLO11n ONNX inference engine."""
+    """Retrieve unified YOLO11n ONNX inference engine."""
     from edge.agent.infer import EdgeInferenceEngine
 
     candidates = [
+        "runs/rescue_train/yolo11n_rescue/weights/best.onnx",
         "runs/export/best.onnx",
         "ml/weights/yolo11n_pothole_best.onnx",
         "ml/weights/best.onnx",
@@ -573,96 +539,73 @@ def run_pipeline_on_image(
     iou_thresh: float = 0.35,
     extract_polygons: bool = True,
     crack_floor: Optional[float] = None,
+    preset: str = "balanced",
 ) -> List[DetectionBox]:
-    """Execute multi-model inference pipeline on a decoded BGR image array."""
+    """Execute unified rescued YOLO11 inference pipeline with Guard A road prior on a decoded BGR image array."""
     h, w = img.shape[:2]
+
+    # Preset calibration
+    if preset == "high_precision":
+        active_conf = max(0.40, conf_thresh)
+    elif preset == "high_recall":
+        active_conf = min(0.15, conf_thresh)
+    else:  # balanced
+        active_conf = conf_thresh
 
     # 1. Detect obstacles with COCO blocker (conf >= 0.40)
     obstacles = detect_non_road_obstacles(img, conf_thresh=0.40)
 
-    # 2. Pothole detections from YOLO11n
-    pothole_eng = get_pothole_engine(conf_thresh=conf_thresh, iou_thresh=iou_thresh)
-    raw_potholes = pothole_eng.predict(img) if pothole_eng else []
+    # 2. Guard A: Extract drivable road surface mask
+    road_mask = compute_road_surface_mask(img) if ENABLE_ROAD_REGION_GUARD else None
 
-    # 3. Crack detections from YOLOv8n crack specialist (calibrated threshold)
-    if crack_floor is None:
-        crack_floor = max(0.38, conf_thresh)
-    crack_eng = get_crack_engine(conf_thresh=crack_floor, iou_thresh=iou_thresh)
-    raw_cracks = crack_eng.predict(img) if crack_eng else []
+    # 3. Defect detections from unified modern YOLO11n detector
+    det_eng = get_pothole_engine(conf_thresh=active_conf, iou_thresh=iou_thresh)
+    raw_dets = det_eng.predict(img) if det_eng else []
 
-    # Filter out obstacles and non-defect classes
+    # Filter out obstacles, off-road candidates, and sanity bounds
     valid_candidates: List[dict] = []
-    pothole_boxes: List[List[float]] = []
 
-    for p in raw_potholes:
-        bx = [float(v) for v in p.bbox_xyxy]
-        cls_name = getattr(p, "class_name", "").upper()
-        if "POTHOLE" not in cls_name and cls_name != "0":
-            continue
-        # Phase T3: Road-region guard (reject detections located entirely in sky/canopy/overhead region)
-        if ENABLE_ROAD_REGION_GUARD and bx[3] < (ROAD_REGION_MIN_Y * h):
-            continue
+    for d in raw_dets:
+        bx = [float(v) for v in d.bbox_xyxy]
+        cls_name = getattr(d, "class_name", "").upper()
+        
+        # Standardize class name
+        if "POTHOLE" in cls_name or cls_name == "0":
+            clean_label = "POTHOLE"
+        elif "LONG" in cls_name or cls_name == "1":
+            clean_label = "CRACK_LONGITUDINAL"
+        elif "TRANS" in cls_name or cls_name == "2":
+            clean_label = "CRACK_TRANSVERSE"
+        elif "ALLIGATOR" in cls_name or cls_name == "3":
+            clean_label = "CRACK_ALLIGATOR"
+        else:
+            clean_label = cls_name or "POTHOLE"
+
+        # Guard A: Filter out detections whose center and bottom are outside drivable road surface
+        if road_mask is not None:
+            cx = int(np.clip((bx[0] + bx[2]) / 2.0, 0, w - 1))
+            cy_c = int(np.clip((bx[1] + bx[3]) / 2.0, 0, h - 1))
+            cy_b = int(np.clip(bx[3] - 2, 0, h - 1))
+            if road_mask[cy_c, cx] == 0 and road_mask[cy_b, cx] == 0:
+                continue
+
+        # Obstacle occlusion check
         if is_occluded_by_obstacle(bx, obstacles):
             continue
+
         # Sanity bounds
         bw, bh = bx[2] - bx[0], bx[3] - bx[1]
         if bw < 4 or bh < 4:
             continue
+
         valid_candidates.append({
             "box": bx,
-            "conf": float(p.confidence),
-            "label": "POTHOLE",
-            "source": "YOLO11n-Unified",
-        })
-        pothole_boxes.append(bx)
-
-    for c in raw_cracks:
-        bx = [float(v) for v in c.bbox_xyxy]
-        cls_name = getattr(c, "class_name", "").upper()
-        if "CRACK" not in cls_name:
-            continue
-        # Phase T3: Road-region guard for cracks (road distress is on pavement surface, not signboards/awnings)
-        if ENABLE_ROAD_REGION_GUARD and (
-            bx[3] < (ROAD_REGION_MIN_Y + 0.03) * h or (bx[1] + bx[3]) / 2.0 < ROAD_REGION_MIN_Y * h
-        ):
-            continue
-        if is_occluded_by_obstacle(bx, obstacles):
-            continue
-        # Suppress crack if it overlaps an authoritative pothole crater
-        if any(compute_iou_xyxy(bx, p_bx) > 0.20 or compute_iom_xyxy(bx, p_bx) > 0.35 for p_bx in pothole_boxes):
-            continue
-        bw, bh = bx[2] - bx[0], bx[3] - bx[1]
-        if bw < 4 or bh < 4:
-            continue
-        valid_candidates.append({
-            "box": bx,
-            "conf": float(c.confidence),
-            "label": cls_name,
-            "source": "YOLOv8n-Distress",
+            "conf": float(d.confidence),
+            "label": clean_label,
+            "source": "Unified YOLO11n-Rescue + Guarded Surface Prior",
         })
 
-    # Weighted Boxes Fusion & Non-Maximum Suppression
-    valid_candidates.sort(key=lambda x: x["conf"], reverse=True)
-    fused: List[dict] = []
-
-    for cand in valid_candidates:
-        matched = False
-        for f in fused:
-            if compute_iou_xyxy(cand["box"], f["box"]) > iou_thresh:
-                # Merge: weight coordinates by confidence
-                w1, w2 = f["conf"], cand["conf"]
-                total_w = w1 + w2
-                f["box"] = [
-                    (f["box"][0] * w1 + cand["box"][0] * w2) / total_w,
-                    (f["box"][1] * w1 + cand["box"][1] * w2) / total_w,
-                    (f["box"][2] * w1 + cand["box"][2] * w2) / total_w,
-                    (f["box"][3] * w1 + cand["box"][3] * w2) / total_w,
-                ]
-                f["conf"] = max(f["conf"], cand["conf"])
-                matched = True
-                break
-        if not matched:
-            fused.append(dict(cand))
+    fused = valid_candidates
 
     # Build final DetectionBox objects
     detections: List[DetectionBox] = []
@@ -729,8 +672,9 @@ def run_pipeline_on_image(
 @router.post("/infer/image", response_model=InferenceResponse, include_in_schema=False)
 async def infer_road_defects(
     file: UploadFile = File(...),
-    conf_thresh: float = Query(0.35, ge=0.05, le=0.95),
+    conf_thresh: float = Query(0.25, ge=0.05, le=0.95),
     iou_thresh: float = Query(0.35, ge=0.1, le=0.9),
+    preset: str = Query("balanced", pattern="^(balanced|high_precision|high_recall)$"),
 ):
     """Run real-time road defect inference on an uploaded image file."""
     start_t = time.perf_counter()
@@ -743,7 +687,12 @@ async def infer_road_defects(
         raise HTTPException(status_code=422, detail=reason)
 
     h, w = img.shape[:2]
-    detections = run_pipeline_on_image(img, conf_thresh=conf_thresh, iou_thresh=iou_thresh)
+    detections = run_pipeline_on_image(
+        img,
+        conf_thresh=conf_thresh,
+        iou_thresh=iou_thresh,
+        preset=preset,
+    )
 
     # Phase T7: Cap maximum rendered bounding boxes to 25 to prevent canvas visual clutter
     detections = detections[:25]
@@ -774,7 +723,7 @@ async def infer_road_defects(
         max_severity=max_severity,
         overall_health_score=overall_health,
         detections=detections,
-        engine="Calibrated Multi-Model Ensemble (YOLO11n + YOLOv8n)",
+        engine="Unified YOLO11n-Rescue + Guarded Surface Prior",
         latency_ms=latency_ms,
     )
 
