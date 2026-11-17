@@ -14,31 +14,28 @@
 | **1** | **`D00`** | **Longitudinal Crack** | Single structural crack line propagating parallel ($\pm 30^\circ$) to the direction of vehicular travel, commonly along paving seams, wheel tracks, or lane markings. |
 | **2** | **`D10`** | **Transverse Crack** | Single crack line oriented predominantly perpendicular ($60^\circ\text{--}120^\circ$) across lane width, caused by thermal shrinkage cycles or reflective sub-grade shifting. |
 | **3** | **`D20`** | **Alligator Crack** | Interconnected pattern of structural fatigue fissures forming a multi-sided polygonal mosaic (similar to reptilian skin). Indicates base course failure under heavy axle loads. |
+| **4** | **`D41`** | **Water-Filled Pothole** | Depressed cavity filled with turbid water or mud where fractured perimeter asphalt edges are clearly visible. Treated with high severity due to hydroplaning risk. |
+| **5** | **`S01`** | **Concrete Crack** | Structural fracture in concrete civil assets (bridges, retaining walls, culverts, abutments). |
+| **6** | **`S02`** | **Spalling** | Flaking, chipping, or detachment of concrete surface exposing the sub-surface matrix. |
+| **7** | **`S03`** | **Exposed Rebar** | Structural reinforcing steel bars visibly protruding or uncovered due to extensive concrete loss. Critical safety hazard. |
+| **8** | **`S04`** | **Corrosion / Rust** | Oxidation staining and iron hydroxide runoff bleeding across concrete faces. |
+| **9** | **`S05`** | **Efflorescence** | Crystalline salt deposits leached by moisture seepage through concrete joints and retaining structures. |
 
 ---
 
-## 2. Bounding Box Geometry Rules
+## 2. Pavement & Surface Distinctions
 
-1. **Tight Boundary Fit:**
-   - Draw the bounding box tightly around the visible perimeter of the distress.
-   - Include the outer perimeter lip and depth shadow of potholes.
-   - For cracks, encompass the continuous fissure and immediate fractured asphalt edges.
-2. **Minimum Resolution Threshold:**
-   - **Minimum Bounding Box Dimension:** $\ge 20 \times 20\text{ pixels}$.
-   - Defects smaller than $20\text{ pixels}$ occupying distant background ($>20\text{ m}$) must be ignored to prevent training noise.
-3. **Multi-Fragment Disjoint Cracks:**
-   - If a crack has a break $<15\text{ cm}$ (or $<25\text{ pixels}$ on screen), encapsulate it within a single bounding box.
-   - If the separation exceeds $15\text{ cm}$, annotate as two separate crack instances.
-4. **Alligator Crack Area Grouping:**
-   - Annotate the entire contiguous polygonal cluster as a single `crack_alligator` (`D20`) bounding box. Do not draw dozens of tiny boxes over individual cells.
+### Edge Case A: Water-Filled Pothole vs. Surface Water Puddle
+- **Water-Filled Pothole (Defect - D41):** The depression has visible broken, fractured asphalt lip boundaries around the water line, indicating loss of pavement base.
+- **Surface Puddle (Negative / Non-Defect):** Standing water on intact asphalt where pavement edges are unbroken and road texture continues beneath the water film.
+- **Rule:** **A puddle on intact asphalt is NEVER a pothole.** Only label as a defect if fractured pavement edges are present.
 
----
-
-## 3. Disambiguation of Ambiguous Edge Cases (Crucial for Viva)
-
-### Edge Case A: Bitumen Patch vs. Pothole
+### Edge Case B: Bitumen Patch vs. Pothole
 - **Bitumen Patch (Negative / Non-Defect):** Fresh or weathered asphalt applied during municipal repairs. Surface is raised or coplanar with the road, exhibiting flat granular texture without an internal depression shadow.
-- **Rule:** **DO NOT label bitumen patches as potholes.** If unannotated, leave as background or mine as a hard-negative.
+- **Rule:** **DO NOT label bitumen patches as potholes.**
+
+### Edge Case C: Non-Road Backgrounds & Off-Road Objects
+- **Rule:** **NEVER label people, vehicles, signs, vegetation, or sky.** Defects exist strictly on road pavement or civil infrastructure surfaces. If an object is not road pavement or concrete structure, it must have 0 annotations.
 
 ### Edge Case B: Cast-Iron Manhole Cover vs. Pothole
 - **Manhole Cover (Negative / Non-Defect):** Circular or rectangular metallic utility access cover. Displays concentric iron ridges, metallic luster, and level road grade.

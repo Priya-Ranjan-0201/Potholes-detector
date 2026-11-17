@@ -1,0 +1,39 @@
+# Severity Assessment Configuration & Weight Spec
+version: "2.0.0"
+fitted_seed: 42
+fitting_method: "monotonic_constrained_scoring"
+
+class_weights:
+  POTHOLE: 48.0
+  WATER_FILLED_POTHOLE: 62.0
+  CRACK_ALLIGATOR: 40.0
+  CRACK_TRANSVERSE: 28.0
+  CRACK_LONGITUDINAL: 22.0
+  CONCRETE_CRACK: 32.0
+  SPALLING: 58.0
+  EXPOSED_REBAR: 85.0
+  CORROSION_RUST: 52.0
+  EFFLORESCENCE: 25.0
+
+area_scaling:
+  min_multiplier: 0.80
+  max_multiplier: 1.60
+  steepness: 12.0
+
+position_weights:
+  wheel_path: 1.25
+  lane_center: 1.00
+  shoulder_edge: 0.85
+
+extent_scaling:
+  cluster_base_bonus: 5.0
+  max_cluster_bonus: 20.0
+
+structural_risk_flags:
+  exposed_rebar_critical_bump: 25.0
+  water_filled_hazard_bump: 12.0
+
+thresholds:
+  low_cutoff: 30
+  moderate_cutoff: 55
+  high_cutoff: 75

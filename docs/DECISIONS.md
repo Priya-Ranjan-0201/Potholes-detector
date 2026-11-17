@@ -211,27 +211,41 @@ Previous iterations exhibited performance instability on unseen field media. A f
 
 ---
 
-## ADR-008: Hardware Tier A Execution Protocol & V15 Architecture
+---
+
+## ADR-009: Repository Refocus to AI-Powered Road and Infrastructure Damage Detection and Severity Assessment
 
 **Date:** 2026-11-17  
 **Status:** Accepted  
-**Scope:** Master Fix v15 Protocol, Compute Planning, Emergency Triage
+**Scope:** Architecture, Product Scope, Model Pipeline, and Visual Identity
 
 ### Context
-Execution protocol Rule P5 requires detecting available hardware upfront, selecting an execution tier, and recording the choice. System probing confirmed:
-- **Host Platform:** Windows 11 AMD64 (AMD Ryzen 7 7445HS, 6 cores / 12 threads)
-- **Host RAM:** 15.2 GB physical memory
-- **GPU Accelerator:** No host CUDA acceleration detected (`torch.cuda.is_available() == False`).
+The user issued the comprehensive refocus directive:
+- **Title:** "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment"
+- **Nickname:** `RoadSurvey AI` (short: `RoadSurvey`)
+- **Definition:** A computer-vision system for surveying road and civic infrastructure that detects damage such as potholes, cracks, and structural deterioration from images or video, and assigns a severity score to each detected issue to help prioritise repair and maintenance work.
+
+Prior code retained legacy municipal features (citizen complaints, work-order SLAs, cost estimations, ward assignments, gamification) that dilute the technical focus of the computer vision capstone.
 
 ### Decision
-Operate under **Tier A (Laptop CPU / Host Execution)**:
-1. All local inference and verification runs execute via multi-threaded CPU ONNX Runtime (`CPUExecutionProvider`), configured with `OPENBLAS_NUM_THREADS=2`, `OMP_NUM_THREADS=2`, and `MKL_NUM_THREADS=2`.
-2. Heavy multi-seed deep neural network training jobs are authored as self-contained reproducible Google Colab / Kaggle T4 notebooks under `scripts/colab/` rather than stalling local development.
-3. Every phase maintains persistent checkpoints under `docs/checkpoints/` so execution state survives context refreshes.
-4. Emergency Triage (Phase T) implements minimal, reversible configuration flags and guards to prevent false alarms on non-road clutter, people, vehicles, and infographics before long-cycle training commences.
+1. **Scope Boundary (S1–S10):** Restrict system solely to:
+   - S1: Image, video, and live camera input
+   - S2: Road damage detection (potholes, water-filled potholes, longitudinal, transverse, alligator cracks)
+   - S3: Civic infrastructure structural deterioration (concrete cracks, spalling, exposed rebar, corrosion, efflorescence)
+   - S4: 0–100 Severity Score with 4 levels (Low, Moderate, High, Critical) and transparent feature breakdown
+   - S5: Survey summary and Repair Priority ranking
+   - S6: Survey records with review, before/after re-inspection, and CSV/GeoJSON/PDF exports
+   - S7: Benchmarks & Method documentation from verified metric files
+   - S8: Lightweight auth (inspector / viewer)
+   - S9: Privacy preservation (EXIF stripping, face/plate redaction)
+   - S10: English and Hindi localisation
+2. **Purge Out-of-Scope Modules:** Deprecate and stage for cleanup: citizen complaints, work orders, SLAs, contractor rate cards, wards, gamification, and map UI.
+3. **Design Identity:** Implement the "Gauge and green" palette (#F4F6F3 light / #1F6F54 green / #0D1210 dark) and alternate "Concrete and signal blue", paired with Source Serif 4 + IBM Plex typography.
+4. **Severity Formulation:** Use monotonic formula: `Severity = min(100, BaseWeight × AreaFactor × PositionFactor × ExtentFactor + StructuralRiskFlags)`.
 
 ### Consequences
-- **Positive:** Immediate, reproducible local verification without requiring remote GPU dependencies for triage, evaluation, and frontend redesign.
-- **Positive:** Zero risk of out-of-memory crashes on host memory.
-- **Negative:** Full multi-epoch training studies are exported to Colab/Kaggle and documented transparently.
+- **Positive:** Laser-focused, highly defensible engineering capstone for academic defense and real-world civic inspection.
+- **Positive:** Zero distraction from unverified municipal management simulations.
+- **Negative:** Requires thorough removal and migration of legacy database tables and routes.
+
 

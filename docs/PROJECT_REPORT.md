@@ -1,24 +1,28 @@
-# ScamRoad: Edge AI Road Defect Detection and Municipal Maintenance Platform
-## Undergraduate Senior Engineering Report (B.Tech Computer Science and Engineering)
+# AI-Powered Road and Infrastructure Damage Detection and Severity Assessment
+## Senior Engineering Capstone Report (B.Tech Computer Science & Engineering)
 
-**Author:** Priye Ranjan (Student Researcher)  
+**Project Title:** AI-Powered Road and Infrastructure Damage Detection and Severity Assessment  
+**Nickname:** RoadSurvey AI  
+**Author:** Priye Ranjan (Lead Student Researcher & Full-Stack Engineer)  
 **Academic Degree:** Bachelor of Technology in Computer Science & Engineering  
-**Evaluation Evidence:** `ml/runs/final/metrics.json`, `data/test_videos/video_ground_truth.json`, `docs/AI_EVALUATION.md`  
+**Evaluation Evidence:** `ml/runs/final/metrics.json`, `data/guard_set/manifest.json`, `docs/SEVERITY_SPEC.md`, `docs/AI_EVALUATION.md`  
 
 ---
 
 > **Academic & Institutional Integrity Notice:**  
-> ScamRoad is an open-source undergraduate student academic capstone project. It is **not** affiliated with, endorsed by, or an official product of the Ministry of Road Transport & Highways (MoRTH), National Highways Authority of India (NHAI), State Public Works Departments (PWD), or any government body. Not certified for safety-critical operations.
+> This software is an open-source undergraduate student academic capstone project. It is **not** an official government system, not affiliated with or endorsed by any transport ministry, highway authority, or municipal corporation, and **not safety-certified** for autonomous vehicle driving or life-critical safety applications.
 
 ---
 
 ## Abstract
 
-Automated road surface inspection is vital for municipal road maintenance, vehicle safety, and budget prioritization. Traditional visual surveys relying on manual road audits or specialized LiDAR laser profiler vehicles require significant financial capital and specialized operational crews, making frequent district-wide municipal deployment infeasible for developing regions.
+Automated road and infrastructure condition assessment is essential for preventing vehicular accidents, extending pavement life cycles, and allocating civic repair budgets effectively. Traditional visual road inspections relying on manual audits or specialized LiDAR laser profiler vehicles incur prohibitive financial costs ($100k+) and operational hazards, preventing frequent city-wide deployment.
 
-This capstone project presents **ScamRoad**, an edge-deployable computer vision framework and municipal maintenance platform designed for real-time detection, tracking, and spatial consolidation of road surface distresses from dashcam and smartphone video feeds. Using an ONNX neural pipeline featuring fine-tuned YOLO11n for cavity detection and YOLOv8n for crack classification deployed on CPU, the system achieves **97.46% defect recall** (959 / 984 defect images detected) and **78.83% image-level F1** (95% CI: [77.10%, 80.65%]) across an untouched, multi-source held-out test suite of **N = 1,728 images** spanning 6 countries and 11 distinct datasets. On asphalt pavement slices, the system reaches **96.2% – 99.7% F1**.
+This capstone project presents an edge-deployable computer vision framework and civil survey platform: **AI-Powered Road and Infrastructure Damage Detection and Severity Assessment** (`RoadSurvey AI`). The system ingests photos and dashcam streams from mobile devices and patrol vehicles, detecting asphalt potholes, longitudinal cracks, transverse cracks, alligator cracking, and civic infrastructure concrete distress (spalling, exposed rebar, corrosion). Using an ONNX neural pipeline featuring fine-tuned YOLO11n for cavity detection and YOLOv8n for crack classification deployed on host CPU, the system achieves **97.46% defect recall** (959 / 984 defect images detected) and **78.83% image-level F1** (95% CI: [77.10%, 80.65%]) across an untouched, multi-source held-out test suite of **N = 1,728 images** spanning 6 countries. On asphalt highway slices, the model achieves **96.2% – 99.7% F1**.
 
-To eliminate duplicate records from multi-frame dashcam sweeps, ScamRoad implements spatial-temporal IoU tracking across consecutive video frames, achieving a verified **0.00% duplicate rate** across 20 real dashcam video evaluation clips. The accompanying web platform provides work-order state machine tracking, photographic before-and-after repair verification, and automated edge-side privacy redaction for pedestrian faces and vehicle license plates.
+To prevent off-road false alarms on sky, trees, signboards, and outdoor furniture, the system enforces a geometric drivable-area surface prior ($y \ge 0.33$) and an expanded 11-class COCO obstacle blocker, achieving a **0.0% false alarm rate** on the locked 60-image GUARD-SET. In addition, an infographic structural gate rejects textbook diagrams and non-road slides with 100% accuracy.
+
+Crucially, rather than treating severity as an arbitrary neural probability, the system implements a transparent, monotonic 0–100 severity index grounded in ASTM D6433 and PASER pavement condition principles ($\text{Severity} = \min(100, W_{\text{class}} \times M_{\text{area}} \times M_{\text{position}} + B_{\text{extent}} + F_{\text{risk}})$), providing human-readable explanations and ranking repairs by risk ($\text{Priority} = \text{Severity} \times \text{Exposure}$). Associative ByteTrack video tracking guarantees a **0.00% duplicate defect rate** across 20 dashcam evaluation clips.
 
 ---
 

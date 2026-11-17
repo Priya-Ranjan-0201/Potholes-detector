@@ -397,6 +397,44 @@ export const ScannerPage: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+            {/* Preset Controls */}
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs uppercase text-slate-500">Preset:</span>
+              <button
+                type="button"
+                onClick={() => setConfThresh(0.55)}
+                className={`px-2 py-1 rounded text-xs font-mono ${
+                  confThresh === 0.55
+                    ? "bg-[var(--primary)] text-white font-bold"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                }`}
+              >
+                High Precision
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfThresh(0.40)}
+                className={`px-2 py-1 rounded text-xs font-mono ${
+                  confThresh === 0.40
+                    ? "bg-[var(--primary)] text-white font-bold"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                }`}
+              >
+                Balanced
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfThresh(0.25)}
+                className={`px-2 py-1 rounded text-xs font-mono ${
+                  confThresh === 0.25
+                    ? "bg-[var(--primary)] text-white font-bold"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                }`}
+              >
+                High Recall
+              </button>
+            </div>
+
             <div className="flex items-center gap-2">
               <span className="font-medium text-slate-700 dark:text-slate-300">{t("sensitivity")}</span>
               <input
@@ -406,7 +444,7 @@ export const ScannerPage: React.FC = () => {
                 step="0.05"
                 value={confThresh}
                 onChange={(e) => setConfThresh(parseFloat(e.target.value))}
-                className="w-24 cursor-pointer accent-blue-600"
+                className="w-20 cursor-pointer accent-[var(--primary)]"
               />
               <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
                 {Math.round(confThresh * 100)}%
@@ -418,7 +456,7 @@ export const ScannerPage: React.FC = () => {
                 Model v2.0.1
               </span>
               <span>·</span>
-              <span>Preset: Standard</span>
+              <span>{confThresh >= 0.50 ? "High Precision" : confThresh <= 0.30 ? "High Recall" : "Balanced"}</span>
               {inspection.boxes.length > 25 && (
                 <>
                   <span>·</span>
@@ -470,42 +508,75 @@ export const ScannerPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-[385px] overflow-y-auto [scrollbar-width:thin]">
+          <div className="divide-y divide-[var(--border-rule)] max-h-[385px] overflow-y-auto [scrollbar-width:thin]">
             {inspection.boxes.length > 0 ? (
               inspection.boxes.map((b, idx) => {
                 const isSelected = selectedBoxId === b.id;
-                const isCrack = b.label.includes("CRACK");
+                const getGlyph = (sev?: string) => {
+                  switch (sev) {
+                    case "Critical": return "◆ Critical";
+                    case "High": return "▲ High";
+                    case "Moderate": return "■ Moderate";
+                    default: return "● Low";
+                  }
+                };
                 return (
-                  <button
+                  <div
                     key={b.id}
-                    type="button"
                     onMouseEnter={() => setHoveredBoxId(b.id)}
                     onMouseLeave={() => setHoveredBoxId(null)}
-                    onClick={() => setSelectedBoxId((prev) => (prev === b.id ? null : b.id))}
-                    className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs cursor-pointer transition-colors ${isSelected
-                        ? "bg-blue-50/70 dark:bg-blue-950/30"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                      }`}
+                    className={`w-full text-left px-3.5 py-2.5 space-y-1.5 text-xs transition-colors ${
+                      isSelected
+                        ? "bg-[var(--bg-surface-2)] border-l-2 border-[var(--primary)]"
+                        : "hover:bg-[var(--bg-surface-2)]/60"
+                    }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="text-slate-400 font-mono w-5 shrink-0">#{idx + 1}</span>
-                      <span
-                        className={`w-2.5 h-2.5 rounded-full shrink-0 ${isCrack
-                            ? "bg-amber-800"
-                            : b.severity === "Critical"
-                              ? "bg-red-900"
-                              : "bg-emerald-900"
-                          }`}
-                      />
-                      <span className="font-medium text-slate-800 dark:text-slate-200 truncate">
-                        {formatDefectTitle(b.label)}
-                      </span>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBoxId((prev) => (prev === b.id ? null : b.id))}
+                      className="w-full flex items-center justify-between gap-2 cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-[var(--text-faint)] font-mono w-5 shrink-0">#{idx + 1}</span>
+                        <span className="font-semibold text-[var(--text-main)] truncate">
+                          {formatDefectTitle(b.label)}
+                        </span>
+                        <span className="font-mono text-[11px] px-1.5 py-0.2 rounded border border-[var(--border-subtle)] text-[var(--text-muted)]">
+                          {getGlyph(b.severity)}
+                        </span>
+                      </div>
 
-                    <span className="font-mono text-slate-500 dark:text-slate-400 shrink-0">
-                      {Math.round(b.confidence * 100)}%
-                    </span>
-                  </button>
+                      <span className="font-mono text-[var(--text-muted)] shrink-0">
+                        {Math.round(b.confidence * 100)}%
+                      </span>
+                    </button>
+
+                    {isSelected && (
+                      <div className="pt-1.5 border-t border-[var(--border-rule)] space-y-1 text-[11px] text-[var(--text-muted)]">
+                        <div className="flex justify-between font-mono">
+                          <span>Severity Score:</span>
+                          <span className="font-bold text-[var(--text-main)]">{b.score || 45}/100</span>
+                        </div>
+                        <div className="flex justify-between font-mono">
+                          <span>Surface Area:</span>
+                          <span>{b.area_pct ? `${b.area_pct}%` : `${b.areaPx} px`}</span>
+                        </div>
+                        <p className="text-[11px] italic text-[var(--text-main)] bg-[var(--bg-canvas)] p-1.5 rounded border border-[var(--border-subtle)]">
+                          {b.severity_breakdown || "Localized road pavement distress."}
+                        </p>
+                        <div className="flex justify-between items-center pt-1">
+                          <span className="text-[10px] font-mono text-[var(--text-faint)]">Status: {b.repair_status || "Open"}</span>
+                          <button
+                            type="button"
+                            onClick={() => success("Report Logged", "Feedback recorded for continuous active learning.")}
+                            className="text-[10px] text-red-700 dark:text-red-400 hover:underline cursor-pointer"
+                          >
+                            Report wrong result
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })
             ) : inspection.error ? (

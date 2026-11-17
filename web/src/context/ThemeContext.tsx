@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type ThemeMode = "light" | "dark";
-export type PaletteTheme = "survey-paper" | "chalk-kerb" | "slate-brick";
+export type PaletteTheme = "gauge-green" | "concrete-blue";
 
 interface ThemeContextType {
   theme: ThemeMode;
@@ -25,8 +25,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [palette, setPaletteState] = useState<PaletteTheme>(() => {
     const saved = localStorage.getItem("scamroad_palette");
-    if (saved === "survey-paper" || saved === "chalk-kerb" || saved === "slate-brick") return saved;
-    return "survey-paper";
+    if (saved === "gauge-green" || saved === "concrete-blue") return saved;
+    return "gauge-green"; // Section 12 default: "Gauge and green"
   });
 
   const [reducedMotion, setReducedMotionState] = useState<boolean>(() => {

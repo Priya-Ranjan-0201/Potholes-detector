@@ -17,7 +17,7 @@ import { Logo } from "./Logo";
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
-  const { language, setLanguage, currentOption, t } = useLanguage();
+  const { language, setLanguage, currentOption } = useLanguage();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -38,23 +38,23 @@ export const Navbar: React.FC = () => {
   }, [location.pathname]);
 
   const navLinks = [
-    { to: "/", label: t("navHome"), icon: Compass },
-    { to: "/scanner", label: t("navDetect"), icon: Camera },
-    { to: "/dashboard", label: t("navDashboard"), icon: Activity },
-    { to: "/maintenance", label: t("navMaintenance"), icon: ClipboardList },
-    { to: "/benchmarks", label: t("navBenchmarks"), icon: BarChart3 },
-    { to: "/about", label: t("navAbout"), icon: Info },
+    { to: "/", label: "Home", icon: Compass },
+    { to: "/scanner", label: "Analyse", icon: Camera },
+    { to: "/surveys", label: "Surveys", icon: Activity },
+    { to: "/priority-list", label: "Priority list", icon: ClipboardList },
+    { to: "/benchmarks", label: "Benchmarks", icon: BarChart3 },
+    { to: "/about", label: "Method", icon: Info },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+    <header className="sticky top-0 z-40 w-full bg-[var(--bg-surface)] border-b border-[var(--border-rule)]">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-4">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none">
             <Logo showWordmark={false} size="sm" />
-            <span className="font-heading font-bold text-sm tracking-tight text-slate-900 dark:text-white">
-              ScamRoad
+            <span className="font-serif font-bold text-sm tracking-tight text-[var(--text-main)]">
+              RoadSurvey AI
             </span>
           </Link>
 

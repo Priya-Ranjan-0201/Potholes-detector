@@ -12,9 +12,13 @@ export interface DefectBox {
   severity: "Critical" | "Severe" | "Moderate" | "Minor";
   score: number;
   areaPx: number;
+  area_pct?: number;
   action?: string;
   wheelPathRisk?: boolean;
   depthIndicator?: "Shallow" | "Medium" | "Deep";
+  severity_breakdown?: string;
+  repair_status?: string;
+  priority_score?: number;
   modelSource?: string;
 }
 
@@ -96,9 +100,13 @@ export async function detectDefects(
         severity: d.severity,
         score: d.score,
         areaPx: d.areaPx,
+        area_pct: d.area_pct,
         action: d.action,
         wheelPathRisk: d.wheel_path_risk,
         depthIndicator: d.depth_indicator,
+        severity_breakdown: d.severity_breakdown,
+        repair_status: d.repair_status,
+        priority_score: d.priority_score,
         modelSource: d.model_source,
       }));
 

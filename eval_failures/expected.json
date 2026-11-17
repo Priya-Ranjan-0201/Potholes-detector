@@ -1,0 +1,43 @@
+{
+  "case_01_pothole_nh44.jpg": {
+    "road_photo": true,
+    "expect": "potholes_on_road_only",
+    "forbidden_boxes_on": ["sky", "vegetation", "background"],
+    "min_potholes": 1
+  },
+  "case_02_civil_distress_diagram.jpg": {
+    "road_photo": false,
+    "expect": "reject_not_a_road_photo",
+    "max_detections": 0
+  },
+  "case_03_alligator_cracks.jpg": {
+    "road_photo": true,
+    "expect": "alligator_cracking_on_road",
+    "forbidden_boxes_on": ["off_road", "sky", "vegetation"],
+    "min_cracks": 1
+  },
+  "case_04_bengaluru_potholes.jpg": {
+    "road_photo": true,
+    "expect": "detections_only_on_road_surface",
+    "forbidden_boxes_on": ["signboard", "chair", "building", "tree", "sky", "car", "scooter"],
+    "max_offroad_boxes": 0
+  },
+  "case_05_asphalt_crater.jpg": {
+    "road_photo": true,
+    "expect": "potholes_on_pavement_only",
+    "forbidden_boxes_on": ["background", "off_road"],
+    "min_potholes": 1
+  },
+  "case_06_mumbai_potholes.avif": {
+    "road_photo": true,
+    "expect": "potholes_on_road_only",
+    "forbidden_boxes_on": ["person", "scooter", "grass", "off_road"],
+    "min_potholes": 1
+  },
+  "case_07_user_tested_potholes.jpg": {
+    "road_photo": true,
+    "expect": "potholes_on_road_only",
+    "forbidden_boxes_on": ["car", "scooter", "blurred_region", "person"],
+    "min_potholes": 1
+  }
+}

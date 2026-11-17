@@ -19,8 +19,8 @@ export const LANGUAGES: LanguageOption[] = [
 
 export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   en: {
-    govtBanner: "Student Research Project | Road Defect & Maintenance Portal (Not an official government portal)",
-    standardsNotice: "Severity rubric inspired by IRC:82-2023",
+    govtBanner: "Student Research Project | Road and Infrastructure Damage Detection (Academic Capstone)",
+    standardsNotice: "Severity rubric informed by common pavement-condition practice",
     footerNotice: "Student research project. Not an official government system. Not safety-certified.",
     navHome: "Home",
     navDetect: "Detect",
@@ -48,8 +48,8 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     savedToMaintenance: "Saved to Maintenance",
   },
   hi: {
-    govtBanner: "छात्र अनुसंधान परियोजना | सड़क दोष एवं रखरखाव पोर्टल (गैर-सरकारी / अनुसंधान हेतु)",
-    standardsNotice: "IRC:82-2023 (खण्ड 4.2) से प्रेरित गंभीरता मानक",
+    govtBanner: "छात्र अनुसंधान परियोजना | सड़क एवं अवसंरचना क्षति पहचान (अनुसंधान हेतु)",
+    standardsNotice: "सामान्य फुटपाथ-स्थिति पद्धति से प्रेरित गंभीरता मानक",
     footerNotice: "छात्र अनुसंधान परियोजना। यह कोई आधिकारिक सरकारी प्रणाली नहीं है। सुरक्षा-प्रमाणित नहीं है।",
     navHome: "होम",
     navDetect: "पहचान",

@@ -11,14 +11,14 @@ import { Footer } from "./components/Footer";
 import { CommandPalette } from "./components/CommandPalette";
 import { ShortcutsModal } from "./motion/ShortcutsModal";
 import { PageTransition } from "./motion/PageTransition";
-import { DashboardPage } from "./pages/DashboardPage";
 import { ScannerPage } from "./pages/ScannerPage";
-import { MaintenancePage } from "./pages/MaintenancePage";
 import { ModelBenchmarksPage } from "./pages/ModelBenchmarksPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { AboutPage } from "./pages/AboutPage";
+import { SurveysPage } from "./pages/SurveysPage";
+import { PriorityListPage } from "./pages/PriorityListPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -130,14 +130,20 @@ const AppShell: React.FC = () => {
         <AnimatePresence mode="wait">
           <PageTransition key={location.pathname}>
             <Routes location={location}>
-              {/* Primary Navigation Routes */}
+              {/* Primary Navigation Routes (Section 12.5 Site Map) */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/scanner" element={<ScannerPage />} />
+              <Route path="/analyse" element={<Navigate to="/scanner" replace />} />
               <Route path="/detect" element={<Navigate to="/scanner" replace />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/maintenance" element={<MaintenancePage />} />
+              <Route path="/surveys" element={<SurveysPage />} />
+              <Route path="/priority-list" element={<PriorityListPage />} />
               <Route path="/benchmarks" element={<ModelBenchmarksPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/method" element={<Navigate to="/about" replace />} />
+
+              {/* Legacy Aliases & Redirects */}
+              <Route path="/dashboard" element={<Navigate to="/surveys" replace />} />
+              <Route path="/maintenance" element={<Navigate to="/priority-list" replace />} />
 
               {/* Authentication */}
               <Route path="/login" element={<LoginPage />} />

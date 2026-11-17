@@ -7,9 +7,8 @@ interface ThemeToggleProps {
 }
 
 const PALETTES: { id: PaletteTheme; label: string; swatch: string }[] = [
-  { id: "survey-paper", label: "Survey Paper", swatch: "#c2410c" },
-  { id: "chalk-kerb", label: "Chalk & Kerb", swatch: "#ca8a04" },
-  { id: "slate-brick", label: "Slate & Brick", swatch: "#b85d43" },
+  { id: "gauge-green", label: "Gauge & Green", swatch: "#1F6F54" },
+  { id: "concrete-blue", label: "Concrete & Blue", swatch: "#1E3A8A" },
 ];
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = "" }) => {
@@ -39,20 +38,11 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = "" }) => {
         <span
           className="w-2.5 h-2.5 rounded-full shrink-0"
           style={{
-            backgroundColor:
-              palette === "survey-paper"
-                ? "#c2410c"
-                : palette === "chalk-kerb"
-                  ? "#ca8a04"
-                  : "#b85d43",
+            backgroundColor: palette === "gauge-green" ? "#1F6F54" : "#1E3A8A",
           }}
         />
         <span className="hidden xl:inline text-[11px] font-medium">
-          {palette === "survey-paper"
-            ? "Survey"
-            : palette === "chalk-kerb"
-              ? "Chalk"
-              : "Brick"}
+          {palette === "gauge-green" ? "Gauge Green" : "Signal Blue"}
         </span>
       </button>
 

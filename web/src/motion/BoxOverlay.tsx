@@ -42,11 +42,15 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
     return "Pothole";
   };
 
-  const getColor = (rawLabel: string, sev?: string) => {
+  const getColor = (rawLabel: string) => {
     const upper = (rawLabel || "").toUpperCase();
-    if (upper.includes("CRACK")) return "#78350f"; // Deep Dark Amber Brown
-    if (sev?.toLowerCase() === "critical") return "#7f1d1d"; // Deep Dark Crimson
-    return "#052e16"; // Ultra-Deep Dark Forest Green
+    if (upper.includes("WATER")) return "#CC79A7"; // Water-filled pothole: Okabe-Ito reddish purple
+    if (upper.includes("POTHOLE")) return "#D55E00"; // Pothole: Okabe-Ito vermilion
+    if (upper.includes("CRACK")) return "#0072B2"; // Crack family: Okabe-Ito blue
+    if (upper.includes("SPALLING")) return "#E69F00"; // Spalling: Okabe-Ito yellow-orange
+    if (upper.includes("REBAR") || upper.includes("CORROSION")) return "#A6761D"; // Rebar / corrosion: dark amber
+    if (upper.includes("EFFLORESCENCE")) return "#56B4E9"; // Efflorescence: sky blue
+    return "#0072B2"; // Default
   };
 
   const labelHeight = 2.4;
@@ -54,7 +58,7 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
 
   const items = sorted.map((d, index) => {
     const [x, y, w, h] = d.box;
-    const color = getColor(d.label, d.severity);
+    const color = getColor(d.label);
     const shortName = getDefectName(d.label);
     const labelText = `${shortName} ${Math.round(d.confidence * 100)}%`;
     const labelWidth = Math.max(12.0, Math.min(24.0, labelText.length * 1.05 + 2.5));
@@ -140,27 +144,38 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
             {(viewMode === "masks" || viewMode === "both") &&
               d.polygon &&
               d.polygon.length >= 3 && (
-                <polygon
-                  points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
-                  fill={color}
-                  fillOpacity={isActive ? 0.42 : 0.28}
-                  stroke={color}
-                  strokeWidth={isActive ? 1.05 : 0.78}
-                  strokeLinejoin="round"
-                />
+                <>
+                  <polygon
+                    points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth={isActive ? 1.6 : 1.2}
+                    strokeLinejoin="round"
+                    strokeOpacity={0.85}
+                  />
+                  <polygon
+                    points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
+                    fill={color}
+                    fillOpacity={isActive ? 0.08 : 0.05}
+                    stroke={color}
+                    strokeWidth={isActive ? 1.1 : 0.8}
+                    strokeLinejoin="round"
+                  />
+                </>
               )}
 
             {(viewMode === "boxes" || viewMode === "both" || !d.polygon || d.polygon.length < 3) && (
               <>
+                {/* 3px High-contrast Halo Layer */}
                 <rect
                   x={x}
                   y={y}
                   width={w}
                   height={h}
                   fill="none"
-                  stroke="#000000"
-                  strokeOpacity={0.7}
-                  strokeWidth={isActive ? 1.55 : 1.25}
+                  stroke="#FFFFFF"
+                  strokeOpacity={0.9}
+                  strokeWidth={isActive ? 1.7 : 1.3}
                   rx={0.35}
                 />
                 <rect
@@ -169,9 +184,9 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
                   width={w}
                   height={h}
                   fill={color}
-                  fillOpacity={isActive ? 0.42 : 0.28}
+                  fillOpacity={isActive ? 0.08 : 0.04}
                   stroke={color}
-                  strokeWidth={isActive ? 1.15 : 0.9}
+                  strokeWidth={isActive ? 1.15 : 0.85}
                   rx={0.35}
                 />
               </>

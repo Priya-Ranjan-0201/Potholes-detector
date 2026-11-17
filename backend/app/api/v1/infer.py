@@ -72,13 +72,90 @@ class DetectionBox(BaseModel):
     severity: str
     score: int
     areaPx: int
+    area_pct: float = 0.0
     action: str
     is_calibrated: bool = False
     measurement_method: str = "uncalibrated_pixel_area"
     unit: str = "px_relative_pct"
     wheel_path_risk: bool = False
     depth_indicator: str = "Medium"
+    severity_breakdown: str = ""
+    repair_status: str = "Open"
+    priority_score: int = 0
     model_source: str = "YOLO11n + YOLOv8n Ensemble"
+
+
+def compute_transparent_severity(
+    label: str,
+    area_ratio: float,
+    wheel_path_risk: bool,
+    cluster_size: int,
+    is_water_filled: bool = False,
+    is_exposed_rebar: bool = False,
+) -> tuple[int, str, str]:
+    """Compute transparent, monotonic 0-100 severity score and 4-level rating."""
+    lbl_upper = label.upper()
+    
+    # Base class hazard weight (Phase 5 / config/severity.yaml spec)
+    if "REBAR" in lbl_upper or is_exposed_rebar:
+        w_base = 85.0
+    elif "WATER" in lbl_upper or is_water_filled:
+        w_base = 62.0
+    elif "SPALLING" in lbl_upper:
+        w_base = 58.0
+    elif "CORROSION" in lbl_upper:
+        w_base = 52.0
+    elif "POTHOLE" in lbl_upper:
+        w_base = 48.0
+    elif "ALLIGATOR" in lbl_upper or "CROCODILE" in lbl_upper:
+        w_base = 40.0
+    elif "CONCRETE" in lbl_upper:
+        w_base = 32.0
+    elif "TRANSVERSE" in lbl_upper:
+        w_base = 28.0
+    elif "EFFLORESCENCE" in lbl_upper:
+        w_base = 25.0
+    elif "LONGITUDINAL" in lbl_upper or "CRACK" in lbl_upper:
+        w_base = 22.0
+    else:
+        w_base = 30.0
+
+    # Relative area multiplier (clamped between 0.80 and 1.60)
+    m_area = min(1.60, max(0.80, 0.80 + 12.0 * area_ratio))
+    
+    # Position multiplier
+    m_pos = 1.25 if wheel_path_risk else 1.00
+    
+    # Extent cluster bonus (5 points per additional co-located defect, capped at 20)
+    b_extent = min(20.0, 5.0 * max(0, cluster_size - 1))
+    
+    # Structural risk flags
+    f_risk = 0.0
+    if is_exposed_rebar:
+        f_risk += 25.0
+    if is_water_filled:
+        f_risk += 12.0
+
+    raw_score = (w_base * m_area * m_pos) + b_extent + f_risk
+    score = int(round(min(100.0, max(5.0, raw_score))))
+
+    # 4 levels: Low (<30), Moderate (30-54), High (55-74), Critical (>=75)
+    if score >= 75:
+        level = "Critical"
+    elif score >= 55:
+        level = "High"
+    elif score >= 30:
+        level = "Moderate"
+    else:
+        level = "Low"
+
+    # Human-readable breakdown string
+    area_pct_str = f"{area_ratio * 100:.1f}%"
+    pos_desc = "in wheel path" if wheel_path_risk else "lane center"
+    cluster_desc = f"cluster of {cluster_size}" if cluster_size > 1 else "isolated defect"
+    breakdown = f"{label.replace('_', ' ').title()} {pos_desc}, {area_pct_str} pavement area, {cluster_desc}"
+    
+    return score, level, breakdown
 
 
 class InferenceResponse(BaseModel):
@@ -589,6 +666,7 @@ def run_pipeline_on_image(
 
     # Build final DetectionBox objects
     detections: List[DetectionBox] = []
+    cluster_size = len(fused)
     for d in fused:
         bx = d["box"]
         bw = max(1.0, bx[2] - bx[0])
@@ -599,19 +677,17 @@ def run_pipeline_on_image(
 
         area_px = int(bw * bh)
         area_ratio = area_px / max(1, w * h)
-        is_pothole = d["label"] == "POTHOLE"
+        is_pothole = "POTHOLE" in d["label"]
 
-        score = min(
-            100,
-            max(
-                15,
-                (45 if is_pothole else 35)
-                + min(40, int(area_ratio * 400))
-                + (10 if wheel_path_risk else 0)
-                + (10 if depth_indicator == "Deep" else (5 if depth_indicator == "Medium" else 0)),
-            ),
+        score, severity, breakdown = compute_transparent_severity(
+            label=d["label"],
+            area_ratio=area_ratio,
+            wheel_path_risk=wheel_path_risk,
+            cluster_size=cluster_size,
+            is_water_filled=("WATER" in d["label"]),
+            is_exposed_rebar=("REBAR" in d["label"]),
         )
-        severity = "Critical" if score >= 70 else ("Severe" if score >= 50 else "Moderate")
+
         action = (
             "Immediate 24-hour asphalt compaction and sealing"
             if is_pothole
@@ -635,9 +711,13 @@ def run_pipeline_on_image(
                 severity=severity,
                 score=score,
                 areaPx=area_px,
+                area_pct=round(area_ratio * 100, 2),
                 action=action,
                 wheel_path_risk=wheel_path_risk,
                 depth_indicator=depth_indicator,
+                severity_breakdown=breakdown,
+                repair_status="Open",
+                priority_score=score,
                 model_source=d["source"],
             )
         )
@@ -671,13 +751,15 @@ async def infer_road_defects(
     pothole_cnt = sum(1 for d in detections if "POTHOLE" in d.label)
     crack_cnt = sum(1 for d in detections if "CRACK" in d.label)
 
-    max_severity = "Minor"
+    max_severity = "None"
     if any(d.severity == "Critical" for d in detections):
         max_severity = "Critical"
-    elif any(d.severity == "Severe" for d in detections):
-        max_severity = "Severe"
-    elif len(detections) > 0:
+    elif any(d.severity == "High" for d in detections):
+        max_severity = "High"
+    elif any(d.severity == "Moderate" for d in detections):
         max_severity = "Moderate"
+    elif len(detections) > 0:
+        max_severity = "Low"
 
     overall_health = max(10, 100 - len(detections) * 12) if detections else 100
     latency_ms = round((time.perf_counter() - start_t) * 1000, 1)

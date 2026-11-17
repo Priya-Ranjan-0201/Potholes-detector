@@ -1,33 +1,18 @@
 {
-  "phase": "PHASE_9_FINAL_FREEZE",
+  "project_title": "AI-Powered Road and Infrastructure Damage Detection and Severity Assessment",
+  "nickname": "RoadSurvey AI",
+  "phase": "PHASE_14_COMPLETE_FREEZE_READY",
   "status": "COMPLETED",
-  "branch": "v13/global-fix",
-  "baseline_tag": "before-v13",
-  "phase_1_tag": "v13-phase-1-done",
-  "phase_2_tag": "v13-phase-2-done",
-  "phase_3_tag": "v13-phase-3-done",
-  "phase_4_tag": "v13-phase-4-done",
-  "phase_5_tag": "v13-phase-5-done",
-  "phase_6_tag": "v13-phase-6-done",
-  "phase_7_tag": "v13-phase-7-done",
-  "phase_8_tag": "v13-phase-8-done",
-  "final_freeze_tag": "v2.0.0",
-  "evidence_paths": {
-    "final_report": "docs/FINAL_REPORT.md",
-    "improvement_backlog": "docs/IMPROVEMENT_BACKLOG.md",
-    "evidence_matrix": "docs/EVIDENCE.md",
-    "evaluation_metrics": "ml/runs/final/metrics.json"
-  },
+  "branch": "rd/refocus",
+  "baseline_tag": "before-refocus",
   "metrics": {
     "eval_images_count": 1728,
     "defect_recall": 0.9746,
     "image_f1": 0.7883,
     "video_duplicate_rate": 0.0,
     "leakage_collisions": 0,
-    "python_tests_passed": 11,
-    "web_tests_passed": 10,
-    "build_status": "SUCCESS"
+    "frontend_bundle_gzip_kb": 148.12
   },
   "gate_passed": true,
-  "next_action": "ALL PHASES COMPLETE. Freeze tagged v2.0.0."
+  "next_action": "Commit all changes and tag rd-refocus-complete"
 }
