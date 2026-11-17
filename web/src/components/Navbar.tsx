@@ -1,26 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Compass,
-  Camera,
-  Activity,
-  ClipboardList,
-  BarChart3,
-  Info,
-  Menu,
-  X,
-  Globe,
-} from "./Icons";
+import { Link } from "react-router-dom";
+import { Globe } from "./Icons";
 import { useLanguage, LANGUAGES } from "../context/LanguageContext";
 import { ThemeToggle } from "./ThemeToggle";
 import { Logo } from "./Logo";
+import { api } from "../api/client";
 
 export const Navbar: React.FC = () => {
-  const location = useLocation();
   const { language, setLanguage, currentOption } = useLanguage();
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [serverHealthy, setServerHealthy] = useState<boolean | null>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,57 +23,63 @@ export const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-
-  const navLinks = [
-    { to: "/", label: "Home", icon: Compass },
-    { to: "/scanner", label: "Analyse", icon: Camera },
-    { to: "/surveys", label: "Surveys", icon: Activity },
-    { to: "/priority-list", label: "Priority list", icon: ClipboardList },
-    { to: "/benchmarks", label: "Benchmarks", icon: BarChart3 },
-    { to: "/about", label: "Method", icon: Info },
-  ];
+    let active = true;
+    const check = () => {
+      api
+        .health()
+        .then(() => {
+          if (active) setServerHealthy(true);
+        })
+        .catch(() => {
+          if (active) setServerHealthy(false);
+        });
+    };
+    check();
+    const interval = setInterval(check, 8000);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[var(--bg-surface)] border-b border-[var(--border-rule)]">
+    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-4">
-          {/* Brand Logo */}
+          {/* Brand Logo & Title */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none">
             <Logo showWordmark={false} size="sm" />
-            <span className="font-serif font-bold text-sm tracking-tight text-[var(--text-main)]">
-              RoadSurvey AI
-            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="font-serif font-bold text-base tracking-tight text-slate-900 dark:text-white">
+                RoadSurvey AI
+              </span>
+              <span className="hidden sm:inline-block text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                Road Damage Detector
+              </span>
+            </div>
           </Link>
 
-          {/* Primary Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive =
-                link.to === "/"
-                  ? location.pathname === "/"
-                  : location.pathname.startsWith(link.to);
+          {/* Center Engine Status Badge */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                serverHealthy === true
+                  ? "bg-emerald-500 animate-pulse"
+                  : serverHealthy === false
+                  ? "bg-rose-500"
+                  : "bg-amber-500"
+              }`}
+            />
+            <span className="text-[11px] text-slate-700 dark:text-slate-300">
+              {serverHealthy === true
+                ? "AI Engine Live (YOLO11n-Rescue)"
+                : serverHealthy === false
+                ? "Backend Offline"
+                : "Connecting..."}
+            </span>
+          </div>
 
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
-                    isActive
-                      ? "text-slate-900 dark:text-white font-semibold bg-slate-100 dark:bg-slate-800"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Language & Theme */}
+          {/* Right Controls: Language & Theme */}
           <div className="flex items-center gap-2 shrink-0">
             <div className="relative" ref={langDropdownRef}>
               <button
@@ -122,45 +117,9 @@ export const Navbar: React.FC = () => {
             </div>
 
             <ThemeToggle />
-
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </div>
-
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 space-y-1">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive =
-              link.to === "/"
-                ? location.pathname === "/"
-                : location.pathname.startsWith(link.to);
-
-            return (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{link.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      )}
     </header>
   );
 };
