@@ -34,9 +34,9 @@ export const Footer: React.FC = () => {
               title={isOnline ? "API Online" : "API Offline"}
             />
             <span className="font-heading font-semibold text-slate-800 dark:text-slate-200">
-              ScamRoad
+              RoadSurvey AI
             </span>
-            <span className="text-[11px] text-slate-400">· Road Surface Inspection Research</span>
+            <span className="text-[11px] text-slate-400">· Road &amp; Infrastructure Damage Detection</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[11px]">

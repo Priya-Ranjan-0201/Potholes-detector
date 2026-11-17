@@ -235,6 +235,8 @@ export interface ModelEvaluationResponse {
     fps: number;
   };
   limitations_note?: string;
+  rescue_benchmark?: any;
+  calibrated_presets?: Record<string, any>;
 }
 
 export interface WorkOrder {

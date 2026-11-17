@@ -10,7 +10,7 @@ import {
   Eye,
   EyeOff,
 } from "../components/Icons";
-import { detectDefects, InspectionResult } from "../utils/cvDetector";
+import { detectDefects, InspectionResult, DetectionPreset } from "../utils/cvDetector";
 import { useToast } from "../context/ToastContext";
 import { useLanguage } from "../context/LanguageContext";
 import { ScanLine, BoxOverlay } from "../motion";
@@ -75,7 +75,8 @@ const formatDefectTitle = (label: string) => {
 export const ScannerPage: React.FC = () => {
   const [inputMode, setInputMode] = useState<InputMode>("image");
   const [showBoxes, setShowBoxes] = useState<boolean>(true);
-  const [confThresh, setConfThresh] = useState<number>(0.40);
+  const [preset, setPreset] = useState<DetectionPreset>("balanced");
+  const [confThresh, setConfThresh] = useState<number>(0.25);
   const [selectedSampleId, setSelectedSampleId] = useState<string>("capture-bengaluru");
   const [activeImageSrc, setActiveImageSrc] = useState<string>("/samples/bengaluru_potholes.jpg");
   const [activeRoadName, setActiveRoadName] = useState<string>("Bengaluru Arterial Road");
@@ -100,7 +101,7 @@ export const ScannerPage: React.FC = () => {
     latencyMs: 0,
     imageWidth: 640,
     imageHeight: 480,
-    engine: "Calibrated Multi-Model Ensemble",
+    engine: "Unified YOLO11n-Rescue + Guarded Surface Prior",
   });
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -134,6 +135,7 @@ export const ScannerPage: React.FC = () => {
       const result = await detectDefects(
         source,
         confThresh,
+        preset,
         (stage) => {
           if (scanIdRef.current === scanId) setScanStage(stage);
         },
@@ -160,7 +162,7 @@ export const ScannerPage: React.FC = () => {
     if (inputMode === "image" && activeImageSrc) {
       runDetection(uploadedFileRef.current ?? activeImageSrc);
     }
-  }, [activeImageSrc, confThresh, inputMode, selectedSampleId]);
+  }, [activeImageSrc, confThresh, preset, inputMode, selectedSampleId]);
 
   useEffect(() => {
     if (inputMode === "camera") {
@@ -398,38 +400,50 @@ export const ScannerPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
             {/* Preset Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="font-mono text-xs uppercase text-slate-500">Preset:</span>
               <button
                 type="button"
-                onClick={() => setConfThresh(0.55)}
-                className={`px-2 py-1 rounded text-xs font-mono ${
-                  confThresh === 0.55
+                onClick={() => {
+                  setPreset("high_precision");
+                  setConfThresh(0.40);
+                }}
+                className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
+                  preset === "high_precision"
                     ? "bg-[var(--primary)] text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300"
                 }`}
+                title="High Precision (conf >= 0.40): lowest false alarms"
               >
                 High Precision
               </button>
               <button
                 type="button"
-                onClick={() => setConfThresh(0.40)}
-                className={`px-2 py-1 rounded text-xs font-mono ${
-                  confThresh === 0.40
+                onClick={() => {
+                  setPreset("balanced");
+                  setConfThresh(0.25);
+                }}
+                className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
+                  preset === "balanced"
                     ? "bg-[var(--primary)] text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300"
                 }`}
+                title="Balanced (conf >= 0.25): optimal F1 across all defect types"
               >
                 Balanced
               </button>
               <button
                 type="button"
-                onClick={() => setConfThresh(0.25)}
-                className={`px-2 py-1 rounded text-xs font-mono ${
-                  confThresh === 0.25
+                onClick={() => {
+                  setPreset("high_recall");
+                  setConfThresh(0.15);
+                }}
+                className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
+                  preset === "high_recall"
                     ? "bg-[var(--primary)] text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300"
                 }`}
+                title="High Recall (conf >= 0.15): catches faint distress"
               >
                 High Recall
               </button>
@@ -439,7 +453,7 @@ export const ScannerPage: React.FC = () => {
               <span className="font-medium text-slate-700 dark:text-slate-300">{t("sensitivity")}</span>
               <input
                 type="range"
-                min="0.15"
+                min="0.10"
                 max="0.80"
                 step="0.05"
                 value={confThresh}
@@ -452,11 +466,15 @@ export const ScannerPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2 font-mono text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold">
-                Model v2.0.1
+              <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold">
+                YOLO11n-Rescue
               </span>
               <span>·</span>
-              <span>{confThresh >= 0.50 ? "High Precision" : confThresh <= 0.30 ? "High Recall" : "Balanced"}</span>
+              <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold">
+                Guards A+B Active
+              </span>
+              <span>·</span>
+              <span className="capitalize">{preset.replace("_", " ")}</span>
               {inspection.boxes.length > 25 && (
                 <>
                   <span>·</span>

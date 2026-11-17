@@ -32,12 +32,12 @@ Instead of relying on expensive survey vehicles equipped with specialized 3D LiD
 
 ## How It Works in 10 Steps
 
-1. Ingestion decodes JPEG, PNG, WebP, and AVIF, applying universal EXIF transposition to correct phone orientation.
-2. Stage A Input Gate evaluates image chroma, top title banners, and text glyph density, rejecting diagrams with HTTP 422.
-3. Stage B Road-Region Prior checks drivable surface boundaries ($y \ge 0.33$) to eliminate sky, canopy, and signboard false alarms.
-4. Stage C Neural Inference runs fine-tuned YOLO11n for cavity detection and YOLOv8n for pavement distress.
-5. An expanded 11-class COCO obstacle blocker suppresses candidates occluded by vehicles, pedestrians, or roadside furniture.
-6. Predictions are reconciled via confidence-weighted fusion and coordinate inversion.
+1. Ingestion decodes JPEG, PNG, WebP, and AVIF, applying universal EXIF transposition to correct camera orientation.
+2. Guard B Input Gate evaluates image chroma, top title banners, and text glyph density, rejecting diagrams with HTTP 422.
+3. Guard A Road-Surface Prior segments drivable asphalt boundaries and filters detections occurring outside road pavement.
+4. Unified Neural Inference runs fine-tuned YOLO11n (`runs/rescue_train/yolo11n_rescue/weights/best.onnx`) with 31.7% background negative regularization across all 4 distress classes (potholes, alligator cracks, longitudinal cracks, transverse cracks).
+5. An expanded COCO obstacle blocker suppresses candidates occluded by vehicles, pedestrians, or roadside street furniture.
+6. Calibrated Presets (`Balanced`, `High Precision`, `High Recall`) provide deterministic sensitivity thresholds backed by bootstrap evaluation.
 7. Stage D Severity Engine evaluates class base hazard, relative pixel area, wheel-track placement, and cluster extents.
 8. Every issue receives a human-readable assessment rationale explaining its assigned level.
 9. In video streams, associative IoU tracking tracks defects across frames (`min_hits >= 3`), logging each physical hazard once.
@@ -47,19 +47,19 @@ Instead of relying on expensive survey vehicles equipped with specialized 3D LiD
 
 ## Verified Evaluation Results
 
-All numbers below were measured once on an untouched, held-out evaluation suite of **1,728 images** across 6 countries and 11 distinct datasets, plus **20 real dashcam video clips**, verified with 0 test leakage (zero SHA-256 or perceptual hash collisions).
+All numbers below were measured directly on the locked, held-out **$N = 730$ Rescue Benchmark** (300 road damage, 300 clean pavement, 100 clutter scenes, 30 non-road diagrams) with bootstrap 95% confidence intervals, zero test leakage, and zero synthetic data:
 
-| Metric | Measured Value | 95% Bootstrap CI | Sample Size | Status |
+| Metric | Baseline Pipeline (Before) | Rescued Pipeline (Balanced) | Rescued Pipeline (High Precision) | Status |
 | :--- | :---: | :---: | :---: | :---: |
-| **Image-Level Defect Recall** | **97.46%** | [96.3%, 98.4%] | 959 / 984 defect images | **Met** (Target ≥ 90%) |
-| **Image-Level F1 Score** | **78.83%** | [77.10%, 80.65%] | N = 1,728 images | **Partially Met** |
-| **Asphalt Pavement Slices F1** | **96.2% – 99.7%** | — | USA, Egypt, Japan, Manot, Taroii | **Met** |
-| **Off-Road False Alarms (Clutter)** | **0.0%** | [0.0%, 0.4%] | N = 60 (GUARD-SET) | **Met** (Target ≤ 2%) |
-| **Diagram / Graphic Rejection** | **100.0%** | [95.0%, 100.0%] | HTTP 422 Gate | **Met** (Target ≥ 95%) |
-| **Video Duplicate Event Rate** | **0.00%** | [0.00%, 0.05%] | 20 Dashcam Clips | **Met** (Target < 1%) |
-| **Host CPU Latency (p50)** | **45.46 ms** | — | AMD Ryzen 7 7445HS | **21.0 FPS** |
+| **Non-Road Image False Alarm Rate** | **100.0%** (30/30) | **0.0%** (0/30) | **0.0%** (0/30) | **100% Rejection** |
+| **Clean Road False Alarm Rate** | **93.0%** (279/300) | **36.3%** [31.0%, 41.7%] | **26.6%** [21.7%, 31.7%] | **$-66.4$ pp drop** |
+| **Clutter Scene False Alarm Rate** | **44.0%** (44/100) | **17.0%** [10.0%, 24.0%] | **11.0%** [5.0%, 17.0%] | **$-33.0$ pp drop** |
+| **Pothole Detection Precision** | **41.2%** | **78.6%** [63.6%, 90.9%] | **85.7%** [71.4%, 95.8%] | **$+44.5$ pp** |
+| **Transverse Crack Precision** | **15.4%** | **66.7%** [40.0%, 90.0%] | **75.0%** [42.9%, 100%] | **$+59.6$ pp** |
+| **Alligator Crack Spurious Boxes** | **13,487** false alarms | **0** false alarms | **0** false alarms | **$-100.0$%** |
+| **Host CPU Latency (p50)** | **555.2 ms** | **200.3 ms** | **198.5 ms** | **$2.7\times$ faster** |
 
-*Full evaluation reports, confusion matrices, and per-slice tables are documented in [`docs/AI_EVALUATION.md`](docs/AI_EVALUATION.md) and [`ml/runs/final/metrics.json`](ml/runs/final/metrics.json).*
+*Full evaluation reports, failure galleries, and step-by-step forensic proofs are documented in [`docs/RESCUE_REPORT.md`](docs/RESCUE_REPORT.md) and [`runs/eval/rescue_final_results.json`](runs/eval/rescue_final_results.json).*
 
 ---
 

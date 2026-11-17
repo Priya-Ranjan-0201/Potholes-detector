@@ -37,12 +37,15 @@ export interface InspectionResult {
   error?: string;
 }
 
+export type DetectionPreset = "balanced" | "high_precision" | "high_recall";
+
 /**
  * Runs defect detection on an image File, Blob, or URL.
  */
 export async function detectDefects(
   imageSource: File | Blob | string,
-  confThresh: number = 0.30,
+  confThresh: number = 0.25,
+  preset: DetectionPreset = "balanced",
   onStageChange?: (stage: "preprocess" | "inference" | "postprocess") => void,
   externalSignal?: AbortSignal
 ): Promise<InspectionResult> {
@@ -78,7 +81,7 @@ export async function detectDefects(
 
     onStageChange?.("inference");
 
-    const apiRes = await fetch(`/api/v1/infer?conf_thresh=${confThresh}`, {
+    const apiRes = await fetch(`/api/v1/infer?conf_thresh=${confThresh}&preset=${preset}`, {
       method: "POST",
       body: formData,
       signal: controller.signal,
@@ -123,7 +126,7 @@ export async function detectDefects(
         latencyMs: latency,
         imageWidth: data.image_width,
         imageHeight: data.image_height,
-        engine: data.engine || "Calibrated Multi-Model Ensemble",
+        engine: data.engine || "Unified YOLO11n-Rescue + Guarded Surface Prior",
       };
     }
 
@@ -137,12 +140,12 @@ export async function detectDefects(
 
     const errorMsg =
       apiRes.status === 404
-        ? "ScamRoad inference backend not reached on port 8000. Ensure the server is running."
+        ? "RoadSurvey AI inference backend not reached on port 8000. Ensure python scripts/serve_inference.py is running."
         : apiRes.status === 422
         ? `Image issue: ${detail}`
         : `Backend error (HTTP ${apiRes.status}): ${detail || apiRes.statusText}`;
 
-    console.error("[ScamRoad AI] Inference API error:", apiRes.status, detail);
+    console.error("[RoadSurvey AI] Inference API error:", apiRes.status, detail);
     return {
       source: "neural_api",
       totalDefects: 0,
@@ -152,7 +155,7 @@ export async function detectDefects(
       overallScore: 100,
       boxes: [],
       latencyMs: Math.round(performance.now() - startTime),
-      engine: "Calibrated Multi-Model Ensemble",
+      engine: "Unified YOLO11n-Rescue + Guarded Surface Prior",
       error: errorMsg,
     };
   } catch (err: any) {
@@ -164,7 +167,7 @@ export async function detectDefects(
         ? "Cannot connect to backend server on port 8000. Is python scripts/serve_inference.py running?"
         : err?.message || "Inference failed due to a network connection issue.";
 
-    console.warn("[ScamRoad AI] Inference API connection issue:", err);
+    console.warn("[RoadSurvey AI] Inference API connection issue:", err);
     return {
       source: "neural_api",
       totalDefects: 0,
@@ -174,7 +177,7 @@ export async function detectDefects(
       overallScore: 100,
       boxes: [],
       latencyMs: Math.round(performance.now() - startTime),
-      engine: "Calibrated Multi-Model Ensemble",
+      engine: "Unified YOLO11n-Rescue + Guarded Surface Prior",
       error: message,
     };
   }
