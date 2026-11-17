@@ -11,7 +11,7 @@ import {
   EyeOff,
   FileText,
 } from "../components/Icons";
-import { useInspection, ROAD_SAMPLES } from "../context/InspectionContext";
+import { useInspection } from "../context/InspectionContext";
 import { ScanLine, BoxOverlay } from "../motion";
 
 type InputMode = "image" | "camera";
@@ -56,7 +56,6 @@ export const RoadScannerPage: React.FC = () => {
     activeImageSrc,
     activeRoadName,
     activeChainage,
-    selectedSampleId,
     preset,
     confThresh,
     inspection,
@@ -70,7 +69,6 @@ export const RoadScannerPage: React.FC = () => {
     setShowBoxes,
     setSelectedBoxId,
     setHoveredBoxId,
-    selectSample,
     handleFileUpload,
     runDetection,
   } = useInspection();
@@ -182,32 +180,7 @@ export const RoadScannerPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Road Sample Corridor Selector */}
-      {inputMode !== "camera" && (
-        <div className="bg-[#0D1218] border border-[#283545] p-2.5 rounded-xl flex items-center gap-2 overflow-x-auto [scrollbar-width:thin]">
-          <span className="text-xs font-bold text-[#FFD200] shrink-0 uppercase tracking-wider font-mono mr-1 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#FFD200]" />
-            Highway Corridor:
-          </span>
-          {ROAD_SAMPLES.map((sample) => (
-            <button
-              key={sample.id}
-              type="button"
-              onClick={() => selectSample(sample)}
-              className={`px-3.5 py-2 rounded-lg text-xs font-mono font-medium border transition-all shrink-0 cursor-pointer flex items-center gap-2 ${
-                selectedSampleId === sample.id
-                  ? "bg-[#FF5A00] text-white border-[#FF5A00] font-bold shadow-md shadow-orange-500/20"
-                  : "bg-[#141C24] border-[#222E3C] text-[#94A3B8] hover:text-white hover:border-[#3B4C5F]"
-              }`}
-            >
-              <span className="text-[10px] opacity-75">🛣️</span>
-              <span>{sample.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 3. Main 2-Column Asphalt Inspection Workspace */}
+      {/* 2. Main 2-Column Asphalt Inspection Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Left: Road Canvas */}
         <div className="lg:col-span-8 bg-[#121820] border-2 border-[#283545] rounded-xl p-4 space-y-3.5 shadow-xl relative">
