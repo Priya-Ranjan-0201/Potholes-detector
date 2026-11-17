@@ -28,7 +28,7 @@ export const SurveysPage: React.FC = () => {
   const { data: surveys = [] } = useQuery<SurveyRecord[]>({
     queryKey: ["surveysList"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:8000/api/v1/surveys");
+      const res = await fetch("/api/v1/surveys");
       if (!res.ok) throw new Error("Failed to fetch surveys");
       return res.json();
     },
@@ -36,7 +36,7 @@ export const SurveysPage: React.FC = () => {
 
   const createSurveyMutation = useMutation({
     mutationFn: async (payload: { name: string; asset_type: string; place_text: string; inspector_name: string }) => {
-      const res = await fetch("http://localhost:8000/api/v1/surveys", {
+      const res = await fetch("/api/v1/surveys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

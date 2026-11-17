@@ -81,12 +81,33 @@ export async function detectDefects(
 
     onStageChange?.("inference");
 
-    const apiRes = await fetch(`/api/v1/infer?conf_thresh=${confThresh}&preset=${preset}`, {
-      method: "POST",
-      body: formData,
-      signal: controller.signal,
-    });
+    let apiRes: Response | null = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        apiRes = await fetch(`/api/v1/infer?conf_thresh=${confThresh}&preset=${preset}`, {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+        });
+        if (apiRes.ok || apiRes.status === 422) {
+          break;
+        }
+        if (attempt === 0 && apiRes.status >= 500) {
+          await new Promise((r) => setTimeout(r, 350));
+        }
+      } catch (err: any) {
+        if (attempt === 0 && err?.name !== "AbortError") {
+          await new Promise((r) => setTimeout(r, 350));
+          continue;
+        }
+        throw err;
+      }
+    }
     clearTimeout(timeoutId);
+
+    if (!apiRes) {
+      throw new Error("No response received from inference backend.");
+    }
 
     onStageChange?.("postprocess");
 

@@ -32,7 +32,7 @@ export const PriorityListPage: React.FC = () => {
       if (severityFilter !== "all") params.append("min_severity", severityFilter);
       if (statusFilter !== "all") params.append("status", statusFilter);
 
-      const res = await fetch(`http://localhost:8000/api/v1/priority?${params.toString()}`);
+      const res = await fetch(`/api/v1/priority?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to load priority items");
       return res.json();
     },
@@ -52,7 +52,7 @@ export const PriorityListPage: React.FC = () => {
   };
 
   const handleExportCsv = () => {
-    window.open("http://localhost:8000/api/v1/priority/export/csv", "_blank");
+    window.open("/api/v1/priority/export/csv", "_blank");
   };
 
   return (

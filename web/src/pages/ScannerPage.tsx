@@ -525,7 +525,7 @@ export const ScannerPage: React.FC = () => {
                 }`}
               >
                 {inspection.error
-                  ? (inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is"))
+                  ? (inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is") || inspection.error.includes("Image issue"))
                     ? "Notice"
                     : "Offline"
                   : inspection.boxes.length === 0
@@ -613,7 +613,7 @@ export const ScannerPage: React.FC = () => {
                 </div>
                 <div className="space-y-1">
                   <div className="font-semibold text-rose-800 dark:text-rose-300">
-                    {inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is")
+                    {inspection.error.includes("Not a road photograph") || inspection.error.includes("Image is") || inspection.error.includes("Image issue")
                       ? "Image Inspection Notice"
                       : "Inference Server Offline"}
                   </div>
