@@ -1,134 +1,77 @@
 /**
- * AI-Powered Road and Infrastructure Damage Detection and Severity Assessment
- * Design System Tokens — Section 12 Spec
- *
- * Primary Palette: "Gauge and green" (Default)
- * Alternate Palette: "Concrete and signal blue" (Switchable)
- * Detection Overlay: Okabe-Ito Color-Blind Safe with 3px halo
- * Severity Chips: Accessible shape glyphs + verified text contrast
+ * RoadSurvey AI - Infrastructure Damage Detection System
+ * High-Visibility Theme: Safety Orange, Bright Hazard Yellow, Slate Charcoal, Deep Asphalt Black, and Crisp White.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&display=swap');
-
 :root,
-[data-theme="gauge-green"] {
-  /* Gauge and Green — Light Mode (Default) */
-  --bg-canvas: #F4F6F3;
+[data-theme="high-vis-light"] {
+  /* Light Mode */
+  --bg-canvas: #F1F5F9;
   --bg-surface: #FFFFFF;
-  --bg-surface-2: #E9EDE8;
-  --border-rule: #D3DAD3;
-  --border-subtle: #D3DAD3;
-  --border-strong: #A8B4A8;
-  
-  --text-main: #101815;
-  --text-muted: #526058;
-  --text-faint: #73847B;
-  --text-inverse: #FFFFFF;
-  
-  --primary: #1F6F54;
-  --primary-hover: #17543F;
+  --bg-surface-2: #E2E8F0;
+  --border-rule: #CBD5E1;
+  --border-subtle: #CBD5E1;
+  --border-strong: #94A3B8;
+
+  --text-main: #0B0F14;       /* Deep Asphalt Black */
+  --text-muted: #334155;      /* Slate Charcoal */
+  --text-faint: #64748B;
+  --text-inverse: #FFFFFF;    /* Crisp White */
+
+  --primary: #FF5A00;         /* High-Visibility Safety Orange */
+  --primary-hover: #E04F00;
   --primary-text: #FFFFFF;
-  --focus-ring: #1F6F54;
-  --link-color: #0B5CAD;
+  --focus-ring: #FF5A00;
+  --accent-yellow: #F59E0B;   /* Bright Hazard Yellow */
 
   /* Status Colors */
-  --status-good: #1F6F54;
-  --status-warn: #A87900;
-  --status-alert: #B91C1C;
+  --status-good: #10B981;
+  --status-warn: #F59E0B;
+  --status-alert: #FF5A00;
 
-  /* Detection Overlay (Okabe-Ito Color-Blind Safe) */
-  --overlay-pothole: #D55E00;
-  --overlay-crack: #0072B2;
-  --overlay-water-pothole: #CC79A7;
-  --overlay-spalling: #E69F00;
-  --overlay-rebar-corrosion: #A6761D;
-  --overlay-efflorescence: #56B4E9;
-  --overlay-halo: #FFFFFF;
-
-  /* Severity Chips */
-  --severity-low: #2F7D5B;
-  --severity-moderate: #A87900;
-  --severity-high: #C2410C;
-  --severity-critical: #B91C1C;
-
-  /* Typography */
-  --font-serif: "Source Serif 4", Georgia, serif;
-  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Detection Overlay */
+  --overlay-pothole: #FF5A00;
+  --overlay-crack: #FFD200;
+  --overlay-water-pothole: #FB923C;
+  --overlay-spalling: #EAB308;
+  --overlay-halo: #000000;
 
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 }
 
-/* Gauge and Green — Dark Mode */
-.dark [data-theme="gauge-green"],
-[data-theme="gauge-green-dark"],
-.dark:root {
-  --bg-canvas: #0D1210;
-  --bg-surface: #141B18;
-  --bg-surface-2: #1B2420;
-  --border-rule: #2A3530;
-  --border-subtle: #2A3530;
-  --border-strong: #3D4C46;
+/* Dark Mode - Deep Asphalt Black & Charcoal Primary */
+.dark,
+.dark:root,
+[data-theme="high-vis-dark"] {
+  --bg-canvas: #0B0F14;       /* Deep Asphalt Black */
+  --bg-surface: #121820;      /* Slate Charcoal Surface */
+  --bg-surface-2: #1A222D;    /* Raised Charcoal Surface */
+  --border-rule: #283545;     /* Slate Gray Rule */
+  --border-subtle: #283545;
+  --border-strong: #475569;
 
-  --text-main: #E6ECE8;
-  --text-muted: #9FAEA6;
-  --text-faint: #6E7E76;
-  --text-inverse: #0D1210;
+  --text-main: #FFFFFF;       /* Crisp White */
+  --text-muted: #94A3B8;      /* Slate Gray Text */
+  --text-faint: #64748B;
+  --text-inverse: #0B0F14;
 
-  --primary: #5FC79E;
-  --primary-hover: #4EB38C;
-  --primary-text: #0D1210;
-  --focus-ring: #5FC79E;
-  --link-color: #8DB9F2;
-
-  --overlay-halo: #000000;
-}
-
-/* Alternate: Concrete and Signal Blue — Light Mode */
-[data-theme="concrete-blue"] {
-  --bg-canvas: #F3F4F6;
-  --bg-surface: #FFFFFF;
-  --bg-surface-2: #E5E7EB;
-  --border-rule: #D6D9DE;
-  --border-subtle: #D6D9DE;
-  --border-strong: #9CA3AF;
-
-  --text-main: #12161C;
-  --text-muted: #545C66;
-  --text-faint: #6B7280;
-  --text-inverse: #FFFFFF;
-
-  --primary: #1E3A8A;
-  --primary-hover: #172554;
+  --primary: #FF5A00;         /* High-Visibility Safety Orange */
+  --primary-hover: #FF7324;
   --primary-text: #FFFFFF;
-  --focus-ring: #1E3A8A;
-  --link-color: #1D4ED8;
+  --focus-ring: #FF5A00;
+  --accent-yellow: #FFD200;   /* Bright Hazard Yellow */
 
-  --overlay-halo: #FFFFFF;
-}
+  /* Status Colors */
+  --status-good: #10B981;
+  --status-warn: #FFD200;
+  --status-alert: #FF5A00;
 
-/* Alternate: Concrete and Signal Blue — Dark Mode */
-.dark [data-theme="concrete-blue"],
-[data-theme="concrete-blue-dark"] {
-  --bg-canvas: #0F1216;
-  --bg-surface: #171B21;
-  --bg-surface-2: #1F242C;
-  --border-rule: #2A313C;
-  --border-subtle: #2A313C;
-  --border-strong: #3E4756;
-
-  --text-main: #E8EAEE;
-  --text-muted: #9AA2AF;
-  --text-faint: #677180;
-  --text-inverse: #0F1216;
-
-  --primary: #8AA9FF;
-  --primary-hover: #A5BEFF;
-  --primary-text: #0F1216;
-  --focus-ring: #8AA9FF;
-  --link-color: #93C5FD;
-
+  /* Detection Overlay */
+  --overlay-pothole: #FF5A00;
+  --overlay-crack: #FFD200;
+  --overlay-water-pothole: #FB923C;
+  --overlay-spalling: #FACC15;
   --overlay-halo: #000000;
 }

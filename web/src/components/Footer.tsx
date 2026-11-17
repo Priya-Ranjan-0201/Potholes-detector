@@ -20,24 +20,28 @@ export const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-xs py-5">
+    <footer className="mt-auto border-t border-[#283545] bg-[#0B0F14] text-[#94A3B8] text-xs py-5">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full shrink-0 ${
-              isOnline ? "bg-emerald-500" : "bg-rose-500"
+              isOnline ? "bg-[#10B981] shadow-sm shadow-emerald-500/50" : "bg-[#FF5A00] shadow-sm shadow-orange-500/50"
             }`}
           />
-          <span className="font-semibold text-slate-800 dark:text-slate-200">
+          <span className="font-bold text-white tracking-wide">
             RoadSurvey AI
           </span>
-          <span className="text-slate-400 dark:text-slate-500">·</span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">
-            High-Precision Road & Infrastructure Distress Detection
+          <span className="text-[#64748B]">·</span>
+          <span className="text-[11px] text-[#CBD5E1]">
+            High-Precision Infrastructure Distress &amp; Pothole Detection
           </span>
         </div>
-        <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500">
-          Unified Detector · Calibrated Surface Priors · False Alarm Blocker
+        <div className="text-[11px] font-mono text-[#94A3B8] flex items-center gap-2">
+          <span className="text-[#FF5A00] font-bold">YOLO11n-Rescue</span>
+          <span>·</span>
+          <span className="text-[#FFD200]">Drivable Surface Prior</span>
+          <span>·</span>
+          <span>False Alarm Blocker</span>
         </div>
       </div>
     </footer>

@@ -44,13 +44,13 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
 
   const getColor = (rawLabel: string) => {
     const upper = (rawLabel || "").toUpperCase();
-    if (upper.includes("WATER")) return "#CC79A7"; // Water-filled pothole: Okabe-Ito reddish purple
-    if (upper.includes("POTHOLE")) return "#D55E00"; // Pothole: Okabe-Ito vermilion
-    if (upper.includes("CRACK")) return "#0072B2"; // Crack family: Okabe-Ito blue
-    if (upper.includes("SPALLING")) return "#E69F00"; // Spalling: Okabe-Ito yellow-orange
-    if (upper.includes("REBAR") || upper.includes("CORROSION")) return "#A6761D"; // Rebar / corrosion: dark amber
-    if (upper.includes("EFFLORESCENCE")) return "#56B4E9"; // Efflorescence: sky blue
-    return "#0072B2"; // Default
+    if (upper.includes("CRACK") || upper.includes("ALLIGATOR") || upper.includes("LONGITUDINAL") || upper.includes("TRANSVERSE")) {
+      return "#FFD200"; // Bright Hazard Yellow for cracks
+    }
+    if (upper.includes("WATER")) {
+      return "#FF7A1A"; // High-Visibility Orange Accent for water-filled craters
+    }
+    return "#FF5A00"; // High-Visibility Safety Orange for potholes & pavement craters
   };
 
   const labelHeight = 2.4;

@@ -8,8 +8,13 @@ import {
   UploadCloud,
   Eye,
   EyeOff,
+  Download,
+  FileText,
+  Printer,
+  AlertTriangle,
 } from "../components/Icons";
 import { detectDefects, InspectionResult, DetectionPreset } from "../utils/cvDetector";
+import { generateDistressPDFReport } from "../utils/pdfReport";
 import { useToast } from "../context/ToastContext";
 import { ScanLine, BoxOverlay } from "../motion";
 
@@ -75,23 +80,23 @@ const getSeverityBadge = (severity?: string) => {
     case "Critical":
       return {
         label: "Critical",
-        cls: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300 dark:border-rose-800",
+        cls: "bg-orange-500/20 text-orange-400 border-orange-500/50 font-bold",
       };
     case "Severe":
     case "High":
       return {
         label: "Severe",
-        cls: "bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 border-orange-300 dark:border-orange-800",
+        cls: "bg-amber-500/20 text-yellow-400 border-yellow-500/50 font-semibold",
       };
     case "Moderate":
       return {
         label: "Moderate",
-        cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800",
+        cls: "bg-yellow-500/20 text-yellow-300 border-yellow-400/40 font-medium",
       };
     default:
       return {
         label: "Minor",
-        cls: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-700",
+        cls: "bg-slate-700/40 text-slate-300 border-slate-600 font-normal",
       };
   }
 };
@@ -109,7 +114,8 @@ export const ScannerPage: React.FC = () => {
   const [selectedBoxId, setSelectedBoxId] = useState<string | null>(null);
   const [hoveredBoxId, setHoveredBoxId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const { error: showErrorToast } = useToast();
+  const [isExportingPDF, setIsExportingPDF] = useState<boolean>(false);
+  const { error: showErrorToast, success: showSuccessToast } = useToast();
 
   const [inspection, setInspection] = useState<InspectionResult>({
     source: "neural_api",
@@ -131,6 +137,7 @@ export const ScannerPage: React.FC = () => {
   const uploadedFileRef = useRef<File | null>(null);
   const scanIdRef = useRef<number>(0);
   const abortRef = useRef<AbortController | null>(null);
+  const reportSectionRef = useRef<HTMLDivElement>(null);
 
   const runDetection = async (source: string | Blob) => {
     const scanId = ++scanIdRef.current;
@@ -227,22 +234,89 @@ export const ScannerPage: React.FC = () => {
     }
   };
 
+  const handleDownloadPDF = () => {
+    setIsExportingPDF(true);
+    try {
+      generateDistressPDFReport({
+        roadName: activeRoadName,
+        preset,
+        confThresh,
+        totalDefects: inspection.totalDefects,
+        potholeCount: inspection.potholeCount,
+        crackCount: inspection.crackCount,
+        maxSeverity: inspection.maxSeverity,
+        overallScore: inspection.overallScore,
+        latencyMs: inspection.latencyMs,
+        engine: inspection.engine,
+        boxes: inspection.boxes,
+        imageSrc: activeImageSrc,
+      });
+      showSuccessToast("Report Downloaded", "Official PDF Inspection Audit Report generated successfully.");
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      showErrorToast("PDF Error", "Unable to compile PDF document. Please try again.");
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
+
+  const handleExportJSON = () => {
+    const reportData = {
+      report_title: "RoadSurvey AI Infrastructure Distress Audit",
+      audit_timestamp: new Date().toISOString(),
+      road_name: activeRoadName,
+      detection_engine: inspection.engine,
+      preset,
+      sensitivity_pct: Math.round(confThresh * 100),
+      pavement_condition_score: inspection.overallScore,
+      max_severity: inspection.maxSeverity,
+      total_defects: inspection.totalDefects,
+      potholes_count: inspection.potholeCount,
+      cracks_count: inspection.crackCount,
+      latency_ms: inspection.latencyMs,
+      itemized_defects: inspection.boxes,
+    };
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `RoadSurvey_Audit_${activeRoadName.replace(/[^a-zA-Z0-9_-]/g, "_")}_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showSuccessToast("JSON Exported", "Raw defect audit records saved.");
+  };
+
+  const scrollToReport = () => {
+    reportSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div className="space-y-4">
-      {/* 1. Header with Upload & Camera Action */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[var(--bg-surface)] p-4 rounded-xl border border-[var(--border-rule)] shadow-sm">
+    <div className="space-y-6">
+      {/* 1. Header Banner: High-Vis Orange & Asphalt Black */}
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121820] p-4 sm:p-5 rounded-xl border border-[#283545] shadow-lg relative overflow-hidden">
+        {/* Subtle orange hazard strip at top */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF5A00] via-[#FFD200] to-[#FF5A00]" />
+
         <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-            Road Damage Scanner
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FF5A00] text-white tracking-wider uppercase">
+              Live AI Detection
+            </span>
+            <span className="text-xs font-mono text-[#FFD200] font-semibold">
+              YOLO11n-Rescue
+            </span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-white mt-1">
+            Road Damage & Pothole Scanner
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Upload an image or pick a test sample below to detect potholes, asphalt cracks, and surface damage.
+          <p className="text-xs text-[#94A3B8] mt-0.5">
+            Real-time infrastructure defect detection with drivable surface validation and automated PDF audit reporting.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <label className="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm hover:shadow cursor-pointer flex items-center gap-1.5 active:scale-95">
-            <UploadCloud className="w-4 h-4" />
+        <div className="flex items-center gap-2.5 shrink-0">
+          <label className="px-4 py-2.5 rounded-lg text-xs font-bold bg-[#FF5A00] hover:bg-[#E04F00] text-white transition-all shadow-md hover:shadow-orange-500/20 cursor-pointer flex items-center gap-2 active:scale-95 border border-[#FF6B1A]">
+            <UploadCloud className="w-4 h-4 text-white" />
             <span>Upload Road Photo</span>
             <input
               type="file"
@@ -261,10 +335,10 @@ export const ScannerPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setInputMode(inputMode === "camera" ? "image" : "camera")}
-            className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-2.5 rounded-lg text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
               inputMode === "camera"
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent shadow-sm"
-                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                ? "bg-[#FFD200] text-[#0B0F14] border-[#FFD200] font-bold shadow-sm"
+                : "bg-[#1E293B] border-[#334155] text-white hover:bg-[#334155]"
             }`}
           >
             <Camera className="w-4 h-4" />
@@ -276,8 +350,9 @@ export const ScannerPage: React.FC = () => {
       {/* 2. Sample Image Switcher */}
       {inputMode !== "camera" && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
-          <span className="text-xs font-medium text-slate-400 shrink-0 uppercase tracking-wider font-mono mr-1">
-            Samples:
+          <span className="text-xs font-bold text-[#FFD200] shrink-0 uppercase tracking-wider font-mono mr-1 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FFD200]" />
+            Test Samples:
           </span>
           {SAMPLE_IMAGES.map((sample) => (
             <button
@@ -290,10 +365,10 @@ export const ScannerPage: React.FC = () => {
                 setActiveRoadName(sample.road);
                 setSelectedSampleId(sample.id);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all shrink-0 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all shrink-0 cursor-pointer ${
                 selectedSampleId === sample.id
-                  ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent font-semibold shadow-sm"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700"
+                  ? "bg-[#FF5A00] text-white border-[#FF5A00] font-bold shadow-md shadow-orange-500/20"
+                  : "bg-[#121820] border-[#283545] text-[#94A3B8] hover:text-white hover:border-[#475569]"
               }`}
             >
               {sample.label}
@@ -303,29 +378,32 @@ export const ScannerPage: React.FC = () => {
       )}
 
       {/* 3. Main 2-Column Detector View */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Left: Image Canvas */}
-        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3 shadow-sm">
+        <div className="lg:col-span-8 bg-[#121820] border border-[#283545] rounded-xl p-4 space-y-3.5 shadow-md">
           <div className="flex items-center justify-between gap-2 text-xs">
-            <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
-              {activeRoadName}
-            </span>
+            <div className="flex items-center gap-2 truncate">
+              <span className="w-2 h-2 rounded-full bg-[#FF5A00]" />
+              <span className="font-semibold text-white truncate text-sm">
+                {activeRoadName}
+              </span>
+            </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setShowBoxes(!showBoxes)}
-                className="px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer flex items-center gap-1.5"
+                className="px-2.5 py-1 rounded-md border border-[#334155] bg-[#1E293B] text-[#94A3B8] hover:text-white cursor-pointer flex items-center gap-1.5 transition-colors"
               >
-                {showBoxes ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                {showBoxes ? <Eye className="w-3.5 h-3.5 text-[#FF5A00]" /> : <EyeOff className="w-3.5 h-3.5" />}
                 <span>{showBoxes ? "Hide Boxes" : "Show Boxes"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsFullscreen(true)}
-                className="p-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
-                title="Fullscreen"
+                className="p-1.5 rounded-md border border-[#334155] bg-[#1E293B] text-[#94A3B8] hover:text-white cursor-pointer transition-colors"
+                title="Fullscreen View"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
               </button>
@@ -343,7 +421,7 @@ export const ScannerPage: React.FC = () => {
               const f = e.dataTransfer.files?.[0];
               if (f) handleFileUpload(f);
             }}
-            className="relative min-h-[380px] max-h-[500px] bg-slate-950 rounded-lg overflow-hidden flex items-center justify-center border border-slate-800"
+            className="relative min-h-[380px] max-h-[500px] bg-[#0B0F14] rounded-lg overflow-hidden flex items-center justify-center border border-[#1E293B]"
           >
             {inputMode === "camera" ? (
               <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
@@ -358,33 +436,33 @@ export const ScannerPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={captureFrameAndScan}
-                  className="mt-3 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold cursor-pointer flex items-center gap-1.5"
+                  className="mt-3 px-4 py-2 rounded-md bg-[#FF5A00] hover:bg-[#E04F00] text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 shadow-md"
                 >
                   <Camera className="w-4 h-4" />
-                  <span>Scan Frame</span>
+                  <span>Scan Live Frame</span>
                 </button>
               </div>
             ) : (
               <div className="relative w-full h-[460px] flex items-center justify-center select-none">
                 {/* Overlay Status Badge */}
-                <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-md bg-slate-900/90 border border-slate-700 text-white text-xs font-medium pointer-events-none flex items-center gap-2 max-w-[85%] shadow-sm">
+                <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-md bg-[#0B0F14]/90 border border-[#334155] text-white text-xs font-mono font-medium pointer-events-none flex items-center gap-2 max-w-[85%] shadow-md backdrop-blur-sm">
                   <span
                     className={`w-2.5 h-2.5 rounded-full shrink-0 ${
                       inspection.error
-                        ? "bg-rose-500"
+                        ? "bg-rose-500 animate-pulse"
                         : inspection.boxes.length > 0
-                        ? "bg-emerald-400"
-                        : "bg-slate-400"
+                        ? "bg-[#FF5A00]"
+                        : "bg-emerald-400"
                     }`}
                   />
                   <span className="truncate">
                     {isScanning
-                      ? "Scanning..."
+                      ? "AI Scanning..."
                       : inspection.error
                       ? "Inspection Notice"
                       : inspection.boxes.length > 0
                         ? `${inspection.potholeCount} Potholes · ${inspection.crackCount} Cracks`
-                        : "Clean Road"}
+                        : "Clean Road Surface"}
                   </span>
                 </div>
 
@@ -411,19 +489,19 @@ export const ScannerPage: React.FC = () => {
           </div>
 
           {/* Bottom Controls Row: Presets & Sensitivity */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[#94A3B8] pt-2.5 border-t border-[#283545]">
             <div className="flex items-center gap-1.5">
-              <span className="font-mono text-xs uppercase text-slate-500 font-medium">Preset:</span>
+              <span className="font-mono text-xs uppercase text-[#94A3B8] font-bold">Preset:</span>
               <button
                 type="button"
                 onClick={() => {
                   setPreset("high_precision");
                   setConfThresh(0.40);
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-all cursor-pointer ${
                   preset === "high_precision"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
+                    ? "bg-[#FF5A00] text-white font-bold shadow-sm"
+                    : "bg-[#1E293B] hover:bg-[#334155] text-slate-300"
                 }`}
                 title="High Precision (conf >= 0.40): lowest false alarms"
               >
@@ -435,10 +513,10 @@ export const ScannerPage: React.FC = () => {
                   setPreset("balanced");
                   setConfThresh(0.25);
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-all cursor-pointer ${
                   preset === "balanced"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
+                    ? "bg-[#FF5A00] text-white font-bold shadow-sm"
+                    : "bg-[#1E293B] hover:bg-[#334155] text-slate-300"
                 }`}
                 title="Balanced (conf >= 0.25): optimal F1 across all defect types"
               >
@@ -450,10 +528,10 @@ export const ScannerPage: React.FC = () => {
                   setPreset("high_recall");
                   setConfThresh(0.15);
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-mono transition-all cursor-pointer ${
                   preset === "high_recall"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
+                    ? "bg-[#FF5A00] text-white font-bold shadow-sm"
+                    : "bg-[#1E293B] hover:bg-[#334155] text-slate-300"
                 }`}
                 title="High Recall (conf >= 0.15): catches faint distress"
               >
@@ -462,7 +540,7 @@ export const ScannerPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-medium text-slate-700 dark:text-slate-300">Sensitivity:</span>
+              <span className="font-medium text-white">Sensitivity:</span>
               <input
                 type="range"
                 min="0.10"
@@ -470,20 +548,20 @@ export const ScannerPage: React.FC = () => {
                 step="0.05"
                 value={confThresh}
                 onChange={(e) => setConfThresh(parseFloat(e.target.value))}
-                className="w-20 cursor-pointer accent-blue-600"
+                className="w-20 cursor-pointer accent-[#FF5A00]"
               />
-              <span className="font-mono font-semibold text-slate-800 dark:text-slate-200 w-8">
+              <span className="font-mono font-bold text-[#FFD200] w-8">
                 {Math.round(confThresh * 100)}%
               </span>
             </div>
 
-            <div className="flex items-center gap-2 font-mono text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold">
+            <div className="flex items-center gap-2 font-mono text-[11px] text-[#94A3B8]">
+              <span className="px-1.5 py-0.5 rounded bg-orange-950/40 text-[#FF5A00] border border-orange-800/60 font-bold">
                 YOLO11n-Rescue
               </span>
               <span>·</span>
-              <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold">
-                Guards A+B Active
+              <span className="px-1.5 py-0.5 rounded bg-[#1E293B] border border-[#334155] text-white font-medium">
+                Guards Active
               </span>
               <span>·</span>
               <span>{inspection.latencyMs > 0 ? `${(inspection.latencyMs / 1000).toFixed(2)}s` : "Ready"}</span>
@@ -492,47 +570,45 @@ export const ScannerPage: React.FC = () => {
         </div>
 
         {/* Right: Results Panel */}
-        <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden flex flex-col shadow-sm">
+        <div className="lg:col-span-4 bg-[#121820] border border-[#283545] rounded-xl overflow-hidden flex flex-col shadow-md">
           {/* Top 3 Stat Cards */}
-          <div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-slate-800 border-b border-slate-200 dark:border-slate-800 text-center py-3.5 bg-slate-50/50 dark:bg-slate-800/20">
+          <div className="grid grid-cols-3 divide-x divide-[#283545] border-b border-[#283545] text-center py-3.5 bg-[#161F2A]">
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Potholes</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+              <div className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-wider font-mono">Potholes</div>
+              <div className="text-xl font-bold text-[#FF5A00] font-mono mt-0.5">
                 {inspection.potholeCount}
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Cracks</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+              <div className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-wider font-mono">Cracks</div>
+              <div className="text-xl font-bold text-[#FFD200] font-mono mt-0.5">
                 {inspection.crackCount}
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Road Status</div>
+              <div className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-wider font-mono">Road State</div>
               <div
-                className={`text-sm font-bold mt-1 ${
+                className={`text-sm font-bold mt-1 font-mono ${
                   inspection.error
-                    ? "text-rose-600 dark:text-rose-400"
+                    ? "text-rose-400"
                     : inspection.boxes.length === 0
-                      ? "text-emerald-600 dark:text-emerald-400"
+                      ? "text-emerald-400"
                       : inspection.maxSeverity === "Critical"
-                        ? "text-rose-600 dark:text-rose-400"
-                        : "text-amber-600 dark:text-amber-400"
+                        ? "text-[#FF5A00]"
+                        : "text-[#FFD200]"
                 }`}
               >
                 {inspection.error
-                  ? (inspection.error.includes("Not a road photograph") || inspection.error.includes("Image issue"))
-                    ? "Notice"
-                    : "Offline"
+                  ? "Notice"
                   : inspection.boxes.length === 0
-                    ? "Good Road"
+                    ? "Good"
                     : inspection.maxSeverity}
               </div>
             </div>
           </div>
 
           {/* Defect List or Notice */}
-          <div className="divide-y divide-slate-100 dark:divide-slate-800/60 max-h-[420px] overflow-y-auto [scrollbar-width:thin]">
+          <div className="divide-y divide-[#1E293B] max-h-[360px] overflow-y-auto [scrollbar-width:thin]">
             {inspection.boxes.length > 0 ? (
               inspection.boxes.map((b, idx) => {
                 const isSelected = selectedBoxId === b.id;
@@ -544,8 +620,8 @@ export const ScannerPage: React.FC = () => {
                     onMouseLeave={() => setHoveredBoxId(null)}
                     className={`w-full text-left px-3.5 py-2.5 space-y-1.5 text-xs transition-colors ${
                       isSelected
-                        ? "bg-slate-100 dark:bg-slate-800/70 border-l-2 border-blue-600"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                        ? "bg-[#1E293B] border-l-2 border-[#FF5A00]"
+                        : "hover:bg-[#1A222D]"
                     }`}
                   >
                     <button
@@ -554,37 +630,37 @@ export const ScannerPage: React.FC = () => {
                       className="w-full flex items-center justify-between gap-2 cursor-pointer text-left"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-slate-400 font-mono w-5 shrink-0">#{idx + 1}</span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
+                        <span className="text-[#64748B] font-mono w-5 shrink-0">#{idx + 1}</span>
+                        <span className="font-semibold text-white truncate">
                           {formatDefectTitle(b.label)}
                         </span>
-                        <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded border font-medium ${badge.cls}`}>
+                        <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded border ${badge.cls}`}>
                           {badge.label}
                         </span>
                       </div>
 
-                      <span className="font-mono text-slate-500 dark:text-slate-400 shrink-0 font-medium">
+                      <span className="font-mono text-[#FFD200] shrink-0 font-bold">
                         {Math.round(b.confidence * 100)}%
                       </span>
                     </button>
 
                     {isSelected && (
-                      <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 space-y-1 text-[11px] text-slate-600 dark:text-slate-300">
+                      <div className="pt-2 border-t border-[#283545] space-y-1 text-[11px] text-[#94A3B8]">
                         <div className="flex justify-between font-mono">
-                          <span>Severity Score:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{b.score || 45}/100</span>
+                          <span>Distress Impact:</span>
+                          <span className="font-bold text-white">{b.score || 45}/100</span>
                         </div>
                         <div className="flex justify-between font-mono">
-                          <span>Surface Area:</span>
-                          <span>{b.area_pct ? `${b.area_pct}% of frame` : `${b.areaPx} px`}</span>
+                          <span>Pavement Area:</span>
+                          <span className="text-white">{b.area_pct ? `${b.area_pct}%` : `${b.areaPx} px`}</span>
                         </div>
                         {b.wheelPathRisk && (
-                          <div className="flex justify-between font-mono text-amber-600 dark:text-amber-400">
-                            <span>Wheel Path Risk:</span>
-                            <span className="font-semibold">In Wheel Path</span>
+                          <div className="flex justify-between font-mono text-[#FF5A00] font-bold">
+                            <span>Wheel Path Hazard:</span>
+                            <span>CRITICAL RISK</span>
                           </div>
                         )}
-                        <p className="text-[11px] italic text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 p-2 rounded border border-slate-200 dark:border-slate-700">
+                        <p className="text-[11px] italic text-[#CBD5E1] bg-[#0B0F14] p-2 rounded border border-[#283545]">
                           {b.severity_breakdown || "Localized road pavement distress."}
                         </p>
                       </div>
@@ -593,48 +669,277 @@ export const ScannerPage: React.FC = () => {
                 );
               })
             ) : inspection.error ? (
-              <div className="py-10 px-4 text-center text-xs flex flex-col items-center gap-3 bg-rose-50/50 dark:bg-rose-950/20 m-3 rounded-lg border border-rose-200 dark:border-rose-900/50">
-                <div className="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400 font-bold text-base">
+              <div className="py-8 px-4 text-center text-xs flex flex-col items-center gap-3 bg-rose-950/20 m-3 rounded-lg border border-rose-900/50">
+                <div className="w-8 h-8 rounded-full bg-rose-900/50 flex items-center justify-center text-rose-400 font-bold text-base">
                   !
                 </div>
                 <div className="space-y-1">
-                  <div className="font-semibold text-rose-800 dark:text-rose-300">
+                  <div className="font-semibold text-rose-300">
                     {inspection.error.includes("Not a road photograph") || inspection.error.includes("Image issue")
                       ? "Image Inspection Notice"
                       : "Inference Server Offline"}
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 text-[11px] max-w-xs leading-relaxed">
+                  <p className="text-slate-400 text-[11px] max-w-xs leading-relaxed">
                     {inspection.error}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => runDetection(uploadedFileRef.current ?? activeImageSrc)}
-                  className="px-3 py-1.5 rounded-md text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-md text-xs font-bold bg-[#FF5A00] hover:bg-[#E04F00] text-white transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Retry Inference</span>
+                  <span>Retry Inspection</span>
                 </button>
               </div>
             ) : (
-              <div className="py-12 px-4 text-center text-slate-500 text-xs flex flex-col items-center gap-2">
-                <CheckCircle className="w-6 h-6 text-emerald-500" />
-                <span className="font-medium">Clean Road Pavement — No defects detected.</span>
+              <div className="py-12 px-4 text-center text-slate-400 text-xs flex flex-col items-center gap-2">
+                <CheckCircle className="w-6 h-6 text-emerald-400" />
+                <span className="font-medium text-white">Clean Road Pavement — No distress detected.</span>
               </div>
             )}
           </div>
+
+          {/* Quick jump to report button */}
+          <div className="p-3 border-t border-[#283545] bg-[#161F2A]">
+            <button
+              type="button"
+              onClick={scrollToReport}
+              className="w-full py-2.5 rounded-lg text-xs font-bold bg-[#1E293B] hover:bg-[#283545] text-[#FFD200] border border-[#334155] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:text-white"
+            >
+              <FileText className="w-4 h-4 text-[#FF5A00]" />
+              <span>View Full Audit Report &amp; PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. COMPREHENSIVE ROAD DISTRESS AUDIT REPORT & PDF SECTION */}
+      <div
+        ref={reportSectionRef}
+        className="bg-[#121820] border-2 border-[#283545] rounded-xl p-5 sm:p-6 space-y-6 shadow-xl relative"
+      >
+        {/* Section Top Header & PDF Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#283545]">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FF5A00] text-white tracking-widest uppercase">
+                OFFICIAL AUDIT REPORT
+              </span>
+              <span className="text-xs font-mono text-[#FFD200] font-semibold">
+                IRC:82-2015 Compliant
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mt-1">
+              Road Distress &amp; Maintenance Audit Report
+            </h2>
+            <p className="text-xs text-[#94A3B8] mt-0.5">
+              Comprehensive civil engineering ledger, surface health index, and automated maintenance protocol for <span className="text-white font-semibold">{activeRoadName}</span>.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Primary Download PDF Button */}
+            <button
+              type="button"
+              onClick={handleDownloadPDF}
+              disabled={isExportingPDF}
+              className="px-4 py-2.5 rounded-lg text-xs font-bold bg-[#FF5A00] hover:bg-[#E04F00] text-white transition-all shadow-lg hover:shadow-orange-500/20 cursor-pointer flex items-center gap-2 active:scale-95 border border-[#FF7324] disabled:opacity-50"
+            >
+              {isExportingPDF ? (
+                <RefreshCw className="w-4 h-4 animate-spin text-white" />
+              ) : (
+                <Download className="w-4 h-4 text-white" />
+              )}
+              <span>Download PDF Report</span>
+            </button>
+
+            {/* Print Button */}
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="px-3.5 py-2.5 rounded-lg text-xs font-medium bg-[#1E293B] hover:bg-[#283545] text-white border border-[#334155] transition-all cursor-pointer flex items-center gap-1.5"
+              title="Print Report"
+            >
+              <Printer className="w-4 h-4 text-[#FFD200]" />
+              <span className="hidden sm:inline">Print</span>
+            </button>
+
+            {/* Export JSON Button */}
+            <button
+              type="button"
+              onClick={handleExportJSON}
+              className="px-3.5 py-2.5 rounded-lg text-xs font-medium bg-[#1E293B] hover:bg-[#283545] text-[#94A3B8] hover:text-white border border-[#334155] transition-all cursor-pointer flex items-center gap-1.5"
+              title="Export GIS JSON"
+            >
+              <FileText className="w-4 h-4 text-[#94A3B8]" />
+              <span className="hidden sm:inline">JSON</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Executive KPI Summary Grid (4 Cards) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="bg-[#161F2A] border border-[#283545] rounded-xl p-3.5 space-y-1 shadow-sm">
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase">Total Distress Items</div>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-white">
+              {inspection.totalDefects}
+            </div>
+            <div className="text-[10px] text-[#64748B] font-mono">Detected via dual-pass AI</div>
+          </div>
+
+          <div className="bg-[#161F2A] border border-[#283545] rounded-xl p-3.5 space-y-1 shadow-sm border-l-4 border-l-[#FF5A00]">
+            <div className="text-[11px] font-mono font-bold text-[#FF5A00] uppercase">Potholes &amp; Craters</div>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-[#FF5A00]">
+              {inspection.potholeCount}
+            </div>
+            <div className="text-[10px] text-[#94A3B8] font-mono">Structural subgrade distress</div>
+          </div>
+
+          <div className="bg-[#161F2A] border border-[#283545] rounded-xl p-3.5 space-y-1 shadow-sm border-l-4 border-l-[#FFD200]">
+            <div className="text-[11px] font-mono font-bold text-[#FFD200] uppercase">Fatigue Cracks</div>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-[#FFD200]">
+              {inspection.crackCount}
+            </div>
+            <div className="text-[10px] text-[#94A3B8] font-mono">Alligator / Transverse lines</div>
+          </div>
+
+          <div className="bg-[#161F2A] border border-[#283545] rounded-xl p-3.5 space-y-1 shadow-sm">
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase">Road Health Index</div>
+            <div className={`text-2xl sm:text-3xl font-mono font-bold ${
+              inspection.overallScore < 50 ? "text-[#FF5A00]" : inspection.overallScore < 75 ? "text-[#FFD200]" : "text-emerald-400"
+            }`}>
+              {inspection.overallScore}<span className="text-sm text-[#64748B]">/100</span>
+            </div>
+            <div className="text-[10px] text-[#94A3B8] font-mono uppercase font-bold">
+              {inspection.maxSeverity} Severity
+            </div>
+          </div>
+        </div>
+
+        {/* Audit Technical Specification Block */}
+        <div className="bg-[#0B0F14] border border-[#283545] rounded-xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono text-[#94A3B8]">
+          <div className="space-y-1">
+            <span className="text-[#64748B] block text-[10px] uppercase font-bold">Target Location / File</span>
+            <span className="text-white font-semibold">{activeRoadName}</span>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[#64748B] block text-[10px] uppercase font-bold">Certified AI Engine</span>
+            <span className="text-white font-semibold">YOLO11n-Rescue + Surface Prior</span>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[#64748B] block text-[10px] uppercase font-bold">Inference Speed &amp; Preset</span>
+            <span className="text-[#FFD200] font-semibold">
+              {(inspection.latencyMs / 1000).toFixed(2)}s · {preset.toUpperCase()} ({Math.round(confThresh * 100)}%)
+            </span>
+          </div>
+        </div>
+
+        {/* Itemized Distress Ledger Table */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#FF5A00]" />
+              Itemized Defect Ledger Table
+            </h3>
+            <span className="text-xs font-mono text-[#94A3B8]">
+              {inspection.boxes.length} item(s) logged
+            </span>
+          </div>
+
+          <div className="overflow-x-auto border border-[#283545] rounded-xl bg-[#0B0F14] [scrollbar-width:thin]">
+            <table className="w-full text-left text-xs font-mono border-collapse min-w-[700px]">
+              <thead>
+                <tr className="bg-[#161F2A] text-white border-b border-[#283545]">
+                  <th className="py-3 px-3.5 text-[#94A3B8] font-bold">#</th>
+                  <th className="py-3 px-3.5 font-bold">Defect Type</th>
+                  <th className="py-3 px-3.5 font-bold">Confidence</th>
+                  <th className="py-3 px-3.5 font-bold">Severity</th>
+                  <th className="py-3 px-3.5 font-bold">Pavement Area</th>
+                  <th className="py-3 px-3.5 font-bold">Wheel Path</th>
+                  <th className="py-3 px-3.5 font-bold">Recommended Maintenance Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1E293B]">
+                {inspection.boxes.length > 0 ? (
+                  inspection.boxes.map((b, idx) => {
+                    const badge = getSeverityBadge(b.severity);
+                    const title = formatDefectTitle(b.label);
+                    return (
+                      <tr key={b.id} className="hover:bg-[#161F2A]/60 transition-colors">
+                        <td className="py-2.5 px-3.5 text-[#64748B]">#{idx + 1}</td>
+                        <td className="py-2.5 px-3.5 font-bold text-white flex items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full ${title.includes("Crack") ? "bg-[#FFD200]" : "bg-[#FF5A00]"}`} />
+                          {title}
+                        </td>
+                        <td className="py-2.5 px-3.5 text-[#FFD200] font-bold">
+                          {Math.round(b.confidence * 100)}%
+                        </td>
+                        <td className="py-2.5 px-3.5">
+                          <span className={`px-2 py-0.5 rounded text-[10px] border ${badge.cls}`}>
+                            {badge.label}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3.5 text-[#CBD5E1]">
+                          {b.area_pct ? `${b.area_pct}%` : `${b.areaPx} px`}
+                        </td>
+                        <td className="py-2.5 px-3.5">
+                          {b.wheelPathRisk ? (
+                            <span className="text-[#FF5A00] font-bold flex items-center gap-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-[#FF5A00]" />
+                              HAZARD
+                            </span>
+                          ) : (
+                            <span className="text-[#64748B]">Safe</span>
+                          )}
+                        </td>
+                        <td className="py-2.5 px-3.5 text-[#CBD5E1]">
+                          {b.action || (title.includes("Pothole") ? "Emergency Cold-Mix Asphalt Patch" : "Bituminous Crack Pouring & Sealant")}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="py-8 px-4 text-center text-[#94A3B8]">
+                      No active distress detected on this road section.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Municipal Engineering Maintenance Recommendations */}
+        <div className="bg-[#1A1A14] border border-[#F59E0B]/40 rounded-xl p-4 space-y-2 text-xs">
+          <div className="flex items-center gap-2 text-[#FFD200] font-bold font-mono text-sm">
+            <AlertTriangle className="w-4 h-4 text-[#FFD200]" />
+            Municipal Civil Engineering Recommendations
+          </div>
+          <p className="text-[#CBD5E1] leading-relaxed">
+            {inspection.totalDefects > 0 ? (
+              <>
+                Detected <span className="text-[#FF5A00] font-bold">{inspection.totalDefects} surface distress item(s)</span> including <span className="text-[#FF5A00] font-bold">{inspection.potholeCount} crater(s)</span> and <span className="text-[#FFD200] font-bold">{inspection.crackCount} crack(s)</span>. Priority mobilization should be allocated to craters directly in the active wheel path to mitigate vehicular tire and suspension impact liability. Recommended dispatch: Asphalt cold-mix patching crew and pneumatic compaction roller.
+              </>
+            ) : (
+              <>
+                Pavement section demonstrates acceptable serviceability conforming to municipal road standards. No immediate asphalt milling, cold patching, or crack pouring required. Schedule routine periodic sensor monitoring.
+              </>
+            )}
+          </p>
         </div>
       </div>
 
       {/* Fullscreen Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/95 flex flex-col p-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-sm">
-            <span className="font-semibold text-white">{activeRoadName}</span>
+        <div className="fixed inset-0 z-50 bg-[#0B0F14]/95 flex flex-col p-4 backdrop-blur-md">
+          <div className="flex items-center justify-between pb-3 border-b border-[#283545] text-sm">
+            <span className="font-bold text-white font-mono">{activeRoadName}</span>
             <button
               type="button"
               onClick={() => setIsFullscreen(false)}
-              className="p-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white cursor-pointer"
+              className="p-1.5 rounded-md bg-[#1E293B] text-slate-300 hover:text-white cursor-pointer"
             >
               <Minimize2 className="w-4 h-4" />
             </button>

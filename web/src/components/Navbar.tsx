@@ -43,36 +43,38 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full bg-[#121820] border-b border-[#283545] shadow-md backdrop-blur-md">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-4">
-          {/* Brand Logo & Title */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none">
-            <Logo showWordmark={false} size="sm" />
+          {/* Brand Logo & High-Vis Title */}
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 select-none group">
+            <div className="p-1 rounded bg-[#FF5A00] text-white shadow-sm group-hover:scale-105 transition-transform">
+              <Logo showWordmark={false} size="sm" />
+            </div>
             <div className="flex items-baseline gap-2">
-              <span className="font-serif font-bold text-base tracking-tight text-slate-900 dark:text-white">
+              <span className="font-serif font-bold text-base tracking-tight text-white">
                 RoadSurvey AI
               </span>
-              <span className="hidden sm:inline-block text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <span className="hidden sm:inline-block text-[11px] font-mono font-bold text-[#FFD200]">
                 Road Damage Detector
               </span>
             </div>
           </Link>
 
-          {/* Center Engine Status Badge */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+          {/* Center Engine Status Badge (Charcoal + Bright Dot) */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155]">
             <span
               className={`w-2 h-2 rounded-full ${
                 serverHealthy === true
-                  ? "bg-emerald-500 animate-pulse"
+                  ? "bg-[#10B981] animate-pulse"
                   : serverHealthy === false
-                  ? "bg-rose-500"
-                  : "bg-amber-500"
+                  ? "bg-[#FF5A00]"
+                  : "bg-[#FFD200]"
               }`}
             />
-            <span className="text-[11px] text-slate-700 dark:text-slate-300">
+            <span className="text-[11px] text-white font-medium">
               {serverHealthy === true
-                ? "AI Engine Live (YOLO11n-Rescue)"
+                ? "AI Engine Live (YOLO11n-Rescue · Port 8001)"
                 : serverHealthy === false
                 ? "Backend Offline"
                 : "Connecting..."}
@@ -85,15 +87,15 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs bg-[#1E293B] border border-[#334155] text-white hover:border-[#FF5A00] transition-colors cursor-pointer font-mono"
                 title="Switch language"
               >
-                <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                <Globe className="w-3.5 h-3.5 text-[#FFD200]" />
                 <span className="font-medium hidden sm:inline">{currentOption.nativeName}</span>
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg py-1 z-50 text-xs">
+                <div className="absolute right-0 mt-1.5 w-40 bg-[#121820] border border-[#334155] rounded-lg shadow-xl py-1 z-50 text-xs">
                   {LANGUAGES.map((opt) => (
                     <button
                       key={opt.code}
@@ -102,10 +104,10 @@ export const Navbar: React.FC = () => {
                         setLanguage(opt.code);
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-1.5 text-left flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer ${
+                      className={`w-full px-3 py-1.5 text-left flex items-center justify-between hover:bg-[#1E293B] transition-colors cursor-pointer ${
                         language === opt.code
-                          ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-500/10"
-                          : "text-slate-700 dark:text-slate-300"
+                          ? "text-[#FF5A00] font-bold bg-[#1E293B]"
+                          : "text-slate-300"
                       }`}
                     >
                       <span>{opt.nativeName}</span>
