@@ -54,6 +54,8 @@ class ML2DetectorPipeline:
 
         if model_path is not None:
             bal_path = Path(model_path)
+        elif not bal_path.exists() and dep_path.exists():
+            bal_path = dep_path
 
         self.sess_balanced = None
         self.sess_crack = None
