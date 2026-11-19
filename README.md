@@ -86,6 +86,7 @@ ScamRoad democratizes infrastructure intelligence by enabling **any standard mon
 - [Quickstart Guide](#quickstart-guide)
 - [REST API Reference](#rest-api-reference)
 - [Project Directory Structure](#project-directory-structure)
+- [Project Presentation (PPT)](#project-presentation)
 - [Verification & Automated Tests](#verification--automated-tests)
 - [License](#license)
 
@@ -372,6 +373,15 @@ cd web && npm test -- --run
 # 4. Check frontend TypeScript types and production asset compilation
 cd web && npm run build
 ```
+
+---
+
+## Project Presentation
+
+The 10-slide project presentation is available in both native PowerPoint and interactive browser formats:
+- 📥 **PowerPoint Deck**: [`ScamRoad_Presentation.pptx`](ScamRoad_Presentation.pptx) (16:9 widescreen, custom roadwork dark theme, embedded UI previews)
+- 🌐 **Interactive Slide Viewer**: [`docs/presentation.html`](docs/presentation.html) (Full screen with arrow key navigation)
+- 🛠️ **Presentation Generator**: Run `python generate_ppt.py` to regenerate the deck with `python-pptx`.
 
 ---
 

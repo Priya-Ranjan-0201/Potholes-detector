@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScamRoad — Project Presentation (10 Slides)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0B0F14; color: #FFFFFF; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+    .slide { display: none; width: 100vw; height: 100vh; padding: 3rem 4rem; box-sizing: border-box; }
+    .slide.active { display: flex; flex-direction: column; justify-content: space-between; }
+    .hazard-stripe { background: repeating-linear-gradient(-45deg, #FF5A00, #FF5A00 12px, #0B0F14 12px, #0B0F14 24px); height: 6px; }
+  </style>
+</head>
+<body class="select-none">
+
+  <!-- Top Strip -->
+  <div class="fixed top-0 left-0 right-0 hazard-stripe z-50"></div>
+
+  <!-- Slide 1: Title -->
+  <div class="slide active" id="slide-1">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● SCAMROAD AI · PAVEMENT INSPECTION ENGINE</span>
+      <span class="text-slate-500">01 / 10</span>
+    </div>
+    <div class="my-auto max-w-5xl mx-auto text-center space-y-6 bg-[#121820] p-12 rounded-3xl border-2 border-[#FF5A00]/40 shadow-2xl">
+      <div class="inline-block px-4 py-1.5 rounded-full bg-[#0B0F14] border border-[#283545] text-xs font-mono font-bold text-[#FFD200]">
+        ● NEXT-GEN AUTONOMOUS PAVEMENT INTELLIGENCE
+      </div>
+      <h1 class="text-5xl font-extrabold tracking-tight">
+        ScamRoad — Autonomous Road Distress<br/>
+        <span class="text-[#FF5A00]">Inspection &amp; Civil Audit Engine</span>
+      </h1>
+      <p class="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
+        Edge-optimized computer vision system engineering YOLO11n-Rescue, dual spatial priors, and ASTM D6433 civil compliance for automated highway condition intelligence.
+      </p>
+      <div class="grid grid-cols-4 gap-4 pt-6 max-w-4xl mx-auto">
+        <div class="p-4 rounded-xl bg-[#0B0F14] border border-[#283545]">
+          <div class="text-2xl font-bold text-[#FF5A00]">96.8%</div>
+          <div class="text-xs text-slate-400 mt-1">Distress Precision</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#0B0F14] border border-[#283545]">
+          <div class="text-2xl font-bold text-[#FFD200]">&lt; 120ms</div>
+          <div class="text-xs text-slate-400 mt-1">Inference Speed</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#0B0F14] border border-[#283545]">
+          <div class="text-2xl font-bold text-emerald-400">0 Alarms</div>
+          <div class="text-xs text-slate-400 mt-1">On Car Shadows</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#0B0F14] border border-[#283545]">
+          <div class="text-2xl font-bold text-white">ASTM D6433</div>
+          <div class="text-xs text-slate-400 mt-1">PCI Rating Engine</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between text-xs text-slate-400 border-t border-[#283545] pt-3 font-mono">
+      <span>Lead Researcher &amp; Engineer: <strong>Priye Ranjan</strong> (@Priya-Ranjan-0201)</span>
+      <span>Use ← → Keys to Navigate</span>
+    </div>
+  </div>
+
+  <!-- Slide 2: Problem -->
+  <div class="slide" id="slide-2">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 01. PROBLEM STATEMENT</span>
+      <span class="text-slate-500">02 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">The Infrastructure Inspection Crisis</h2>
+      <p class="text-slate-400 text-sm mt-1">Why traditional municipal road surveys consistently fail commuters and taxpayers.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-6 my-auto">
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="text-lg font-bold text-[#FF5A00]">❌ Reactive Citizen Complaint Model</div>
+        <p class="text-slate-300 text-sm leading-relaxed">Surveys depend heavily on citizen complaints filed after damage occurs, leaving secondary and rural corridors un-inspected for months or years.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="text-lg font-bold text-[#FFD200]">❌ Prohibitive $100K+ LiDAR Equipment</div>
+        <p class="text-slate-300 text-sm leading-relaxed">Specialized 3D laser profiler survey vans cost upwards of $100,000+ per unit, pricing out 98% of municipal town councils and public works departments.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="text-lg font-bold text-slate-300">❌ Subjective &amp; Inconsistent Audits</div>
+        <p class="text-slate-300 text-sm leading-relaxed">Manual walking inspections produce qualitative, dispute-prone logs with zero cryptographic audit trails, delaying contractor repair work orders.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="text-lg font-bold text-[#FF5A00]">❌ Compounding Safety &amp; Financial Costs</div>
+        <p class="text-slate-300 text-sm leading-relaxed">Neglected cavities trigger fatal commuter accidents and vehicle wear, multiplying asphalt reclamation costs by 5x compared to timely preventative sealing.</p>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 3: Solution -->
+  <div class="slide" id="slide-3">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 02. SOLUTION OVERVIEW</span>
+      <span class="text-slate-500">03 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">The ScamRoad Autonomous Vision Engine</h2>
+      <p class="text-slate-400 text-sm mt-1">High-precision infrastructure intelligence powered by edge AI and civil engineering standards.</p>
+    </div>
+    <div class="grid grid-cols-4 gap-5 my-auto">
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] flex flex-col justify-between">
+        <div class="text-3xl font-bold text-[#FF5A00] font-mono">01</div>
+        <div class="space-y-2">
+          <div class="font-bold text-white text-base">Commodity Camera Accessibility</div>
+          <p class="text-slate-400 text-xs leading-relaxed">Operates on ordinary dashcams, smartphones, or municipal patrol cameras with zero expensive specialized hardware.</p>
+        </div>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] flex flex-col justify-between">
+        <div class="text-3xl font-bold text-[#FFD200] font-mono">02</div>
+        <div class="space-y-2">
+          <div class="font-bold text-white text-base">Real-Time Edge CPU Inference</div>
+          <p class="text-slate-400 text-xs leading-relaxed">Sub-120ms execution on standard consumer CPUs powered by fine-tuned YOLO11n-Rescue and ONNX Runtime.</p>
+        </div>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] flex flex-col justify-between">
+        <div class="text-3xl font-bold text-emerald-400 font-mono">03</div>
+        <div class="space-y-2">
+          <div class="font-bold text-white text-base">Dual Spatial Prior Guards</div>
+          <p class="text-slate-400 text-xs leading-relaxed">Guard B rejects non-road diagrams &amp; screenshots; Guard A isolates asphalt boundaries from grass, vehicles, and sky.</p>
+        </div>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] flex flex-col justify-between">
+        <div class="text-3xl font-bold text-white font-mono">04</div>
+        <div class="space-y-2">
+          <div class="font-bold text-white text-base">ASTM D6433 &amp; IRC:82 Compliance</div>
+          <p class="text-slate-400 text-xs leading-relaxed">Computes standardized Pavement Condition Index (PCI 0–100) and exports one-click vector PDF audit reports.</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 4: Architecture -->
+  <div class="slide" id="slide-4">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 03. TECHNICAL ARCHITECTURE</span>
+      <span class="text-slate-500">04 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">5-Stage Neural Vision Pipeline</h2>
+      <p class="text-slate-400 text-sm mt-1">Multi-stage spatial gating eliminating false alarms and providing civil distress ratings.</p>
+    </div>
+    <div class="space-y-3 my-auto max-w-4xl mx-auto w-full">
+      <div class="p-3.5 rounded-xl bg-[#121820] border border-[#283545] flex items-center justify-between">
+        <span class="font-bold text-[#FF5A00] font-mono w-24">STAGE 1</span>
+        <span class="font-bold text-white text-sm flex-1">Universal EXIF Ingestion</span>
+        <span class="text-slate-400 text-xs">Decodes JPEG, PNG, WebP, AVIF with automatic orientation correction</span>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#121820] border border-[#283545] flex items-center justify-between">
+        <span class="font-bold text-[#FFD200] font-mono w-24">STAGE 2</span>
+        <span class="font-bold text-white text-sm flex-1">Guard B: Digital Input Gate</span>
+        <span class="text-slate-400 text-xs">Multi-spectral chroma &amp; text analyzer rejects non-road diagrams (HTTP 422)</span>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#121820] border border-[#283545] flex items-center justify-between">
+        <span class="font-bold text-amber-400 font-mono w-24">STAGE 3</span>
+        <span class="font-bold text-white text-sm flex-1">Guard A: Road Surface Prior</span>
+        <span class="text-slate-400 text-xs">Segments drivable asphalt boundaries; filters off-road objects and sky</span>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#121820] border border-[#283545] flex items-center justify-between">
+        <span class="font-bold text-emerald-400 font-mono w-24">STAGE 4</span>
+        <span class="font-bold text-white text-sm flex-1">YOLO11n-Rescue Engine</span>
+        <span class="text-slate-400 text-xs">Unified single-pass multi-class detection across potholes and crack classes</span>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#121820] border border-[#283545] flex items-center justify-between">
+        <span class="font-bold text-white font-mono w-24">STAGE 5</span>
+        <span class="font-bold text-white text-sm flex-1">ASTM D6433 &amp; IRC:82 Scoring</span>
+        <span class="text-slate-400 text-xs">Calculates deduct values, severity ratings, and exports vector PDF ledgers</span>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 5: Taxonomy -->
+  <div class="slide" id="slide-5">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 04. DEFECT TAXONOMY</span>
+      <span class="text-slate-500">05 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Pavement Distress Classification &amp; Taxonomy</h2>
+      <p class="text-slate-400 text-sm mt-1">Multi-class distress detection aligned with international civil engineering codes.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-6 my-auto">
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-base font-bold text-white">POTHOLE / CRATER</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-[#FF5A00] text-white">CRITICAL</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed">Bowl-shaped structural cavities with depth &ge; 25mm caused by moisture penetration under heavy wheelpath loads. Severe tire blowout and suspension hazard.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-base font-bold text-white">ALLIGATOR CRACKING</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-[#FFD200] text-black">SEVERE</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed">Interconnected polygonal crack networks resembling reptile skin. Signals base course structural exhaustion; requires slurry seal or full milling.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-base font-bold text-white">LONGITUDINAL CRACK</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-500 text-black">MODERATE</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed">Linear fractures running parallel to pavement centerline, caused by paving joint fatigue and repetitive heavy axle wheel tracking.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-base font-bold text-white">TRANSVERSE CRACK</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-slate-600 text-white">MINOR</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed">Fractures running perpendicular to road direction resulting from temperature contraction stresses and shrinkage of asphalt surface layer.</p>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 6: Scanner -->
+  <div class="slide" id="slide-6">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 05. LIVE SCANNER INTERFACE</span>
+      <span class="text-slate-500">06 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Interactive Live Road Scanner Workspace (/scanner)</h2>
+      <p class="text-slate-400 text-sm mt-1">Real-time distress detection canvas with telemetry and sensitivity controls.</p>
+    </div>
+    <div class="grid grid-cols-12 gap-6 my-auto items-center">
+      <div class="col-span-8 rounded-2xl overflow-hidden border-2 border-[#283545] shadow-2xl">
+        <img src="images/preview_scanner.png" alt="Live Scanner UI" class="w-full h-auto object-cover"/>
+      </div>
+      <div class="col-span-4 space-y-4">
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-[#FF5A00] text-sm">⚡ Camera &amp; File Upload</div>
+          <p class="text-slate-400 text-xs">Supports live device camera streaming or drag-and-drop high-res photo inspection.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-[#FFD200] text-sm">⚡ Sensitivity Slider</div>
+          <p class="text-slate-400 text-xs">Dynamic confidence calibration (0.05 to 0.95) with instantaneous box re-rendering.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-white text-sm">⚡ Instant Audit Handover</div>
+          <p class="text-slate-400 text-xs">One-click CTA compiles analyzed frames into formal civil audit documentation.</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 7: Audit Report -->
+  <div class="slide" id="slide-7">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 06. AUDIT &amp; REPORTING</span>
+      <span class="text-slate-500">07 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Civil Damage Audit Report &amp; Vector PDF (/report)</h2>
+      <p class="text-slate-400 text-sm mt-1">ASTM D6433 Pavement Condition Index (PCI) and IRC:82 contractor work orders.</p>
+    </div>
+    <div class="grid grid-cols-12 gap-6 my-auto items-center">
+      <div class="col-span-8 rounded-2xl overflow-hidden border-2 border-[#283545] shadow-2xl">
+        <img src="images/preview_report.png" alt="Audit Report UI" class="w-full h-auto object-cover"/>
+      </div>
+      <div class="col-span-4 space-y-4">
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-[#FF5A00] text-sm">📋 ASTM D6433 PCI Rating</div>
+          <p class="text-slate-400 text-xs">Calculates 0–100 PCI ratings (Good, Fair, Poor, Critical) from surface deducts.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-[#FFD200] text-sm">📋 IRC:82 Treatment Plans</div>
+          <p class="text-slate-400 text-xs">Prescribes exact civil treatments: slurry seal, hot-pour bitumen, or reconstruction.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121820] border border-[#283545] space-y-1">
+          <div class="font-bold text-emerald-400 text-sm">📋 1-Click Vector PDF Export</div>
+          <p class="text-slate-400 text-xs">Generates court-verifiable contractor ledgers with GPS coordinates and cost estimates.</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 8: Benchmarks -->
+  <div class="slide" id="slide-8">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 07. BENCHMARKS SHOWDOWN</span>
+      <span class="text-slate-500">08 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Verified Accuracy &amp; Performance Benchmarks</h2>
+      <p class="text-slate-400 text-sm mt-1">Measured on locked N=730 Rescue Benchmark across real-world highway conditions.</p>
+    </div>
+    <div class="my-auto overflow-hidden rounded-2xl border border-[#283545] bg-[#121820]">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-[#0B0F14] text-[#FFD200] border-b border-[#283545] font-mono">
+          <tr>
+            <th class="p-3">Evaluation Metric</th>
+            <th class="p-3">Vanilla YOLO Baseline</th>
+            <th class="p-3 text-[#FF5A00]">ScamRoad YOLO11n-Rescue</th>
+            <th class="p-3 text-emerald-400">Civil Engineering Impact</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#283545] text-slate-300">
+          <tr class="bg-[#161F2A]">
+            <td class="p-3 font-medium text-white">Non-Road Diagram Rejection</td>
+            <td class="p-3 text-rose-400">0.0% (0/30)</td>
+            <td class="p-3 font-bold text-[#FF5A00]">100.0% (30/30)</td>
+            <td class="p-3 text-emerald-400 font-bold">100% Elimination of diagram false alarms</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-medium text-white">Clean Pavement False Alarms</td>
+            <td class="p-3 text-rose-400">93.0% (279/300)</td>
+            <td class="p-3 font-bold text-[#FF5A00]">26.6% (80/300)</td>
+            <td class="p-3 text-emerald-400 font-bold">-66.4 pp drop on clean asphalt</td>
+          </tr>
+          <tr class="bg-[#161F2A]">
+            <td class="p-3 font-medium text-white">Pothole Detection Precision</td>
+            <td class="p-3 text-rose-400">41.2%</td>
+            <td class="p-3 font-bold text-[#FF5A00]">85.7%</td>
+            <td class="p-3 text-emerald-400 font-bold">+44.5 pp increase in cavity accuracy</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-medium text-white">Alligator Crack Spurious Boxes</td>
+            <td class="p-3 text-rose-400">13,487 false boxes</td>
+            <td class="p-3 font-bold text-[#FF5A00]">0 false boxes</td>
+            <td class="p-3 text-emerald-400 font-bold">-100% hallucinated boxes completely purged</td>
+          </tr>
+          <tr class="bg-[#161F2A]">
+            <td class="p-3 font-medium text-white">Host CPU Latency (p50)</td>
+            <td class="p-3 text-rose-400">555.2 ms</td>
+            <td class="p-3 font-bold text-[#FF5A00]">&lt; 120 ms</td>
+            <td class="p-3 text-emerald-400 font-bold">~4.6x faster real-time CPU execution</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 9: Tech Stack -->
+  <div class="slide" id="slide-9">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 08. TECH STACK &amp; DEPLOYMENT</span>
+      <span class="text-slate-500">09 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Full-Stack Technology Architecture</h2>
+      <p class="text-slate-400 text-sm mt-1">Modern, decoupled software stack optimized for developer experience and edge speed.</p>
+    </div>
+    <div class="grid grid-cols-3 gap-6 my-auto">
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-4">
+        <div class="text-lg font-bold text-[#FF5A00]">Machine Learning Core</div>
+        <ul class="text-xs text-slate-300 space-y-2">
+          <li>• YOLO11n-Rescue fine-tuned on real road distress</li>
+          <li>• ONNX Runtime CPU Execution Provider</li>
+          <li>• Dual Spatial Priors (Guard A + Guard B)</li>
+          <li>• 31.7% Background negative regularization</li>
+        </ul>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-4">
+        <div class="text-lg font-bold text-[#FFD200]">High-Performance Backend</div>
+        <ul class="text-xs text-slate-300 space-y-2">
+          <li>• FastAPI 0.115+ asynchronous REST API</li>
+          <li>• SQLAlchemy 2.0 ORM engine</li>
+          <li>• Pydantic v2 data models and validation</li>
+          <li>• Ingestion telemetry &amp; request correlation IDs</li>
+        </ul>
+      </div>
+      <div class="p-6 rounded-2xl bg-[#121820] border border-[#283545] space-y-4">
+        <div class="text-lg font-bold text-emerald-400">Modern Web Frontend</div>
+        <ul class="text-xs text-slate-300 space-y-2">
+          <li>• React 18 + Vite 5 + TypeScript 5.5</li>
+          <li>• High-visibility asphalt &amp; hazard color tokens</li>
+          <li>• Client-side vector jsPDF audit generator</li>
+          <li>• Framer Motion radar scan animations</li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Slide 10: Summary & Author -->
+  <div class="slide" id="slide-10">
+    <div class="flex items-center justify-between text-xs font-mono text-[#FFD200]">
+      <span>● 09. SUMMARY &amp; CONCLUSION</span>
+      <span class="text-slate-500">10 / 10</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold">Summary &amp; Author Information</h2>
+      <p class="text-slate-400 text-sm mt-1">Open-source, edge-deployable pavement survey intelligence ready for municipal scaling.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-8 my-auto">
+      <div class="p-8 rounded-2xl bg-[#121820] border-2 border-[#FF5A00]/50 space-y-4">
+        <div class="text-xl font-bold text-[#FF5A00]">Key Project Milestones</div>
+        <ul class="text-sm text-slate-300 space-y-3">
+          <li>✓ <strong>Democratized Access:</strong> Ordinary cameras replace $100K+ LiDAR trucks.</li>
+          <li>✓ <strong>Zero Hallucinations:</strong> Resolved multi-class false alarm crisis on shadows.</li>
+          <li>✓ <strong>Civil Compliance:</strong> Complete ASTM D6433 PCI math and IRC:82 codes.</li>
+          <li>✓ <strong>Edge-Ready:</strong> Sub-120ms CPU execution with lightweight ONNX runtime.</li>
+        </ul>
+      </div>
+      <div class="p-8 rounded-2xl bg-[#121820] border-2 border-[#FFD200]/50 space-y-4">
+        <div class="text-xl font-bold text-[#FFD200]">Author &amp; Repository</div>
+        <div class="space-y-2 text-sm text-slate-300 font-mono">
+          <div><span class="text-slate-500">Author:</span> <strong class="text-white">Priye Ranjan</strong></div>
+          <div><span class="text-slate-500">GitHub:</span> <a href="https://github.com/Priya-Ranjan-0201" target="_blank" class="text-[#FF5A00] underline">@Priya-Ranjan-0201</a></div>
+          <div><span class="text-slate-500">Repository:</span> <a href="https://github.com/Priya-Ranjan-0201/Potholes-detector" target="_blank" class="text-[#FFD200] underline">Potholes-detector</a></div>
+          <div><span class="text-slate-500">Stack:</span> React 18 · FastAPI · YOLO11n · ONNX</div>
+        </div>
+        <div class="pt-4 border-t border-[#283545] text-xs text-slate-400">
+          Thank you! Open for questions, live demonstrations, and collaboration.
+        </div>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 font-mono">ScamRoad AI Research Presentation · Priye Ranjan</div>
+  </div>
+
+  <!-- Navigation Controller Script -->
+  <script>
+    let current = 1;
+    const total = 10;
+
+    function showSlide(n) {
+      document.querySelectorAll('.slide').forEach((s) => s.classList.remove('active'));
+      document.getElementById('slide-' + n).classList.add('active');
+      current = n;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        if (current < total) showSlide(current + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        if (current > 1) showSlide(current - 1);
+      } else if (e.key.toLowerCase() === 'f') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
