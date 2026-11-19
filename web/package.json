@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "description": "ScamRoad: AI-Powered Road Distress Inspection & Audit Engine",
+  "author": "Priye Ranjan (https://github.com/Priya-Ranjan-0201)",
+  "homepage": "https://github.com/Priya-Ranjan-0201/potholes-detection",
   "type": "module",
   "scripts": {
     "dev": "vite",

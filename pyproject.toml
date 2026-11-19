@@ -1,9 +1,16 @@
 [project]
 name = "scamroad"
 version = "0.1.0"
-description = "Edge AI pothole tracking system"
+description = "ScamRoad: Autonomous Road Distress Inspection & Audit Engine"
 requires-python = ">=3.12"
 readme = "README.md"
+authors = [
+    {name = "Priye Ranjan", email = "priye@scamroad.dev"}
+]
+
+[project.urls]
+Homepage = "https://github.com/Priya-Ranjan-0201/potholes-detection"
+Repository = "https://github.com/Priya-Ranjan-0201/potholes-detection"
 
 [tool.ruff]
 target-version = "py312"

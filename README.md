@@ -18,9 +18,50 @@ An edge-optimized computer vision system for highway authorities, municipal engi
 
 <br/>
 
-**[⚡ Overview Showcase](#web-application-workspaces)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)**
+**[⚡ Overview Showcase](#web-application-workspaces)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)** • **[👨‍💻 Author](#author--lead-researcher)**
 
 </div>
+
+---
+
+## About the Project
+
+**ScamRoad** is an autonomous pavement vision and civic audit platform engineered to solve one of modern infrastructure's most persistent and costly challenges: **unmonitored road deterioration and delayed maintenance**.
+
+### The Motivation
+Potholes and structural fatigue fractures cause billions in vehicle damage, fatal commuter accidents, and severe traffic congestion each year. Traditional municipal road inspections rely on either manual citizen complaints or cost-prohibitive specialized survey trucks equipped with 3D LiDAR laser profilers costing upwards of $100,000+. Consequently, secondary roads and municipal corridors go un-surveyed for months or years.
+
+### The ScamRoad Solution
+ScamRoad democratizes infrastructure intelligence by enabling **any standard monocular camera, dashcam, or smartphone** to function as a calibrated pavement survey sensor:
+- **Sub-120ms Latency**: Executes on standard CPU architecture without requiring cloud GPU dependencies.
+- **Zero Hallucinations on Shadows**: Dual spatial priors eliminate 99.4% of false alarms on tree shadows, wet road reflections, and non-road images.
+- **Civil-Grade Integrity**: Converts raw pixel detections into standardized **Pavement Condition Index (PCI 0–100)** scores and verifiable PDF audit ledgers.
+
+---
+
+## 👨‍💻 Author & Lead Researcher
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Priya-Ranjan-0201">
+        <img src="https://github.com/Priya-Ranjan-0201.png" width="110px;" alt="Priye Ranjan" style="border-radius: 50%; border: 3px solid #FF5A00;"/><br />
+        <sub><b>Priye Ranjan</b></sub>
+      </a><br />
+      <sub>Lead Researcher & Full-Stack AI Engineer</sub><br />
+      <a href="https://github.com/Priya-Ranjan-0201">GitHub Profile</a> • 
+      <a href="https://github.com/Priya-Ranjan-0201/potholes-detection">Project Repo</a>
+    </td>
+    <td>
+      <b>Project Inception & Core Engineering:</b>
+      <ul>
+        <li>Designed the 5-Stage Neural Vision Architecture fusing fine-tuned YOLO11n with spatial prior guards.</li>
+        <li>Implemented the high-visibility roadwork design system and interactive client-side PDF audit engine.</li>
+        <li>Curated the 730-image held-out benchmark and achieved 0 false alarms on non-road diagrams.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -35,6 +76,8 @@ An edge-optimized computer vision system for highway authorities, municipal engi
 
 ## Table of Contents
 
+- [About the Project](#about-the-project)
+- [Author & Lead Researcher](#author--lead-researcher)
 - [Key Capabilities](#key-capabilities)
 - [System Architecture](#system-architecture)
 - [Web Application Workspaces](#web-application-workspaces)
