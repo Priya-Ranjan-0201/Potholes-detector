@@ -3,7 +3,7 @@ names:
   1: CRACK_LONG
   2: CRACK_TRANS
   3: CRACK_ALLIGATOR
-path: C:/Users/PRIYE RANJAN/OneDrive/Desktop/COMPUTER VISION/scam_road/data/sample/splits
+path: .
 test: images/test
 train: images/train
 val: images/val

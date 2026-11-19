@@ -3,7 +3,7 @@
 **Project Title:** AI-Powered Road and Infrastructure Damage Detection and Severity Assessment  
 **Nickname:** RoadSurvey AI  
 **Date:** 2026-11-17  
-**Evaluation Scope:** Locked Benchmark ($N = 730$ images, SHA-256 locked in [`manifest.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/data/rescue_benchmark/manifest.json))  
+**Evaluation Scope:** Locked Benchmark ($N = 730$ images, SHA-256 locked in [`manifest.json`](data/rescue_benchmark/manifest.json))  
 **Hardware Profile:** AMD Ryzen 7 7445HS with Radeon 740M Graphics (6 cores / 12 threads), 15.2 GB RAM, CPU Execution Provider
 
 ---
@@ -17,7 +17,7 @@ On new dashcam footage and real-world photographs, ~80% of model detections were
 3. Confidence scores were arbitrary and uncalibrated.
 
 ### Root Causes Discovered with Forensic Evidence (Step 2)
-The raw un-thresholded model audit ([`step2_raw_audit.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/forensics/step2_raw_audit.json)) revealed:
+The raw un-thresholded model audit ([`step2_raw_audit.json`](docs/forensics/step2_raw_audit.json)) revealed:
 1. **Unregularized Crack Model Background Hallucinations:** The secondary crack specialist (`runs/baselines/yolov8n/weights/best.onnx`) was trained on tight road distress crops with **zero background negative images**. Consequently, the sigmoid classification head was never penalized on non-road textures, causing it to assign $0.95 - 0.999$ confidence to leaves, signs, chairs, and slide text. On the clean road benchmark, it produced **13,487 false positive boxes across 93% of clean road images**.
 2. **Missing Multi-Class Training Data:** The primary YOLO11n (`runs/export/best.onnx`) was trained on `pothole_unified`, which contained 1,853 potholes but **zero transverse cracks and zero alligator cracks**. To compensate, developers bolted on the unregularized crack model in a 70/30 blend.
 3. **The "Clean Road" Fallacy:** In earlier attempts to suppress sky boxes, an ad-hoc threshold filter was introduced. Because real road alligator cracks naturally output confidence $\approx 0.40 - 0.48$, the filter destroyed 100% of true road cracks, making the system falsely report "clean road" on heavily damaged asphalt.
@@ -35,7 +35,7 @@ In accordance with Step 1 and Rule H2 (Zero Test Leakage), an immutable, hashed 
 | **Clean Road Negatives** | 300 | RDD2022 clean negatives & Kauevestena | Empty ground truth ($0$ defect boxes) |
 | **Clutter Road Scenes** | 100 | Urban traffic, pedestrians, scooters, signboards | Valid road annotations where present; 0 on off-road objects |
 | **Non-Road Images** | 30 | Engineering diagrams, confusion matrices, UI screenshots | Empty ground truth ($0$ defect boxes); must be rejected |
-| **Total Benchmark** | **730** | Hashed in [`data/rescue_benchmark/manifest.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/data/rescue_benchmark/manifest.json) | **All images locked with SHA-256** |
+| **Total Benchmark** | **730** | Hashed in [`data/rescue_benchmark/manifest.json`](data/rescue_benchmark/manifest.json) | **All images locked with SHA-256** |
 
 ---
 
@@ -85,12 +85,12 @@ All numbers are measured directly on the locked $N=730$ benchmark at IoU thresho
 
 ### Step 4: Retrained Unified Modern Detector (YOLO11n)
 - **Data Formulation:** 464 training images strictly outside the benchmark, with **31.7% background negative images** (clean asphalt, road signs, traffic, shadows, non-road diagrams).
-- **Export:** Exported to clean ONNX format at [`runs/rescue_train/yolo11n_rescue/weights/best.onnx`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/rescue_train/yolo11n_rescue/weights/best.onnx) (10.2 MB, single output tensor `[1, 8, 8400]`).
+- **Export:** Exported to clean ONNX format at [`runs/rescue_train/yolo11n_rescue/weights/best.onnx`](runs/rescue_train/yolo11n_rescue/weights/best.onnx) (10.2 MB, single output tensor `[1, 8, 8400]`).
 
 ### Step 5: The Two Architectural Guards
-- **Guard A (Road Surface Prior — [`ml/guard/road_guards.py`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/ml/guard/road_guards.py)):**
+- **Guard A (Road Surface Prior — [`ml/guard/road_guards.py`](ml/guard/road_guards.py)):**
   - Uses pavement color seed and connected components from bottom center, with safety 15% dilation.
-  - *Ablation Result ([`runs/ablations/guard_a_ablation.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/ablations/guard_a_ablation.json)):* Kept **92.41%** of true road damage while filtering off-road candidate detections.
+  - *Ablation Result ([`runs/ablations/guard_a_ablation.json`](runs/ablations/guard_a_ablation.json)):* Kept **92.41%** of true road damage while filtering off-road candidate detections.
 - **Guard B (Input Gate):**
   - Multi-spectral input usability gate inspecting luminance, blur, digital canvas variance, and graphic banner signatures.
   - *Result:* **100.0% of non-road images (30/30) correctly rejected** with 0 false detections, while falsely rejecting 0.0% (0/50) of real road photographs.
@@ -133,11 +133,11 @@ In strict accordance with the evaluation rules (*"If a target is missed, say so 
 
 ## 8. Forensics: Worst Remaining Failures
 
-Visual overlay composites for the 20 worst remaining failure cases (green = ground truth, red = predicted) are saved in [`docs/forensics/rescue_final/`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/forensics/rescue_final/):
+Visual overlay composites for the 20 worst remaining failure cases (green = ground truth, red = predicted) are saved in [`docs/forensics/rescue_final/`](docs/forensics/rescue_final/):
 
-- [`remaining_failure_01_missed_damage`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/forensics/rescue_final/remaining_failure_01_missed_damage_bench_damage_113_test_src2_usa_United_States_000079.jpg): Faint longitudinal hairline crack in high-glare concrete surface.
-- [`remaining_failure_02_missed_damage`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/forensics/rescue_final/remaining_failure_02_missed_damage_bench_damage_057_test_src2_usa_United_States_000004.jpg): Shallow surface wear under heavy tree canopy shadows.
-- [`failures_manifest.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/forensics/rescue_final/failures_manifest.json): Full metadata and breakdown of all 20 evaluated failure cases.
+- [`remaining_failure_01_missed_damage`](docs/forensics/rescue_final/remaining_failure_01_missed_damage_bench_damage_113_test_src2_usa_United_States_000079.jpg): Faint longitudinal hairline crack in high-glare concrete surface.
+- [`remaining_failure_02_missed_damage`](docs/forensics/rescue_final/remaining_failure_02_missed_damage_bench_damage_057_test_src2_usa_United_States_000004.jpg): Shallow surface wear under heavy tree canopy shadows.
+- [`failures_manifest.json`](docs/forensics/rescue_final/failures_manifest.json): Full metadata and breakdown of all 20 evaluated failure cases.
 
 ---
 
@@ -169,9 +169,9 @@ python -m pytest backend/tests/test_accuracy_rescue_regressions.py backend/tests
 
 ## 10. Artifact Links
 
-- Benchmark Manifest ($N=730$): [`data/rescue_benchmark/manifest.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/data/rescue_benchmark/manifest.json)
-- Baseline Evaluation Metrics: [`runs/eval/rescue_baseline_results.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/eval/rescue_baseline_results.json)
-- Final Evaluation Metrics: [`runs/eval/rescue_final_results.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/eval/rescue_final_results.json)
-- Guard A Ablation Results: [`runs/ablations/guard_a_ablation.json`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/ablations/guard_a_ablation.json)
-- Rescued ONNX Model: [`runs/rescue_train/yolo11n_rescue/weights/best.onnx`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/runs/rescue_train/yolo11n_rescue/weights/best.onnx)
-- Architectural Decisions: [`docs/DECISIONS.md`](file:///c:/Users/PRIYE%20RANJAN/OneDrive/Desktop/COMPUTER%20VISION/scam_road/docs/DECISIONS.md#L254-L290)
+- Benchmark Manifest ($N=730$): [`data/rescue_benchmark/manifest.json`](data/rescue_benchmark/manifest.json)
+- Baseline Evaluation Metrics: [`runs/eval/rescue_baseline_results.json`](runs/eval/rescue_baseline_results.json)
+- Final Evaluation Metrics: [`runs/eval/rescue_final_results.json`](runs/eval/rescue_final_results.json)
+- Guard A Ablation Results: [`runs/ablations/guard_a_ablation.json`](runs/ablations/guard_a_ablation.json)
+- Rescued ONNX Model: [`runs/rescue_train/yolo11n_rescue/weights/best.onnx`](runs/rescue_train/yolo11n_rescue/weights/best.onnx)
+- Architectural Decisions: [`docs/DECISIONS.md`](docs/DECISIONS.md#L254-L290)
