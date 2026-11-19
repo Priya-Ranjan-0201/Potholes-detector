@@ -1,6 +1,11 @@
-# ScamRoad — Autonomous Road Distress Inspection & Audit Engine
+<div align="center">
+
+# 🛣️ ScamRoad
+### Autonomous Road Distress Inspection & Audit Engine
 
 An edge-optimized computer vision system for highway authorities, municipal engineers, and road contractors that automates pavement distress detection (potholes, alligator cracks, longitudinal and transverse cracks) from camera feeds and dashcam imagery, calculates civil-grade severity ratings, and exports ASTM D6433 & IRC:82 compliant audit reports.
+
+<br/>
 
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](pyproject.toml)
@@ -10,8 +15,21 @@ An edge-optimized computer vision system for highway authorities, municipal engi
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](web)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC.svg)](web)
 [![Model](https://img.shields.io/badge/YOLO11n-Rescue-FF5A00.svg)](runs/rescue_train/yolo11n_rescue)
-[![Civil Standard](https://img.shields.io/badge/Civil%20Standard-ASTM%20D6433-FFD200.svg)](docs)
-[![Highway Code](https://img.shields.io/badge/Highway%20Code-IRC%3A82--2015-FFD200.svg)](docs)
+
+<br/>
+
+**[⚡ Overview Showcase](#web-application-workspaces)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)**
+
+</div>
+
+---
+
+## Visual Inspection Showcase
+
+| State Highway Crater | Fatigue Alligator Cracking | National Highway Shoulder Void |
+| :---: | :---: | :---: |
+| <img src="web/public/samples/asphalt_crater.jpg" width="280" alt="State Highway Crater"/> | <img src="web/public/samples/alligator_cracks.jpg" width="280" alt="Alligator Cracks"/> | <img src="web/public/samples/pothole_nh44.jpg" width="280" alt="NH-44 Pothole"/> |
+| **State Highway 17**<br><code>PCI 38/100 · Critical</code><br>Base Layer Collapse | **MDR-04 Corridor**<br><code>PCI 44/100 · Poor</code><br>IRC:82 Sealant Required | **National Highway 44**<br><code>PCI 62/100 · Fair</code><br>Wheelpath Hazard Void |
 
 ---
 
