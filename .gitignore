@@ -54,6 +54,7 @@ ml/data/external/
 *.ckpt
 *.onnx
 !runs/export/best_int8.onnx
+!runs/rescue_train/yolo11n_rescue/weights/best.onnx
 *.tflite
 *.engine
 *.ncnn.bin

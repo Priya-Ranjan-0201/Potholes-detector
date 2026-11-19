@@ -17,13 +17,15 @@ start "ScamRoad AI Backend" cmd /k "cd /d "%PROJECT_ROOT%" && set PYTHONPATH=. &
 echo [2/3] Launching Vite Frontend on http://localhost:3000...
 start "ScamRoad Web Frontend" cmd /k "cd /d "%PROJECT_ROOT%\web" && npm run dev"
 
-echo [3/3] Opening ScamRoad in default browser...
+echo [3/3] Opening ScamRoad Overview in default browser...
 timeout /t 3 /nobreak >nul
-start http://localhost:3000/scanner
+start http://localhost:3000
 
 echo.
 echo ========================================================
 echo    ScamRoad is now running!
 echo    - AI Inference Engine: http://localhost:8001
-echo    - Interactive Scanner UI: http://localhost:3000/scanner
+echo    - Overview & Showcase:  http://localhost:3000
+echo    - Interactive Scanner:  http://localhost:3000/scanner
+echo    - Audit Report & PDF:   http://localhost:3000/report
 echo ========================================================
