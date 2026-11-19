@@ -18,7 +18,7 @@ An edge-optimized computer vision system for highway authorities, municipal engi
 
 <br/>
 
-**[⚡ Overview Showcase](#web-application-workspaces)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)** • **[👨‍💻 Author](#author--lead-researcher)**
+**[⚡ Previews & UI](#web-application-previews)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report--vector-pdf-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)** • **[👨‍💻 Author](#author--lead-researcher)**
 
 </div>
 
@@ -80,7 +80,7 @@ ScamRoad democratizes infrastructure intelligence by enabling **any standard mon
 - [Author & Lead Researcher](#author--lead-researcher)
 - [Key Capabilities](#key-capabilities)
 - [System Architecture](#system-architecture)
-- [Web Application Workspaces](#web-application-workspaces)
+- [Web Application Previews](#web-application-previews)
 - [Accuracy & Latency Benchmarks](#accuracy--latency-benchmarks)
 - [Pavement Assessment & Maintenance Criteria](#pavement-assessment--maintenance-criteria)
 - [Quickstart Guide](#quickstart-guide)
@@ -147,26 +147,28 @@ ScamRoad democratizes infrastructure intelligence by enabling **any standard mon
 
 ---
 
-## Web Application Workspaces
+## Web Application Previews
 
 ### 1. Overview & Architecture Showcase (`/`)
-- Full-length infrastructure engineering landing page.
-- Real-time pavement radar preview with an interactive highway corridor switcher:
-  - **State Highway 17 Crater** (`asphalt_crater.jpg` — PCI 38/100 Critical)
-  - **MDR-04 Alligator Cracking** (`alligator_cracks.jpg` — PCI 44/100 Poor)
-  - **NH-44 Highway Shoulder Void** (`pothole_nh44.jpg` — PCI 62/100 Fair)
-- Detailed breakdown of the 5-stage neural pipeline, accuracy benchmark showdown, and IRC:82 distress taxonomy.
+> Full-length engineering landing page featuring real-time telemetry, 5-stage neural inspection pipeline, accuracy benchmark showdown, and interactive radar scanner preview.
+
+<p align="center">
+  <img src="docs/images/preview_overview.png" alt="ScamRoad Overview Landing Page" width="100%"/>
+</p>
 
 ### 2. Live Road Scanner (`/scanner`)
-- Direct device camera scanner and high-resolution file upload workspace.
-- Real-time sensitivity threshold slider, frame inspection canvas with bounding boxes, and instant defect breakdown.
-- Immediate handover CTA to compile analyzed frames into full civil audit documentation.
+> Real-time pavement distress scanner with camera feed, image upload, sensitivity calibration slider, and neural bounding box overlays.
 
-### 3. Civil Damage Audit Report (`/report`)
-- Instant calculation of the ASTM D6433 Pavement Condition Index (PCI 0–100).
-- Categorized defect ledger itemizing surface area percentages, wheelpath exposure risk, and IRC:82 recommended treatments (milling, hot-pour bitumen sealant, or full depth reclamation).
-- Integrated contractor cost calculation based on configurable regional rate cards.
-- Client-side vector PDF generator producing `ScamRoad_Audit_Report_*.pdf`.
+<p align="center">
+  <img src="docs/images/preview_scanner.png" alt="ScamRoad Live Scanner Workspace" width="100%"/>
+</p>
+
+### 3. Civil Damage Audit Report & Vector PDF (`/report`)
+> Automated civil damage audit ledger calculating ASTM D6433 Pavement Condition Index (PCI 0–100), treatment recommendations, and one-click vector PDF generation.
+
+<p align="center">
+  <img src="docs/images/preview_report.png" alt="ScamRoad Audit Report and PDF Generator" width="100%"/>
+</p>
 
 ---
 
