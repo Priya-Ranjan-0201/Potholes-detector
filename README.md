@@ -383,6 +383,15 @@ The 10-slide project presentation is available in both native PowerPoint and int
 - 🌐 **Interactive Slide Viewer**: [`docs/presentation.html`](docs/presentation.html) (Full screen with arrow key navigation)
 - 🛠️ **Presentation Generator**: Run `python generate_ppt.py` to regenerate the deck with `python-pptx`.
 
+<p align="center">
+  <img src="docs/ppt_slides/Slide1.JPG" alt="ScamRoad Title Slide" width="48%"/>
+  <img src="docs/ppt_slides/Slide4.JPG" alt="ScamRoad Architecture Slide" width="48%"/>
+</p>
+<p align="center">
+  <img src="docs/ppt_slides/Slide6.JPG" alt="ScamRoad Live Scanner Slide" width="48%"/>
+  <img src="docs/ppt_slides/Slide8.JPG" alt="ScamRoad Benchmark Slide" width="48%"/>
+</p>
+
 ---
 
 ## License
