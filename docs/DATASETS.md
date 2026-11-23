@@ -18,6 +18,7 @@ licensing, provenance, and processing status.
 | **MakeML Potholes** | CC0 / Public Domain | `larxel/pothole-detection` | 2021 | pothole | pothole→POTHOLE (0) | 70/15/15 Stratified | Diverse urban and highway pothole bounding boxes. |
 | **IIT Bombay Indian Roads** | CC BY 4.0 | `e-yantra-iit-bombay/semantic-segmentation-datasets-of-indian-roads` | 2023 | road, pothole, footpath | pothole→POTHOLE (0) | 80/10/10 Split | Pixel-level semantic and instance segmentation of Indian road conditions. |
 | **IIT Goa Potholes** | Research Use | `iitgoa/iit-goa-pothole-detection-classification-dataset` | 2023 | pothole | pothole→POTHOLE (0) | 70/15/15 Stratified | Rural and urban Indian road surfaces with variable lighting. |
+| **Real-World Road Defect Dataset** | CC BY-SA 4.0 / CC0 | [RDD2022 HuggingFace](https://huggingface.co/datasets/dronefreak/RDD2022) & [GitHub](https://github.com/michelpf/dataset-pothole) | 2026-11 | POTHOLE, CRACK_LONG, CRACK_TRANS, CRACK_ALLIGATOR | 0→pothole, 1→crack_longitudinal, 2→crack_transverse, 3→crack_alligator | 80/20 Stratified train/val | Curated multi-source dataset (400 images: 320 train, 80 val) with background negatives. Script: `scripts/prepare_real_world_dataset.py`. |
 | **Sample Benchmark** | CC0 / Internal | `scripts/seed/create_benchmark_sample.py` | 2026-10-31 | D40, D00 | D40→POTHOLE, D00→CRACK_LONG | 70/15/15 Sequence-aware | 30 images, 33 annotations. Full audit in `docs/DATASET_AUDIT.md`. |
 
 ---
