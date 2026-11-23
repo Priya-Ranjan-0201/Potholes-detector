@@ -1,0 +1,20 @@
+{
+  "mAP50": 0.1858,
+  "mAP50_95": 0.0819,
+  "precision": 0.9228,
+  "recall": 0.1392,
+  "fitness": 0.0819,
+  "classes": {
+    "0": "pothole",
+    "1": "crack_longitudinal",
+    "2": "crack_transverse",
+    "3": "crack_alligator"
+  },
+  "per_class_mAP50": {
+    "pothole": 0.2852,
+    "crack_longitudinal": 0.0107,
+    "crack_transverse": 0.0284,
+    "crack_alligator": 0.0034
+  },
+  "training_time_seconds": 1031.8
+}

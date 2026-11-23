@@ -102,17 +102,17 @@ class ML2DetectorPipeline:
 
         # Calibrated Preset Thresholds
         if preset == "high_precision":
-            conf_thresh = 0.35
+            conf_thresh = 0.45
             crack_thresh = 0.45
             dep_thresh = 0.45
         elif preset == "high_recall":
-            conf_thresh = 0.15
-            crack_thresh = 0.30
-            dep_thresh = 0.30
-        else:  # balanced
             conf_thresh = 0.20
-            crack_thresh = 0.35
-            dep_thresh = 0.35
+            crack_thresh = 0.25
+            dep_thresh = 0.25
+        else:  # balanced
+            conf_thresh = 0.30
+            crack_thresh = 0.32
+            dep_thresh = 0.32
 
         # Letterbox 640x640
         scale = min(640.0 / h, 640.0 / w)
@@ -156,9 +156,16 @@ class ML2DetectorPipeline:
             y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
             bw_px, bh_px = x2 - x1, y2 - y1
             area_ratio = (bw_px * bh_px) / (w * h)
+            cx_box = (x1 + x2) / 2.0
+            # Border artifact rejection: ignore spurious slice artifacts hugging image perimeter
+            if ((x1 <= 3 or x2 >= w - 3) and c < 0.45) or cx_box < 0.03 * w or cx_box > 0.97 * w:
+                continue
+            # Horizon noise rejection: upper 12% should not have weak detections
+            if y2 < h * 0.12 and c < 0.55:
+                continue
             if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
                 continue
-            if bw_px >= 4 and bh_px >= 4:
+            if bw_px >= 12 and bh_px >= 12:
                 boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
                 confs_nms.append(float(c))
                 candidates.append({
@@ -230,9 +237,14 @@ class ML2DetectorPipeline:
                 y2 = max(0.0, min(float(h), ((cy + bh / 2.0) - dy) / scale))
                 bw_px, bh_px = x2 - x1, y2 - y1
                 area_ratio = (bw_px * bh_px) / (w * h)
+                cx_box = (x1 + x2) / 2.0
+                if ((x1 <= 3 or x2 >= w - 3) and c < 0.45) or cx_box < 0.03 * w or cx_box > 0.97 * w:
+                    continue
+                if y2 < h * 0.12 and c < 0.55:
+                    continue
                 if c < 0.30 and (bh_px > h * 0.45 or area_ratio > 0.18):
                     continue
-                if bw_px >= 4 and bh_px >= 4:
+                if bw_px >= 12 and bh_px >= 12:
                     boxes_nms.append([int(x1), int(y1), int(bw_px), int(bh_px)])
                     confs_nms.append(float(c))
                     candidates.append({
