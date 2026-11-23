@@ -20,10 +20,10 @@ from pathlib import Path
 import pytest
 import torch
 import yaml
-from checkpoint_manager import CheckpointManager
-from cloud_orchestrator import CloudOrchestrator
-from environment_manager import EnvironmentManager
-from experiment_manager import ExperimentManager
+from ml.orchestration.checkpoint_manager import CheckpointManager
+from ml.orchestration.cloud_orchestrator import CloudOrchestrator
+from ml.orchestration.environment_manager import EnvironmentManager
+from ml.orchestration.experiment_manager import ExperimentManager
 
 
 @pytest.fixture

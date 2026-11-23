@@ -18,7 +18,10 @@ from pathlib import Path
 
 import yaml
 from configs.paths import get_paths
-from scripts.seed.create_benchmark_sample import create_sample_dataset
+try:
+    from scripts.seed.create_benchmark_sample import create_sample_dataset
+except ImportError:
+    create_sample_dataset = None
 
 
 def record_to_dataset_docs(
