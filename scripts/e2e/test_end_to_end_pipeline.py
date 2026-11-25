@@ -98,9 +98,17 @@ def test_end_to_end_14_stage_pipeline(client: TestClient) -> None:
     # -------------------------------------------------------------------------
     # STAGE 3: Edge ONNX YOLOv8 Inference (Rule R2, R14)
     # -------------------------------------------------------------------------
-    model_path = Path("ml/runs/pothole_yolov8n/weights/best_int8.onnx")
-    if not model_path.exists():
-        model_path = Path("ml/runs/pothole_yolov8n/weights/best.onnx")
+    model_candidates = [
+        Path("ml/weights/best_int8.onnx"),
+        Path("ml/weights/yolo11n_pothole_best.onnx"),
+        Path("runs/export/best_int8.onnx"),
+        Path("runs/export/best.onnx"),
+        Path("ml/runs/pothole_yolov8n/weights/best_int8.onnx"),
+        Path("ml/runs/pothole_yolov8n/weights/best.onnx"),
+    ]
+    model_path = next((p for p in model_candidates if p.exists()), None)
+    if not model_path:
+        pytest.skip("No ONNX model found on disk for e2e test")
 
     engine = EdgeInferenceEngine(
         model_path=str(model_path),
