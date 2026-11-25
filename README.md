@@ -378,9 +378,9 @@ cd web && npm run build
 
 ## Project Presentation
 
-The 10-slide project presentation is available in both native PowerPoint and interactive browser formats:
-- 📥 **PowerPoint Deck**: [`ScamRoad_Presentation.pptx`](ScamRoad_Presentation.pptx) (16:9 widescreen, custom roadwork dark theme, embedded UI previews)
-- 🌐 **Interactive Slide Viewer**: [`docs/presentation.html`](docs/presentation.html) (Full screen with arrow key navigation)
+The 12-slide project presentation is available in both native PowerPoint and interactive browser formats:
+- 📥 **PowerPoint Deck**: [`ScamRoad_Presentation.pptx`](ScamRoad_Presentation.pptx) (16:9 widescreen, custom cyber-civil dark theme, embedded UI previews and forensic benchmarks)
+- 🌐 **Interactive Slide Viewer**: [`docs/presentation.html`](docs/presentation.html) (Full screen with arrow key navigation, F-key fullscreen)
 - 🛠️ **Presentation Generator**: Run `python generate_ppt.py` to regenerate the deck with `python-pptx`.
 
 <p align="center">
@@ -389,7 +389,11 @@ The 10-slide project presentation is available in both native PowerPoint and int
 </p>
 <p align="center">
   <img src="docs/ppt_slides/Slide6.JPG" alt="ScamRoad Live Scanner Slide" width="48%"/>
-  <img src="docs/ppt_slides/Slide8.JPG" alt="ScamRoad Benchmark Slide" width="48%"/>
+  <img src="docs/ppt_slides/Slide8.JPG" alt="ScamRoad Forensic Model Rescue Slide" width="48%"/>
+</p>
+<p align="center">
+  <img src="docs/ppt_slides/Slide9.JPG" alt="ScamRoad Blind Test Slide" width="48%"/>
+  <img src="docs/ppt_slides/Slide12.JPG" alt="ScamRoad Author Summary Slide" width="48%"/>
 </p>
 
 ---
