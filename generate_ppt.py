@@ -1,10 +1,9 @@
 """Generate ScamRoad 12-slide Class Presentation (.pptx).
-Designed with a clean, professional, human-crafted academic aesthetic:
-- Crisp, high-contrast light background (perfect for classroom projectors)
+Designed with simple, clear, punchy, human-crafted content:
+- Clean, high-contrast light background (perfect for classroom projectors)
 - Authoritative deep navy and warm civil-engineering amber accents
-- Perfectly aligned left-oriented typography for natural readability
-- Simple, clear, uncluttered slide layouts tailored for an engaging class presentation
-- Authentic project screenshots and honest engineering insights
+- Concise, easy-to-read bullet points without heavy jargon
+- Direct project facts, authentic screenshots, and honest engineering findings
 """
 
 from __future__ import annotations
@@ -182,8 +181,8 @@ tf1 = title_card.text_frame
 
 add_para(tf1, "COMPUTER VISION & CIVIL INFRASTRUCTURE PROJECT", 11, bold=True, color=COLOR_AMBER)
 add_para(tf1, "ScamRoad", 46, bold=True, color=COLOR_NAVY, space_before=4)
-add_para(tf1, "Automated Road Distress Detection & Civil Audit System", 17, bold=True, color=COLOR_ROYAL, space_before=2)
-add_para(tf1, "An intelligent edge computer vision framework that detects road hazards (potholes and cracks) in real time from mobile camera feeds, and automatically compiles standardized civil engineering audit reports.", 11.5, color=COLOR_TEXT_BODY, space_before=12)
+add_para(tf1, "AI-Powered Road Defect Detection & Civil Audit System", 17, bold=True, color=COLOR_ROYAL, space_before=2)
+add_para(tf1, "A real-time computer vision system that detects road hazards (potholes and cracks) from everyday smartphone cameras and automatically generates standardized civil engineering audit reports.", 11.5, color=COLOR_TEXT_BODY, space_before=12)
 
 # Right Column: Highlights Card
 hl_card = add_card(s1, Inches(8.45), Inches(1.1), Inches(4.08), Inches(4.3), border_color=COLOR_ROYAL, fill_color=COLOR_CARD_MUTED, border_width=1.5)
@@ -191,10 +190,10 @@ htf = hl_card.text_frame
 add_para(htf, "KEY PROJECT HIGHLIGHTS", 12, bold=True, color=COLOR_NAVY)
 
 highlights = [
-    ("⚡ Real-Time Edge Processing", "Runs under 65ms per frame on standard laptop CPUs with zero GPU requirements.", COLOR_ROYAL),
-    ("🎯 High Pothole Precision", "92.3% validation precision with verified confidence on real Indian road craters.", COLOR_EMERALD),
-    ("🛡️ Zero Clean Road False Alarms", "Eliminated border ghost boxes; 0% false positives on clean highway surfaces.", COLOR_AMBER),
-    ("📋 Automated Civil Audit", "Generates ASTM D6433 Pavement Condition Index (PCI) and tamper-proof PDF reports.", COLOR_NAVY),
+    ("⚡ Real-Time CPU Processing", "Runs under 65ms per frame on standard laptops (no GPU needed).", COLOR_ROYAL),
+    ("🎯 Accurate Pothole Detection", "92.3% validation precision on authentic Indian road conditions.", COLOR_EMERALD),
+    ("🛡️ Zero Clean Road False Alarms", "Eliminated border ghost boxes; 0% false positives on clean asphalt.", COLOR_AMBER),
+    ("📋 Automated Civil Audit", "Generates ASTM D6433 road health scores and downloadable PDF reports.", COLOR_NAVY),
 ]
 for h_title, h_desc, h_col in highlights:
     add_para(htf, h_title, 11.5, bold=True, color=h_col, space_before=8)
@@ -204,7 +203,7 @@ for h_title, h_desc, h_col in highlights:
 auth_card = add_card(s1, Inches(0.8), Inches(5.65), Inches(11.73), Inches(1.3), border_color=COLOR_BORDER, fill_color=COLOR_CARD)
 tf_a = auth_card.text_frame
 add_para(tf_a, "Presented by: Priye Ranjan  (@Priya-Ranjan-0201)", 14, bold=True, color=COLOR_NAVY)
-add_para(tf_a, "Course / Topic: Computer Vision, Real-Time Edge AI & Smart Public Infrastructure", 10.5, color=COLOR_TEXT_BODY, space_before=3)
+add_para(tf_a, "Topic: Computer Vision, Real-Time Edge AI & Smart Public Infrastructure", 10.5, color=COLOR_TEXT_BODY, space_before=3)
 add_para(tf_a, "Open-Source Project: github.com/Priya-Ranjan-0201/Potholes-detector  ·  FastAPI + React + YOLO11 (ONNX)", 9.5, color=COLOR_TEXT_MUTED, space_before=2)
 
 
@@ -213,42 +212,42 @@ add_para(tf_a, "Open-Source Project: github.com/Priya-Ranjan-0201/Potholes-detec
 # ==============================================================================
 s2 = prs.slides.add_slide(blank_layout)
 set_slide_background(s2)
-add_header(s2, "Problem Statement: The Highway Safety & Road Inspection Crisis", "01. Introduction & Context", 2, 12)
+add_header(s2, "Problem Statement: Why Road Distress is a Major Crisis", "01. Problem Statement", 2, 12)
 
 # Left Card: The Human & Economic Impact
 left_s2 = add_card(s2, Inches(0.8), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_CRIMSON, fill_color=COLOR_CARD, border_width=1.5)
 tf_ls2 = left_s2.text_frame
 add_para(tf_ls2, "THE REAL-WORLD PROBLEM", 11, bold=True, color=COLOR_CRIMSON)
-add_para(tf_ls2, "Public Safety & Financial Burden", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(tf_ls2, "Public Safety & Financial Drain", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 impact_items = [
-    ("Over 3,500+ Fatalities Annually", "Potholes and sudden depressions cause fatal vehicular accidents and two-wheeler crashes every year across Indian roads."),
-    ("Massive Financial Drain (₹15,000+ Cr)", "Public money is repeatedly drained on poor quality road patches that erode after a single monsoon season."),
-    ("Severe Vehicle Wear & Traffic Bottlenecks", "Damaged road surfaces damage suspensions, cause tire blowouts, and slow down commercial logistics."),
+    ("Over 3,500+ Deaths Annually", "Sudden potholes and depressions cause fatal road accidents and two-wheeler crashes every year."),
+    ("Heavy Public Fund Wastage (₹15,000+ Cr)", "Billions are spent on substandard bitumen repairs that wash away during the very first monsoon."),
+    ("Severe Vehicle Wear & Traffic Jams", "Rough roads cause tire blowouts, broken suspensions, and severe commercial transit delays."),
 ]
 for title, desc in impact_items:
-    add_para(tf_ls2, f"• {title}", 11.5, bold=True, color=COLOR_CRIMSON, space_before=8)
+    add_para(tf_ls2, f"• {title}:", 11, bold=True, color=COLOR_CRIMSON, space_before=8)
     add_para(tf_ls2, f"   {desc}", 10, color=COLOR_TEXT_BODY)
 
 # Right Card: Why Manual Audits Fail
 right_s2 = add_card(s2, Inches(6.83), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_AMBER, fill_color=COLOR_CARD, border_width=1.5)
 tf_rs2 = right_s2.text_frame
 add_para(tf_rs2, "LIMITATIONS OF CURRENT METHODS", 11, bold=True, color=COLOR_AMBER)
-add_para(tf_rs2, "Why Manual Inspections Fail", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(tf_rs2, "Why Traditional Inspections Fail", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 limit_items = [
-    ("Slow & Infrequent Surveys", "Manual clipboard surveys take weeks or months to complete, allowing minor cracks to degrade into deep craters before repairs begin."),
-    ("Prohibitive Equipment Costs (₹80+ Lakhs)", "Laser profilometer vans and specialized LiDAR survey trucks are too expensive for 98% of local municipal budgets."),
-    ("Subjective & Contested Reports", "Paper-based assessments rely on individual human judgment, leading to disputed contractor repair quality and 'ghost repairs'."),
+    ("Slow Manual Surveys", "Paper clipboard inspections take weeks or months; minor cracks turn into deep craters before repairs start."),
+    ("Expensive Equipment (₹80+ Lakhs)", "Laser survey vans and LiDAR trucks are too expensive for 98% of municipal and rural budgets."),
+    ("Subjective & Unverified", "Manual grading relies on individual human opinion, leading to disputed repairs and unchecked 'ghost repairs'."),
 ]
 for title, desc in limit_items:
-    add_para(tf_rs2, f"• {title}", 11.5, bold=True, color=COLOR_AMBER, space_before=8)
+    add_para(tf_rs2, f"• {title}:", 11, bold=True, color=COLOR_AMBER, space_before=8)
     add_para(tf_rs2, f"   {desc}", 10, color=COLOR_TEXT_BODY)
 
 # Bottom Summary Banner
 b_s2 = add_card(s2, Inches(0.8), Inches(6.15), Inches(11.73), Inches(0.85), border_color=COLOR_BORDER, fill_color=COLOR_CARD_MUTED)
 stf2 = b_s2.text_frame
-add_para(stf2, "💡 The Solution: Use computer vision and everyday cameras (smartphones, dashcams) to make road inspection automated, fast, objective, and affordable.", 11.5, bold=True, color=COLOR_NAVY)
+add_para(stf2, "💡 The Project Mission: Use computer vision and ordinary cameras (smartphones, dashcams) to make road inspection fast, automated, affordable, and tamper-proof.", 11.5, bold=True, color=COLOR_NAVY)
 
 
 # ==============================================================================
@@ -256,26 +255,26 @@ add_para(stf2, "💡 The Solution: Use computer vision and everyday cameras (sma
 # ==============================================================================
 s3 = prs.slides.add_slide(blank_layout)
 set_slide_background(s3)
-add_header(s3, "System Overview: End-to-End Automated Inspection Workflow", "02. System Architecture", 3, 12)
+add_header(s3, "System Overview: How ScamRoad Works End-to-End", "02. System Architecture", 3, 12)
 
 pillars = [
-    ("1. MOBILE DATA INGESTION", "Everyday Camera Input", [
-        ("Monocular Video Upload", "Upload video or photos from consumer smartphones or dashcams."),
-        ("Automatic GPS Tagging", "Extracts latitude and longitude directly from EXIF metadata."),
-        ("Citizen Privacy Protection", "Automatically blurs vehicle license plates and civilian faces."),
-        ("Universal Format Support", "Decodes JPEG, PNG, WebP, and AVIF without conversion.")
-    ], "Zero dedicated hardware needed; accessible to all citizens.", COLOR_ROYAL),
+    ("1. CAMERA DATA INGESTION", "Everyday Mobile Input", [
+        ("Smartphone & Dashcam Video", "Upload road photos or recorded video directly from consumer devices."),
+        ("Automatic GPS Extraction", "Extracts latitude and longitude coordinates from image metadata (EXIF)."),
+        ("Citizen Privacy Protection", "Automatically blurs vehicle number plates and human faces."),
+        ("Universal File Support", "Seamlessly decodes JPEG, PNG, WebP, and AVIF formats.")
+    ], "Zero expensive hardware needed; accessible to all citizens.", COLOR_ROYAL),
     ("2. COMPUTER VISION CORE", "5-Stage Edge AI Pipeline", [
-        ("Defensive Input Gating", "Instantly rejects screenshots, indoor photos, and textbook diagrams."),
-        ("Road Horizon Masking", "Isolates the bitumen surface and ignores sky, trees, and buildings."),
-        ("YOLO11 Feature Extraction", "101 fused convolutional layers running on fast ONNX CPU runtime."),
-        ("Perimeter Box Filtering", "Suppresses corrupt false-positive boxes hugging image boundaries.")
+        ("Input Validation Gate", "Instantly rejects screenshots, indoor photos, and textbook diagrams."),
+        ("Road Horizon Masking", "Focuses on the pavement and ignores sky, trees, and buildings."),
+        ("YOLO11 Feature Extraction", "Processes images in <65ms on standard laptops without a GPU."),
+        ("Perimeter Filter", "Suppresses false-positive margin boxes hugging image borders.")
     ], "High accuracy with zero false alarms on clean asphalt.", COLOR_AMBER),
-    ("3. CIVIL AUDIT & GOVERNANCE", "Actionable Road Reports", [
-        ("Automated Work Orders", "Maps detected road damage to official IRC:82 repair codes."),
-        ("ASTM D6433 Scoring", "Computes standardized Pavement Condition Index (PCI 0-100)."),
-        ("Vector PDF Report Export", "Generates multi-page engineering reports with embedded damage crops."),
-        ("Photometric Verification", "Compares before-and-after photos to confirm completed contractor repairs.")
+    ("3. CIVIL AUDIT & GOVERNANCE", "Actionable Municipal Reports", [
+        ("Automated Work Orders", "Maps detected road damage to official IRC:82 maintenance codes."),
+        ("ASTM D6433 Road Rating", "Calculates standard Pavement Condition Index (PCI: 0 to 100)."),
+        ("Vector PDF Report Export", "Generates formal multi-page engineering reports with damage photos."),
+        ("Before-and-After Verification", "Compares contractor photos against original damage to confirm repairs.")
     ], "Transparent municipal accountability and verified repairs.", COLOR_EMERALD),
 ]
 
@@ -291,12 +290,12 @@ for p_tag, p_head, p_items, p_foot, p_col in pillars:
         add_para(ptf, f"• {item_title}:", 10, bold=True, color=COLOR_NAVY, space_before=5)
         add_para(ptf, f"   {item_desc}", 9, color=COLOR_TEXT_BODY)
 
-    add_para(ptf, f"✓ Benefit: {p_foot}", 9.5, bold=True, color=p_col, space_before=10)
+    add_para(ptf, f"✓ {p_foot}", 9.5, bold=True, color=p_col, space_before=10)
     p_x += Inches(3.99)
 
 b_strip3 = add_card(s3, Inches(0.8), Inches(6.15), Inches(11.73), Inches(0.85), border_color=COLOR_BORDER, fill_color=COLOR_CARD_MUTED)
 st3 = b_strip3.text_frame
-add_para(st3, "💡 Closed-Loop System: A single roadway photo automatically generates AI defect detection, civil severity scoring, and a verifiable contractor work order.", 11.5, bold=True, color=COLOR_NAVY)
+add_para(st3, "💡 Complete Closed Loop: A single road photo automatically triggers AI defect detection, civil severity scoring, and a verifiable contractor work order.", 11.5, bold=True, color=COLOR_NAVY)
 
 
 # ==============================================================================
@@ -304,14 +303,14 @@ add_para(st3, "💡 Closed-Loop System: A single roadway photo automatically gen
 # ==============================================================================
 s4 = prs.slides.add_slide(blank_layout)
 set_slide_background(s4)
-add_header(s4, "Under the Hood: 5-Stage Defensive Vision Pipeline", "03. Computer Vision Pipeline", 4, 12)
+add_header(s4, "Under the Hood: 5 Steps of the Detection Pipeline", "03. Computer Vision Pipeline", 4, 12)
 
 stages = [
-    ("Stage 1", "Input Validation Gate", "Filters out UI screenshots, indoor photos, and textbook diagrams before running neural network inference.", "100% SPECIFICITY", COLOR_ROYAL),
-    ("Stage 2", "Road Surface Prior (Masking)", "Isolates the actual asphalt region and ignores the upper horizon (sky, trees, signboards, background vehicles).", "HORIZON ISOLATION", COLOR_ROYAL),
-    ("Stage 3", "YOLO11 Feature Extraction", "Processes 640×640 letterboxed image through 101 fused convolutional layers using lightweight ONNX Runtime CPU.", "FAST CPU INFERENCE", COLOR_AMBER),
-    ("Stage 4", "Perimeter Edge Filtering", "Suppresses false-positive margin boxes hugging the image borders (x < 3% or x > 97%) and tiny noise artifacts.", "ELIMINATES GHOST BOXES", COLOR_AMBER),
-    ("Stage 5", "Confidence Calibration & NMS", "Non-Maximum Suppression merges overlapping boxes; provides 3 presets: Balanced (0.30), High Precision (0.45), High Recall (0.20).", "CALIBRATED OUTPUT", COLOR_EMERALD),
+    ("Step 1", "Input Validation Gate", "Checks if the input is a real road photo. Instantly blocks screenshots, diagrams, and indoor images.", "100% SPECIFICITY", COLOR_ROYAL),
+    ("Step 2", "Road Surface Segmentation", "Isolates the bitumen road surface and masks out irrelevant background (sky, trees, oncoming cars).", "HORIZON MASK", COLOR_ROYAL),
+    ("Step 3", "YOLO11 Feature Extraction", "Scans the road at 640×640 resolution to detect defect bounding boxes in under 65ms on simple CPU.", "FAST CPU INFERENCE", COLOR_AMBER),
+    ("Step 4", "Perimeter Edge Filtering", "Removes false-positive boxes that hug the image borders, eliminating phantom edge glitches.", "ELIMINATES GHOST BOXES", COLOR_AMBER),
+    ("Step 5", "Confidence Calibration & NMS", "Merges overlapping boxes and applies sensitivity modes: Balanced (0.30), High Precision, and High Recall.", "CALIBRATED OUTPUT", COLOR_EMERALD),
 ]
 
 stg_y = Inches(1.55)
@@ -330,7 +329,7 @@ for s_num, s_title, s_desc, s_badge, s_color in stages:
 # ==============================================================================
 s5 = prs.slides.add_slide(blank_layout)
 set_slide_background(s5)
-add_header(s5, "Road Distress Types & ASTM D6433 Severity Standards", "04. Defect Taxonomy", 5, 12)
+add_header(s5, "Road Distress Types & Severity Standards (ASTM D6433)", "04. Defect Taxonomy", 5, 12)
 
 classes_data = [
     ("POTHOLE", "Cavity Hazard", [
@@ -338,28 +337,28 @@ classes_data = [
         ("Root Cause", "Water seepage and repeated heavy traffic impacts."),
         ("Safety Risk", "High hazard for two-wheelers and tire punctures."),
         ("Standard Repair", "Rapid compaction bitumen mastic."),
-        ("ASTM Code", "ASTM D6433-P / IRC:82")
+        ("Severity Code", "ASTM D6433-P / IRC:82")
     ], COLOR_AMBER),
     ("LONGITUDINAL CRACK", "Fatigue Seam", [
         ("Description", "Crack running parallel to the road centerline."),
         ("Root Cause", "Paving joint failure or heavy traffic wheel paths."),
-        ("Safety Risk", "Allows moisture into lower pavement layers."),
+        ("Safety Risk", "Allows rain water into lower road base."),
         ("Standard Repair", "Hot-pour rubberized bitumen sealant."),
-        ("ASTM Code", "ASTM D6433-LC / IRC:82")
+        ("Severity Code", "ASTM D6433-LC / IRC:82")
     ], COLOR_ROYAL),
     ("TRANSVERSE CRACK", "Thermal Fracture", [
         ("Description", "Crack running across the road width."),
-        ("Root Cause", "Temperature shrinkage cycles and subgrade shifts."),
-        ("Safety Risk", "Creates recurring bumps and structural weakening."),
+        ("Root Cause", "Temperature shrinkage cycles and ground shifts."),
+        ("Safety Risk", "Creates noticeable bumps and weakens pavement."),
         ("Standard Repair", "Joint routing and elastomeric crack sealing."),
-        ("ASTM Code", "ASTM D6433-TC / IRC:82")
+        ("Severity Code", "ASTM D6433-TC / IRC:82")
     ], COLOR_PURPLE),
     ("ALLIGATOR CRACK", "Structural Failure", [
         ("Description", "Interconnected web cracking resembling reptile skin."),
-        ("Root Cause", "Complete failure of the underlying road base."),
-        ("Safety Risk", "Rapidly erodes into widespread potholes under rain."),
+        ("Root Cause", "Complete failure of the underlying road foundation."),
+        ("Safety Risk", "Rapidly collapses into widespread potholes under rain."),
         ("Standard Repair", "Full-depth asphalt milling and repaving."),
-        ("ASTM Code", "ASTM D6433-AC / IRC:82")
+        ("Severity Code", "ASTM D6433-AC / IRC:82")
     ], COLOR_CRIMSON),
 ]
 
@@ -380,7 +379,7 @@ for c_name, c_sub, c_details, c_col in classes_data:
 # Severity Formula Banner
 sev_banner = add_card(s5, Inches(0.8), Inches(6.15), Inches(11.73), Inches(0.85), border_color=COLOR_BORDER, fill_color=COLOR_CARD_MUTED)
 stf5 = sev_banner.text_frame
-add_para(stf5, "📐 Standard Civil Engineering Metric (ASTM D6433): Pavement Condition Index (PCI = 100 - ∑ Deduct Values) based on defect type, surface area, and wheel-path hazard location.", 10.5, bold=True, color=COLOR_NAVY)
+add_para(stf5, "📐 Standard Civil Metric: Pavement Condition Index (PCI = 100 - ∑ Deduct Values) graded from 100 (Good) to 0 (Failed) based on defect size, depth, and wheel-path position.", 10.5, bold=True, color=COLOR_NAVY)
 
 
 # ==============================================================================
@@ -388,7 +387,7 @@ add_para(stf5, "📐 Standard Civil Engineering Metric (ASTM D6433): Pavement Co
 # ==============================================================================
 s6 = prs.slides.add_slide(blank_layout)
 set_slide_background(s6)
-add_header(s6, "Interactive Live Road Scanner Workspace (/scanner)", "05. Live Scanner Interface", 6, 12)
+add_header(s6, "Real-Time Road Scanner Interface (/scanner)", "05. Live Scanner Interface", 6, 12)
 
 # Left: Cropped Live Scanner Interface
 if clean_scan_path.exists():
@@ -404,11 +403,11 @@ add_para(ftf, "REAL-TIME SCANNER FEATURES", 11, bold=True, color=COLOR_AMBER)
 add_para(ftf, "Computer Vision in Action", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 feats = [
-    ("Visual Bounding Box Overlays", "High-visibility bounding boxes with calibrated confidence percentages and severity pills."),
-    ("Polygon Contour Extraction", "Extracts smooth defect boundaries using OpenCV Otsu thresholding and morphological closing."),
-    ("Adjustable Detection Presets", "Instant switching between Balanced (0.30), High Precision (0.45), and High Recall (0.20)."),
-    ("Wheel-Path Risk Alert", "Flags defects positioned directly within vehicle tire tracks (16%-36% and 64%-84% image corridor)."),
-    ("Fast CPU Performance", "Runs at 15+ frames per second on standard laptop processors with no dedicated GPU required.")
+    ("Visual Bounding Boxes", "Overlays colored boxes with confidence percentage and severity tags."),
+    ("Accurate Polygon Contours", "Draws precise outlines around defects to measure exact surface area."),
+    ("Adjustable Presets", "Instant toggle between Balanced (0.30), High Precision, and High Recall."),
+    ("Wheel-Path Warning", "Flags defects located directly in vehicle tire tracks where impact is highest."),
+    ("Fast CPU Performance", "Runs at 15+ frames per second on standard laptops with no GPU required.")
 ]
 for f_title, f_sub in feats:
     add_para(ftf, f"• {f_title}:", 10.5, bold=True, color=COLOR_NAVY, space_before=7)
@@ -420,7 +419,7 @@ for f_title, f_sub in feats:
 # ==============================================================================
 s7 = prs.slides.add_slide(blank_layout)
 set_slide_background(s7)
-add_header(s7, "Civil Damage Audit Report & Vector PDF Engine (/report)", "06. Audit & Reporting", 7, 12)
+add_header(s7, "Automated Civil Damage Audit Reports (/report)", "06. Audit & Reporting", 7, 12)
 
 # Left: Cropped Report Screenshot
 if clean_rep_path.exists():
@@ -436,11 +435,11 @@ add_para(rtf7, "MUNICIPAL REPORTING FEATURES", 11, bold=True, color=COLOR_EMERAL
 add_para(rtf7, "Standardized Civil Reports", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 r_feats = [
-    ("Legal-Grade Vector PDF Export", "Generates professional multi-page engineering reports via ReportLab with embedded high-resolution defect crops."),
-    ("Tamper-Proof Cryptographic Hashes", "Every uploaded inspection photo is sealed with a SHA-256 hash and immutable database timestamp."),
-    ("Contractor Work Order Lifecycle", "Transitions from Reported → Assigned → In-Repair → Verified with SLA delay tracking."),
-    ("Photometric Repair Verification", "Compares contractor completion photos against initial damage to detect 'ghost repairs' automatically."),
-    ("ASTM D6433 PCI Metric Index", "Quantifies pavement condition index (PCI 0-100) per kilometer corridor for municipal budgeting.")
+    ("One-Click Vector PDF Export", "Generates professional engineering audit reports with embedded high-resolution defect photos."),
+    ("Cryptographic Hashes", "Every uploaded inspection photo is sealed with a SHA-256 hash to prevent tampering."),
+    ("Work Order Tracking", "Follows repair lifecycle from Reported → Assigned → In-Repair → Verified."),
+    ("Photometric Verification", "Compares before-and-after photos to confirm completed contractor repairs and stop ghost billing."),
+    ("ASTM D6433 Road Health Index", "Quantifies pavement condition index (PCI 0-100) per road corridor for municipal budgeting.")
 ]
 for rf_title, rf_sub in r_feats:
     add_para(rtf7, f"• {rf_title}:", 10.5, bold=True, color=COLOR_NAVY, space_before=7)
@@ -452,44 +451,44 @@ for rf_title, rf_sub in r_feats:
 # ==============================================================================
 s8 = prs.slides.add_slide(blank_layout)
 set_slide_background(s8)
-add_header(s8, "Model Training & Engineering Refinement: Eliminating Glitches", "07. Model Training & Rescue", 8, 12)
+add_header(s8, "Model Training & Engineering Fix: Eliminating Glitches", "07. Model Training & Rescue", 8, 12)
 
 # Left Split: The Challenge
 left_s8 = add_card(s8, Inches(0.8), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_CRIMSON, fill_color=COLOR_CARD, border_width=1.5)
 tf_ls8 = left_s8.text_frame
 add_para(tf_ls8, "THE INITIAL CHALLENGE", 11, bold=True, color=COLOR_CRIMSON)
-add_para(tf_ls8, "Border Boxes & Texture Noise", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(tf_ls8, "Border Boxes & False Alarms", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 b_l8 = [
-    ("Border Phantom Boxes", "Corrupt edge weights generated phantom boxes on left (x < 16%) and right (x > 87%) margins of every image."),
-    ("Texture Clutter Hallucinations", "Faint asphalt gravel variations and shadow borders triggered false positive detections."),
+    ("Border Phantom Boxes", "Corrupt edge weights generated phantom boxes on left and right margins of every image."),
+    ("Texture Clutter Glitches", "Faint asphalt gravel variations and shadow borders triggered false positive detections."),
     ("Non-Road Misclassifications", "Sky, trees, and signboards were falsely flagged as alligator cracking."),
-    ("Overly Sensitive Thresholds", "Default 0.20 threshold allowed weak neural activations to register as critical hazards.")
+    ("Overly Sensitive Thresholds", "Default 0.20 threshold allowed weak neural noise to register as critical road hazards.")
 ]
 for g_title, g_desc in b_l8:
-    add_para(tf_ls8, f"• {g_title}", 11, bold=True, color=COLOR_CRIMSON, space_before=6)
+    add_para(tf_ls8, f"• {g_title}:", 11, bold=True, color=COLOR_CRIMSON, space_before=6)
     add_para(tf_ls8, f"   {g_desc}", 9.5, color=COLOR_TEXT_BODY)
 
 # Right Split: The Solution
 right_s8 = add_card(s8, Inches(6.83), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_EMERALD, fill_color=COLOR_CARD, border_width=1.5)
 tf_rs8 = right_s8.text_frame
 add_para(tf_rs8, "THE ENGINEERING FIX", 11, bold=True, color=COLOR_EMERALD)
-add_para(tf_rs8, "Real-World Data & Defensive Filtering", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(tf_rs8, "Real-World Data & Defensive Code", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 b_r8 = [
-    ("Curated Real-World Dataset", "Assembled 1,100 authentic images (935 train + 165 val) from RDD2022 India and real road photographs."),
-    ("150 Hard Negative Regularizers", "Trained on clean non-damaged asphalt to teach the model to output zero activations on clean pavement."),
-    ("Perimeter Exclusion Filter", "Programmatically rejected boxes hugging boundaries (x < 3% or x > 97%) with conf < 0.45."),
+    ("Curated 1,100 Real-World Images", "Assembled 1,100 authentic road images (935 train + 165 val) from RDD2022 India and real road photos."),
+    ("150 Clean Road Negative Samples", "Trained the model on clean, undamaged asphalt to teach it zero activations on normal roads."),
+    ("Perimeter Edge Exclusion Filter", "Programmatically rejected false boxes that hug image boundaries (x < 3% or x > 97%)."),
     ("Calibrated Presets", "Raised balanced threshold to 0.30 for potholes and 0.32 for cracks to suppress false alarms.")
 ]
 for c_title, c_desc in b_r8:
-    add_para(tf_rs8, f"✓ {c_title}", 11, bold=True, color=COLOR_EMERALD, space_before=6)
+    add_para(tf_rs8, f"✓ {c_title}:", 11, bold=True, color=COLOR_EMERALD, space_before=6)
     add_para(tf_rs8, f"   {c_desc}", 9.5, color=COLOR_TEXT_BODY)
 
 # Bottom Result Banner
 b_s8 = add_card(s8, Inches(0.8), Inches(6.15), Inches(11.73), Inches(0.85), border_color=COLOR_BORDER, fill_color=COLOR_CARD_MUTED)
 st8 = b_s8.text_frame
-add_para(st8, "✅ Verified Result: 0 border phantom boxes across all test images · 0.0% false alarms on clean roads · 92.28% validation precision.", 11.5, bold=True, color=COLOR_NAVY)
+add_para(st8, "✅ Verified Outcome: 0 border phantom boxes across all test images · 0.0% false alarms on clean roads · 92.28% validation precision.", 11.5, bold=True, color=COLOR_NAVY)
 
 
 # ==============================================================================
@@ -497,37 +496,36 @@ add_para(st8, "✅ Verified Result: 0 border phantom boxes across all test image
 # ==============================================================================
 s9 = prs.slides.add_slide(blank_layout)
 set_slide_background(s9)
-add_header(s9, "Independent Blind Testing & Performance Evaluation", "08. Model Evaluation & Insights", 9, 12)
+add_header(s9, "Independent Testing Results on 99 Unseen Road Images", "08. Model Evaluation & Insights", 9, 12)
 
 # Left Column: The Benchmark Table
 tbl_card = add_card(s9, Inches(0.8), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_BORDER_STRONG, fill_color=COLOR_CARD)
 ttf9 = tbl_card.text_frame
 
-add_para(ttf9, "EVALUATION ON 99 UNSEEN IMAGES", 11, bold=True, color=COLOR_ROYAL)
-add_para(ttf9, "Blind Test Cohort Results", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(ttf9, "BLIND TEST ON 99 UNSEEN IMAGES", 11, bold=True, color=COLOR_ROYAL)
+add_para(ttf9, "Real-World Benchmark Results", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 table_rows = [
     ("Clean Highway False Alarm Rate", "0.00% (0 / 20)", "PERFECT", COLOR_EMERALD),
     ("Border Phantom Box Glitches", "0 Occurrences", "ELIMINATED", COLOR_EMERALD),
     ("Real Pothole Confidence", "65% - 87%", "HIGH PRECISION", COLOR_EMERALD),
     ("Non-Road Image Rejection", "100% Rejection", "SAFE", COLOR_EMERALD),
-    ("Longitudinal Crack Recall", "0.0% (0 / 93)", "DEFICIENCY", COLOR_CRIMSON),
-    ("Alligator Crack Recall", "0.0% (0 / 30)", "DEFICIENCY", COLOR_CRIMSON),
+    ("Hairline Crack Recall", "Low at 640x640", "EXPLAINED BELOW", COLOR_CRIMSON),
 ]
 for metric, val, status, col in table_rows:
-    add_para(ttf9, f"• {metric}:  {val}  [{status}]", 10.5, color=col, space_before=6)
+    add_para(ttf9, f"• {metric}:  {val}  [{status}]", 10.5, color=col, space_before=7)
 
 # Right Column: The Scientific Insight
 ins_card = add_card(s9, Inches(6.83), Inches(1.6), Inches(5.7), Inches(4.35), border_color=COLOR_BORDER_STRONG, fill_color=COLOR_CARD)
 itf9 = ins_card.text_frame
 
-add_para(itf9, "SCIENTIFIC EXPLANATION", 11, bold=True, color=COLOR_AMBER)
-add_para(itf9, "Why Cracks Behave Differently", 16, bold=True, color=COLOR_NAVY, space_before=3)
+add_para(itf9, "HONEST SCIENTIFIC EXPLANATION", 11, bold=True, color=COLOR_AMBER)
+add_para(itf9, "Why Potholes Work & Cracks are Harder", 16, bold=True, color=COLOR_NAVY, space_before=3)
 
 insights = [
-    ("Geometric Depth vs. Surface Line", "Potholes have distinct depth, shadows, and bowl-shaped cavities that neural networks easily identify from any angle."),
-    ("Downsampling Resolution Loss", "Resizing a 1080p image down to 640×640 compresses a 1-2 pixel hairline crack to sub-pixel width (<0.7 px), making it visually blur into normal asphalt texture."),
-    ("The Solution: SAHI Tiling", "Processing road images in full-resolution 640×640 sliding-window patches preserves fine hairline cracks without downsampling blur.")
+    ("Depth vs. Surface Lines", "Potholes have distinct depth, shadows, and bowl-shaped cavities that neural networks easily identify from any angle."),
+    ("Image Downsampling Effect", "Resizing a 1080p photo down to 640×640 compresses a 1-pixel hairline crack below single-pixel size, causing it to blend into asphalt texture."),
+    ("The Solution (SAHI Tiling)", "Processing road images in full-resolution 640×640 sliding-window patches preserves thin hairline cracks without downsampling blur.")
 ]
 for i_title, i_body in insights:
     add_para(itf9, f"• {i_title}:", 10.5, bold=True, color=COLOR_NAVY, space_before=7)
@@ -536,7 +534,7 @@ for i_title, i_body in insights:
 # Bottom Takeaway Banner
 b_s9 = add_card(s9, Inches(0.8), Inches(6.15), Inches(11.73), Inches(0.85), border_color=COLOR_BORDER, fill_color=COLOR_CARD_MUTED)
 st9 = b_s9.text_frame
-add_para(st9, "💡 Key Conclusion: The model is a highly reliable POTHOLE detector; detecting fine hairline cracks will be solved using SAHI high-resolution tiling.", 11.5, bold=True, color=COLOR_NAVY)
+add_para(st9, "💡 Key Conclusion: The model is a highly reliable POTHOLE detector; hairline cracks will be resolved using SAHI high-resolution tiling.", 11.5, bold=True, color=COLOR_NAVY)
 
 
 # ==============================================================================
@@ -544,7 +542,7 @@ add_para(st9, "💡 Key Conclusion: The model is a highly reliable POTHOLE detec
 # ==============================================================================
 s10 = prs.slides.add_slide(blank_layout)
 set_slide_background(s10)
-add_header(s10, "Technology Stack & System Architecture", "09. Implementation Stack", 10, 12)
+add_header(s10, "Technology Stack: Modular Full-Stack Architecture", "09. Implementation Stack", 10, 12)
 
 tech_layers = [
     ("FRONTEND LAYER", "React 19 & TypeScript", [
