@@ -41,7 +41,7 @@ export const RoadOverviewPage: React.FC = () => {
       id: "diagram",
       title: "Civil Distress Diagram (Negative Control)",
       location: "eval_failures/case_02_teaching_diagram",
-      src: "/samples/diagram_distress.png",
+      src: "/samples/civil_distress_diagram.jpg",
       defect: "REJECTED BY INPUT GATE",
       severity: "Non-Road",
       note: "MobileNetV3 classifier successfully rejects non-road diagram (P(road)=0.00).",
