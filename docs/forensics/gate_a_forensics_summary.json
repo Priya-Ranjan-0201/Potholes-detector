@@ -1,0 +1,845 @@
+{
+  "case_01_pothole_nh44.jpg": {
+    "file": "case_01_pothole_nh44.jpg",
+    "dimensions": [
+      720,
+      720
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 0,
+    "obstacles": [],
+    "final_detections_count": 0,
+    "final_detections": [],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_02_civil_distress_diagram.jpg": {
+    "file": "case_02_civil_distress_diagram.jpg",
+    "dimensions": [
+      399,
+      501
+    ],
+    "input_gate": {
+      "is_road": false,
+      "reason": "Not a road photograph (civil engineering diagram detected)."
+    },
+    "obstacles_detected": 1,
+    "obstacles": [
+      {
+        "label": "stop sign",
+        "conf": 0.885,
+        "box": [
+          362.4,
+          0.0,
+          396.0,
+          17.0
+        ]
+      }
+    ],
+    "final_detections_count": 0,
+    "final_detections": [],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_03_alligator_cracks.jpg": {
+    "file": "case_03_alligator_cracks.jpg",
+    "dimensions": [
+      387,
+      516
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 0,
+    "obstacles": [],
+    "final_detections_count": 0,
+    "final_detections": [],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_04_bengaluru_potholes.jpg": {
+    "file": "case_04_bengaluru_potholes.jpg",
+    "dimensions": [
+      399,
+      501
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 18,
+    "obstacles": [
+      {
+        "label": "car",
+        "conf": 0.863,
+        "box": [
+          153.9,
+          46.0,
+          211.0,
+          92.2
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.755,
+        "box": [
+          377.3,
+          68.0,
+          391.8,
+          118.3
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.75,
+        "box": [
+          97.4,
+          66.7,
+          127.6,
+          126.5
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.712,
+        "box": [
+          51.9,
+          29.6,
+          61.7,
+          59.7
+        ]
+      },
+      {
+        "label": "motorcycle",
+        "conf": 0.673,
+        "box": [
+          101.6,
+          88.0,
+          128.1,
+          141.3
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.655,
+        "box": [
+          275.7,
+          24.3,
+          305.9,
+          48.9
+        ]
+      },
+      {
+        "label": "bus",
+        "conf": 0.62,
+        "box": [
+          320.9,
+          41.8,
+          358.4,
+          96.3
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.592,
+        "box": [
+          210.7,
+          51.9,
+          235.6,
+          93.5
+        ]
+      },
+      {
+        "label": "truck",
+        "conf": 0.56,
+        "box": [
+          1.9,
+          90.4,
+          104.4,
+          220.1
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.555,
+        "box": [
+          185.6,
+          33.9,
+          226.2,
+          63.7
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.543,
+        "box": [
+          66.9,
+          29.5,
+          95.1,
+          56.8
+        ]
+      },
+      {
+        "label": "motorcycle",
+        "conf": 0.542,
+        "box": [
+          212.7,
+          68.0,
+          235.7,
+          106.2
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.476,
+        "box": [
+          265.7,
+          29.1,
+          278.1,
+          56.6
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.452,
+        "box": [
+          39.3,
+          29.8,
+          50.4,
+          63.4
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.447,
+        "box": [
+          241.6,
+          15.3,
+          250.7,
+          33.7
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.359,
+        "box": [
+          232.9,
+          24.9,
+          243.3,
+          50.9
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.335,
+        "box": [
+          275.0,
+          11.1,
+          293.8,
+          26.2
+        ]
+      },
+      {
+        "label": "motorcycle",
+        "conf": 0.31,
+        "box": [
+          20.8,
+          159.3,
+          49.4,
+          225.2
+        ]
+      }
+    ],
+    "final_detections_count": 4,
+    "final_detections": [
+      {
+        "label": "POTHOLE",
+        "conf": 0.806,
+        "box": [
+          227.2,
+          185.9,
+          306.1,
+          213.2
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.717,
+        "box": [
+          285.2,
+          265.6,
+          342.9,
+          291.8
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.539,
+        "box": [
+          286.6,
+          296.1,
+          333.5,
+          315.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.429,
+        "box": [
+          285.2,
+          199.0,
+          370.5,
+          226.6
+        ]
+      }
+    ],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_05_asphalt_crater.jpg": {
+    "file": "case_05_asphalt_crater.jpg",
+    "dimensions": [
+      581,
+      395
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 0,
+    "obstacles": [],
+    "final_detections_count": 1,
+    "final_detections": [
+      {
+        "label": "POTHOLE",
+        "conf": 0.632,
+        "box": [
+          131.1,
+          87.8,
+          436.3,
+          357.1
+        ]
+      }
+    ],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_06_mumbai_potholes.avif": {
+    "file": "case_06_mumbai_potholes.avif",
+    "dimensions": [
+      402,
+      275
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 6,
+    "obstacles": [
+      {
+        "label": "person",
+        "conf": 0.801,
+        "box": [
+          233.1,
+          253.2,
+          260.4,
+          275.0
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.728,
+        "box": [
+          60.3,
+          125.3,
+          92.5,
+          189.6
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.67,
+        "box": [
+          131.3,
+          135.3,
+          156.2,
+          198.5
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.577,
+        "box": [
+          208.7,
+          262.4,
+          224.4,
+          275.0
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.452,
+        "box": [
+          27.3,
+          41.6,
+          46.4,
+          85.3
+        ]
+      },
+      {
+        "label": "person",
+        "conf": 0.331,
+        "box": [
+          118.5,
+          132.8,
+          136.0,
+          183.2
+        ]
+      }
+    ],
+    "final_detections_count": 15,
+    "final_detections": [
+      {
+        "label": "POTHOLE",
+        "conf": 0.895,
+        "box": [
+          98.5,
+          41.3,
+          146.3,
+          63.0
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.745,
+        "box": [
+          196.2,
+          143.1,
+          246.5,
+          167.2
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.722,
+        "box": [
+          183.7,
+          49.5,
+          234.8,
+          69.9
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.636,
+        "box": [
+          232.1,
+          158.0,
+          323.8,
+          211.5
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.604,
+        "box": [
+          338.5,
+          156.3,
+          368.6,
+          171.6
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.602,
+        "box": [
+          144.1,
+          54.4,
+          176.2,
+          68.3
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.527,
+        "box": [
+          14.3,
+          184.9,
+          97.3,
+          228.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.489,
+        "box": [
+          237.6,
+          70.2,
+          296.4,
+          103.6
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.46,
+        "box": [
+          316.8,
+          131.7,
+          343.5,
+          145.3
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.452,
+        "box": [
+          163.3,
+          84.8,
+          209.2,
+          113.9
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.428,
+        "box": [
+          192.4,
+          162.2,
+          241.8,
+          183.7
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.374,
+        "box": [
+          138.5,
+          110.4,
+          174.2,
+          128.8
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.352,
+        "box": [
+          218.7,
+          115.9,
+          244.3,
+          128.3
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.328,
+        "box": [
+          308.2,
+          144.1,
+          348.6,
+          155.6
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.327,
+        "box": [
+          87.9,
+          65.6,
+          112.9,
+          78.6
+        ]
+      }
+    ],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_07_user_tested_potholes.jpg": {
+    "file": "case_07_user_tested_potholes.jpg",
+    "dimensions": [
+      692,
+      257
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 0,
+    "obstacles": [],
+    "final_detections_count": 6,
+    "final_detections": [
+      {
+        "label": "POTHOLE",
+        "conf": 0.783,
+        "box": [
+          163.6,
+          86.2,
+          230.4,
+          117.0
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.754,
+        "box": [
+          386.1,
+          82.7,
+          471.7,
+          132.1
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.722,
+        "box": [
+          228.8,
+          147.7,
+          326.4,
+          228.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.61,
+        "box": [
+          117.1,
+          134.9,
+          175.2,
+          179.6
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.599,
+        "box": [
+          326.6,
+          117.0,
+          384.7,
+          140.8
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.484,
+        "box": [
+          38.0,
+          194.1,
+          165.8,
+          253.4
+        ]
+      }
+    ],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "case_08_images_77_cropped.jpg": {
+    "file": "case_08_images_77_cropped.jpg",
+    "dimensions": [
+      702,
+      332
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 6,
+    "obstacles": [
+      {
+        "label": "car",
+        "conf": 0.532,
+        "box": [
+          58.5,
+          24.8,
+          137.4,
+          67.9
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.466,
+        "box": [
+          212.4,
+          40.3,
+          238.9,
+          67.9
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.444,
+        "box": [
+          665.2,
+          20.5,
+          701.8,
+          78.5
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.443,
+        "box": [
+          269.3,
+          25.2,
+          308.6,
+          57.1
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.405,
+        "box": [
+          179.1,
+          31.1,
+          219.5,
+          57.4
+        ]
+      },
+      {
+        "label": "car",
+        "conf": 0.317,
+        "box": [
+          251.1,
+          37.6,
+          273.7,
+          61.5
+        ]
+      }
+    ],
+    "final_detections_count": 0,
+    "final_detections": [],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  },
+  "user_uploaded_car_potholes.jpg": {
+    "file": "user_uploaded_car_potholes.jpg",
+    "dimensions": [
+      528,
+      323
+    ],
+    "input_gate": {
+      "is_road": true,
+      "reason": "ok"
+    },
+    "obstacles_detected": 1,
+    "obstacles": [
+      {
+        "label": "car",
+        "conf": 0.849,
+        "box": [
+          38.5,
+          2.3,
+          459.9,
+          125.6
+        ]
+      }
+    ],
+    "final_detections_count": 10,
+    "final_detections": [
+      {
+        "label": "POTHOLE",
+        "conf": 0.871,
+        "box": [
+          8.4,
+          185.7,
+          78.8,
+          227.3
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.867,
+        "box": [
+          246.7,
+          168.6,
+          301.0,
+          191.2
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.809,
+        "box": [
+          213.7,
+          140.2,
+          285.9,
+          165.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.717,
+        "box": [
+          174.5,
+          145.5,
+          227.5,
+          170.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.71,
+        "box": [
+          183.3,
+          172.9,
+          231.7,
+          191.0
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.701,
+        "box": [
+          63.9,
+          227.2,
+          107.3,
+          255.4
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.693,
+        "box": [
+          45.2,
+          145.7,
+          141.2,
+          191.2
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.652,
+        "box": [
+          314.6,
+          133.7,
+          395.9,
+          187.8
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.531,
+        "box": [
+          222.2,
+          201.6,
+          302.6,
+          251.7
+        ]
+      },
+      {
+        "label": "POTHOLE",
+        "conf": 0.429,
+        "box": [
+          451.4,
+          124.8,
+          525.5,
+          174.0
+        ]
+      }
+    ],
+    "forbidden_box_violations": [],
+    "passed_gate_a": true
+  }
+}

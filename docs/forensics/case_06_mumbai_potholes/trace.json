@@ -1,861 +1,229 @@
 {
   "file": "case_06_mumbai_potholes.avif",
-  "input_path": "eval_failures\\case_06_mumbai_potholes.avif",
-  "image_shape": [
-    275,
+  "dimensions": [
     402,
-    3
+    275
   ],
-  "stages": {
-    "obstacles_conf_0_12": [
-      [
-        233.85501098632812,
-        253.87474060058594,
-        261.27032470703125,
-        274.9243469238281
-      ],
-      [
-        131.54629516601562,
-        136.01513671875,
-        157.52354431152344,
-        198.3262176513672
-      ],
-      [
-        60.68520736694336,
-        125.68721008300781,
-        93.75558471679688,
-        195.62359619140625
-      ],
-      [
-        339.7286071777344,
-        29.1512508392334,
-        372.7093811035156,
-        58.409420013427734
-      ],
-      [
-        207.9188690185547,
-        262.15106201171875,
-        223.60040283203125,
-        274.8786315917969
-      ],
-      [
-        26.745424270629883,
-        40.534873962402344,
-        49.339839935302734,
-        89.25312042236328
-      ],
-      [
-        151.50277709960938,
-        143.25360107421875,
-        173.27903747558594,
-        195.5438232421875
-      ],
-      [
-        117.88626861572266,
-        129.23648071289062,
-        140.5224151611328,
-        181.24771118164062
-      ],
-      [
-        13.743131637573242,
-        42.54762649536133,
-        31.111364364624023,
-        89.35792541503906
-      ],
-      [
-        106.92977142333984,
-        19.23833465576172,
-        121.00546264648438,
-        23.50909423828125
-      ],
-      [
-        358.01202392578125,
-        33.04240798950195,
-        372.309814453125,
-        50.256404876708984
-      ],
-      [
-        154.53175354003906,
-        256.3386535644531,
-        175.28846740722656,
-        274.88555908203125
-      ]
-    ],
-    "kept_70_after_filters": [
-      {
-        "box": [
-          229.56,
-          161.32,
-          327.0,
-          207.43
-        ],
-        "conf": 0.4025
-      },
-      {
-        "box": [
-          93.44,
-          39.5,
-          146.44,
-          65.39
-        ],
-        "conf": 0.3299
-      },
-      {
-        "box": [
-          79.55,
-          39.06,
-          151.3,
-          79.69
-        ],
-        "conf": 0.4308
-      },
-      {
-        "box": [
-          224.03,
-          157.43,
-          329.82,
-          206.69
-        ],
-        "conf": 0.3542
-      },
-      {
-        "box": [
-          192.61,
-          143.66,
-          243.56,
-          165.61
-        ],
-        "conf": 0.3527
-      },
-      {
-        "box": [
-          192.08,
-          165.26,
-          240.88,
-          182.0
-        ],
-        "conf": 0.2578
-      }
-    ]
+  "input_gate": {
+    "is_road": true,
+    "reason": "ok"
   },
-  "raw_detections": {
-    "dfine": [
-      {
-        "box": [
-          229.56,
-          161.32,
-          327.0,
-          207.43
-        ],
-        "conf": 0.4025,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          93.44,
-          39.5,
-          146.44,
-          65.39
-        ],
-        "conf": 0.3299,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          115.48,
-          129.52,
-          169.81,
-          201.84
-        ],
-        "conf": 0.7014,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          272.48,
-          195.31,
-          401.76,
-          274.9
-        ],
-        "conf": 0.2718,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          338.94,
-          25.27,
-          373.9,
-          62.84
-        ],
-        "conf": 0.4123,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          79.55,
-          39.06,
-          151.3,
-          79.69
-        ],
-        "conf": 0.4308,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          230.42,
-          253.56,
-          264.15,
-          275.0
-        ],
-        "conf": 0.2797,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          23.2,
-          38.54,
-          50.31,
-          86.91
-        ],
-        "conf": 0.29,
-        "src": "D-FINE Large (70% Weight)"
-      }
-    ],
-    "pyresearch": [
-      {
-        "box": [
-          224.03,
-          157.43,
-          329.82,
-          206.69
-        ],
-        "conf": 0.3542,
-        "src": "PyResearch YOLOv12 (70% Weight)"
-      },
-      {
-        "box": [
-          192.61,
-          143.66,
-          243.56,
-          165.61
-        ],
-        "conf": 0.3527,
-        "src": "PyResearch YOLOv12 (70% Weight)"
-      },
-      {
-        "box": [
-          256.81,
-          184.96,
-          402.0,
-          272.13
-        ],
-        "conf": 0.2997,
-        "src": "PyResearch YOLOv12 (70% Weight)"
-      },
-      {
-        "box": [
-          192.08,
-          165.26,
-          240.88,
-          182.0
-        ],
-        "conf": 0.2578,
-        "src": "PyResearch YOLOv12 (70% Weight)"
-      }
-    ],
-    "yolov8n_seg": [],
-    "edge_yolo11n": [
-      {
-        "box": [
-          232.51,
-          164.17,
-          321.9,
-          204.37
-        ],
-        "conf": 0.8296,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          138.44,
-          111.88,
-          172.43,
-          129.09
-        ],
-        "conf": 0.5499,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          196.31,
-          146.73,
-          244.73,
-          164.89
-        ],
-        "conf": 0.4995,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          184.98,
-          51.38,
-          233.24,
-          70.7
-        ],
-        "conf": 0.4844,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          275.13,
-          134.03,
-          295.86,
-          142.96
-        ],
-        "conf": 0.4319,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          203.36,
-          129.59,
-          233.66,
-          141.82
-        ],
-        "conf": 0.4266,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          99.75,
-          44.66,
-          143.72,
-          64.5
-        ],
-        "conf": 0.4175,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          232.41,
-          62.6,
-          261.53,
-          75.14
-        ],
-        "conf": 0.4069,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          143.73,
-          54.84,
-          175.2,
-          67.65
-        ],
-        "conf": 0.3935,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          202.57,
-          113.28,
-          224.9,
-          124.04
-        ],
-        "conf": 0.3882,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          285.75,
-          205.98,
-          362.19,
-          275.0
-        ],
-        "conf": 0.3708,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          235.11,
-          75.79,
-          289.95,
-          101.04
-        ],
-        "conf": 0.3583,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          57.4,
-          62.98,
-          81.0,
-          74.2
-        ],
-        "conf": 0.327,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          196.49,
-          167.01,
-          239.83,
-          183.67
-        ],
-        "conf": 0.3147,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          185.98,
-          230.0,
-          214.74,
-          245.55
-        ],
-        "conf": 0.3116,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          87.88,
-          137.04,
-          121.14,
-          158.49
-        ],
-        "conf": 0.2822,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          185.27,
-          110.97,
-          198.62,
-          118.75
-        ],
-        "conf": 0.2685,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          87.44,
-          67.04,
-          114.36,
-          79.49
-        ],
-        "conf": 0.2658,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          315.55,
-          132.43,
-          344.5,
-          143.88
-        ],
-        "conf": 0.2588,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          154.54,
-          41.76,
-          173.25,
-          50.03
-        ],
-        "conf": 0.2394,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          165.97,
-          18.84,
-          208.87,
-          33.2
-        ],
-        "conf": 0.2109,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          220.22,
-          119.0,
-          243.31,
-          127.71
-        ],
-        "conf": 0.2047,
-        "cls": "POTHOLE"
-      }
-    ],
-    "crack_model": [
-      {
-        "box": [
-          233.44,
-          247.03,
-          270.86,
-          275.0
-        ],
-        "conf": 0.9679,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          22.99,
-          43.17,
-          56.34,
-          92.1
-        ],
-        "conf": 0.7112,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          30.58,
-          262.65,
-          102.7,
-          274.99
-        ],
-        "conf": 0.6494,
-        "cls": "POTHOLE"
-      },
-      {
-        "box": [
-          167.04,
-          20.68,
-          224.63,
-          36.65
-        ],
-        "conf": 0.5782,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          130.5,
-          134.17,
-          159.44,
-          197.19
-        ],
-        "conf": 0.5108,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          148.94,
-          73.51,
-          279.24,
-          115.43
-        ],
-        "conf": 0.4872,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          180.53,
-          42.92,
-          252.24,
-          69.74
-        ],
-        "conf": 0.4828,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          137.36,
-          233.32,
-          172.99,
-          274.32
-        ],
-        "conf": 0.4729,
-        "cls": "CRACK_ALLIGATOR"
-      }
-    ]
-  },
-  "filtered_reasons": [
+  "obstacles_detected": 6,
+  "obstacles": [
     {
+      "label": "person",
+      "conf": 0.801,
       "box": [
-        115.48139190673828,
-        129.5154266357422,
-        169.80612182617188,
-        201.8401336669922
-      ],
-      "conf": 0.7014402747154236,
-      "reason": "overlaps_coco_obstacle"
-    },
-    {
-      "box": [
-        272.4783630371094,
-        195.31361389160156,
-        401.7560729980469,
-        274.8962097167969
-      ],
-      "conf": 0.2718491554260254,
-      "reason": "heuristic_filter_false_surface"
-    },
-    {
-      "box": [
-        338.93505859375,
-        25.274370193481445,
-        373.8955993652344,
-        62.83967971801758
-      ],
-      "conf": 0.4122796654701233,
-      "reason": "overlaps_coco_obstacle"
-    },
-    {
-      "box": [
-        230.41807556152344,
-        253.5618133544922,
-        264.1521911621094,
+        233.1,
+        253.2,
+        260.4,
         275.0
-      ],
-      "conf": 0.27966150641441345,
-      "reason": "overlaps_coco_obstacle"
+      ]
     },
     {
+      "label": "person",
+      "conf": 0.728,
       "box": [
-        23.19860076904297,
-        38.53609085083008,
-        50.31232452392578,
-        86.90913391113281
-      ],
-      "conf": 0.29004812240600586,
-      "reason": "overlaps_coco_obstacle"
+        60.3,
+        125.3,
+        92.5,
+        189.6
+      ]
     },
     {
+      "label": "person",
+      "conf": 0.67,
       "box": [
-        256.8071594238281,
-        184.95626831054688,
-        402.0,
-        272.1334533691406
-      ],
-      "conf": 0.29969799518585205,
-      "reason": "heuristic_filter_false_surface"
+        131.3,
+        135.3,
+        156.2,
+        198.5
+      ]
+    },
+    {
+      "label": "person",
+      "conf": 0.577,
+      "box": [
+        208.7,
+        262.4,
+        224.4,
+        275.0
+      ]
+    },
+    {
+      "label": "person",
+      "conf": 0.452,
+      "box": [
+        27.3,
+        41.6,
+        46.4,
+        85.3
+      ]
+    },
+    {
+      "label": "person",
+      "conf": 0.331,
+      "box": [
+        118.5,
+        132.8,
+        136.0,
+        183.2
+      ]
     }
   ],
+  "final_detections_count": 15,
   "final_detections": [
     {
       "label": "POTHOLE",
-      "confidence": 0.61,
+      "conf": 0.895,
       "box": [
-        57.8,
-        59.7,
-        22.2,
-        14.6
-      ],
-      "severity": "Severe",
-      "score": 68,
-      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg + 30% Base)",
-      "has_poly": true
+        98.5,
+        41.3,
+        146.3,
+        63.0
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.491,
+      "conf": 0.745,
       "box": [
-        19.8,
-        14.2,
-        17.8,
-        14.8
-      ],
-      "severity": "Severe",
-      "score": 65,
-      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg + 30% Base)",
-      "has_poly": true
+        196.2,
+        143.1,
+        246.5,
+        167.2
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.436,
+      "conf": 0.722,
       "box": [
-        48.8,
-        53.4,
-        12.0,
-        6.6
-      ],
-      "severity": "Moderate",
-      "score": 48,
-      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg + 30% Base)",
-      "has_poly": true
+        183.7,
+        49.5,
+        234.8,
+        69.9
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.302,
+      "conf": 0.636,
       "box": [
-        47.8,
-        60.1,
-        12.1,
-        6.7
-      ],
-      "severity": "Moderate",
-      "score": 48,
-      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg + 30% Base)",
-      "has_poly": true
+        232.1,
+        158.0,
+        323.8,
+        211.5
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.561,
+      "conf": 0.604,
       "box": [
-        34.4,
-        40.7,
-        8.5,
-        6.3
-      ],
-      "severity": "Moderate",
-      "score": 47,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        338.5,
+        156.3,
+        368.6,
+        171.6
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.494,
+      "conf": 0.602,
       "box": [
-        46.0,
-        18.7,
-        12.0,
-        7.0
-      ],
-      "severity": "Moderate",
-      "score": 48,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        144.1,
+        54.4,
+        176.2,
+        68.3
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.441,
-      "box": [
-        68.4,
-        48.7,
-        5.2,
-        3.2
-      ],
-      "severity": "Severe",
-      "score": 60,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.435,
-      "box": [
-        50.6,
-        47.1,
-        7.5,
-        4.4
-      ],
-      "severity": "Moderate",
-      "score": 46,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.415,
-      "box": [
-        57.8,
-        22.8,
-        7.2,
-        4.6
-      ],
-      "severity": "Moderate",
-      "score": 46,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.401,
-      "box": [
-        35.8,
-        19.9,
-        7.8,
-        4.7
-      ],
-      "severity": "Moderate",
-      "score": 46,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.396,
-      "box": [
-        50.4,
-        41.2,
-        5.6,
-        3.9
-      ],
-      "severity": "Severe",
-      "score": 50,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.378,
-      "box": [
-        71.1,
-        74.9,
-        19.0,
-        25.1
-      ],
-      "severity": "Critical",
-      "score": 74,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
-    },
-    {
-      "label": "POTHOLE",
-      "confidence": 0.334,
+      "conf": 0.527,
       "box": [
         14.3,
-        22.9,
-        5.9,
-        4.1
-      ],
-      "severity": "Severe",
-      "score": 55,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        184.9,
+        97.3,
+        228.4
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.318,
+      "conf": 0.489,
       "box": [
-        46.3,
-        83.6,
-        7.2,
-        5.7
-      ],
-      "severity": "Moderate",
-      "score": 46,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        237.6,
+        70.2,
+        296.4,
+        103.6
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.288,
+      "conf": 0.46,
       "box": [
-        21.9,
-        49.8,
-        8.3,
-        7.8
-      ],
-      "severity": "Severe",
-      "score": 57,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        316.8,
+        131.7,
+        343.5,
+        145.3
+      ]
     },
     {
       "label": "POTHOLE",
-      "confidence": 0.274,
+      "conf": 0.452,
       "box": [
-        46.1,
-        40.4,
-        3.3,
-        2.8
-      ],
-      "severity": "Severe",
-      "score": 50,
-      "model_source": "YOLO11n (Unified Multi-Condition)",
-      "has_poly": true
+        163.3,
+        84.8,
+        209.2,
+        113.9
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.428,
+      "box": [
+        192.4,
+        162.2,
+        241.8,
+        183.7
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.374,
+      "box": [
+        138.5,
+        110.4,
+        174.2,
+        128.8
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.352,
+      "box": [
+        218.7,
+        115.9,
+        244.3,
+        128.3
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.328,
+      "box": [
+        308.2,
+        144.1,
+        348.6,
+        155.6
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.327,
+      "box": [
+        87.9,
+        65.6,
+        112.9,
+        78.6
+      ]
     }
   ],
-  "cv2_imdecode_failed": true
+  "forbidden_box_violations": [],
+  "passed_gate_a": true
 }

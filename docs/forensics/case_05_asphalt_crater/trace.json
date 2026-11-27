@@ -1,183 +1,28 @@
 {
   "file": "case_05_asphalt_crater.jpg",
-  "input_path": "eval_failures\\case_05_asphalt_crater.jpg",
-  "image_shape": [
-    395,
+  "dimensions": [
     581,
-    3
+    395
   ],
-  "stages": {
-    "obstacles_conf_0_12": [],
-    "kept_70_after_filters": [
-      {
-        "box": [
-          139.29,
-          95.31,
-          449.2,
-          337.74
-        ],
-        "conf": 0.6409
-      },
-      {
-        "box": [
-          141.86,
-          97.05,
-          443.77,
-          335.35
-        ],
-        "conf": 0.318
-      }
-    ]
+  "input_gate": {
+    "is_road": true,
+    "reason": "ok"
   },
-  "raw_detections": {
-    "dfine": [
-      {
-        "box": [
-          139.29,
-          95.31,
-          449.2,
-          337.74
-        ],
-        "conf": 0.6409,
-        "src": "D-FINE Large (70% Weight)"
-      },
-      {
-        "box": [
-          141.86,
-          97.05,
-          443.77,
-          335.35
-        ],
-        "conf": 0.318,
-        "src": "D-FINE Large (70% Weight)"
-      }
-    ],
-    "pyresearch": [
-      {
-        "box": [
-          129.61,
-          97.97,
-          498.01,
-          337.28
-        ],
-        "conf": 0.5976,
-        "src": "PyResearch YOLOv12 (70% Weight)"
-      }
-    ],
-    "yolov8n_seg": [
-      {
-        "box": [
-          87.85,
-          97.46,
-          477.85,
-          368.61
-        ],
-        "conf": 0.4371,
-        "src": "YOLOv8-Seg (70% Weight)"
-      }
-    ],
-    "edge_yolo11n": [
-      {
-        "box": [
-          137.27,
-          81.83,
-          464.17,
-          292.29
-        ],
-        "conf": 0.4718,
-        "cls": "POTHOLE"
-      }
-    ],
-    "crack_model": [
-      {
-        "box": [
-          375.21,
-          181.07,
-          423.87,
-          223.59
-        ],
-        "conf": 0.569,
-        "cls": "CRACK_LONGITUDINAL"
-      },
-      {
-        "box": [
-          316.27,
-          227.98,
-          391.99,
-          264.48
-        ],
-        "conf": 0.5292,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          157.85,
-          217.99,
-          204.29,
-          261.13
-        ],
-        "conf": 0.5225,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          173.8,
-          261.84,
-          270.58,
-          323.26
-        ],
-        "conf": 0.4004,
-        "cls": "CRACK_ALLIGATOR"
-      },
-      {
-        "box": [
-          359.55,
-          180.25,
-          398.38,
-          211.47
-        ],
-        "conf": 0.3577,
-        "cls": "CRACK_ALLIGATOR"
-      }
-    ]
-  },
-  "filtered_reasons": [
-    {
-      "box": [
-        129.61300659179688,
-        97.96550750732422,
-        498.0107116699219,
-        337.2779235839844
-      ],
-      "conf": 0.5976366400718689,
-      "reason": "heuristic_filter_false_surface"
-    },
-    {
-      "box": [
-        87.84890747070312,
-        97.45980072021484,
-        477.84814453125,
-        368.60986328125
-      ],
-      "conf": 0.4370509386062622,
-      "reason": "heuristic_filter_false_surface"
-    }
-  ],
+  "obstacles_detected": 0,
+  "obstacles": [],
+  "final_detections_count": 1,
   "final_detections": [
     {
       "label": "POTHOLE",
-      "confidence": 0.59,
+      "conf": 0.632,
       "box": [
-        24.0,
-        24.1,
-        53.3,
-        61.4
-      ],
-      "severity": "Critical",
-      "score": 85,
-      "model_source": "Ensemble (70% D-FINE/PyResearch/Seg)",
-      "has_poly": true
+        131.1,
+        87.8,
+        436.3,
+        357.1
+      ]
     }
   ],
-  "cv2_imdecode_failed": false
+  "forbidden_box_violations": [],
+  "passed_gate_a": true
 }

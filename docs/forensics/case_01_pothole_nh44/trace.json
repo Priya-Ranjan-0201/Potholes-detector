@@ -1,23 +1,17 @@
 {
   "file": "case_01_pothole_nh44.jpg",
-  "input_path": "eval_failures\\case_01_pothole_nh44.jpg",
-  "image_shape": [
+  "dimensions": [
     720,
-    720,
-    3
+    720
   ],
-  "stages": {
-    "obstacles_conf_0_12": [],
-    "kept_70_after_filters": []
+  "input_gate": {
+    "is_road": true,
+    "reason": "ok"
   },
-  "raw_detections": {
-    "dfine": [],
-    "pyresearch": [],
-    "yolov8n_seg": [],
-    "edge_yolo11n": [],
-    "crack_model": []
-  },
-  "filtered_reasons": [],
+  "obstacles_detected": 0,
+  "obstacles": [],
+  "final_detections_count": 0,
   "final_detections": [],
-  "cv2_imdecode_failed": false
+  "forbidden_box_violations": [],
+  "passed_gate_a": true
 }

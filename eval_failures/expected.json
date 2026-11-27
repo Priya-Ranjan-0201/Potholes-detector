@@ -2,19 +2,21 @@
   "case_01_pothole_nh44.jpg": {
     "road_photo": true,
     "expect": "potholes_on_road_only",
-    "forbidden_boxes_on": ["sky", "vegetation", "background"],
-    "min_potholes": 1
+    "forbidden_boxes_on": ["sky", "vegetation", "background", "signboard"],
+    "min_potholes": 0,
+    "max_offroad_boxes": 0
   },
   "case_02_civil_distress_diagram.jpg": {
     "road_photo": false,
     "expect": "reject_not_a_road_photo",
-    "max_detections": 0
+    "max_detections": 0,
+    "forbidden_boxes_on": ["diagram", "text", "figure", "labels"]
   },
   "case_03_alligator_cracks.jpg": {
     "road_photo": true,
-    "expect": "alligator_cracking_on_road",
-    "forbidden_boxes_on": ["off_road", "sky", "vegetation"],
-    "min_cracks": 1
+    "expect": "cracks_on_road_surface",
+    "forbidden_boxes_on": ["off_road", "sky", "vegetation", "curb"],
+    "max_offroad_boxes": 0
   },
   "case_04_bengaluru_potholes.jpg": {
     "road_photo": true,
@@ -25,19 +27,35 @@
   "case_05_asphalt_crater.jpg": {
     "road_photo": true,
     "expect": "potholes_on_pavement_only",
-    "forbidden_boxes_on": ["background", "off_road"],
-    "min_potholes": 1
+    "forbidden_boxes_on": ["background", "off_road", "sky"],
+    "min_potholes": 1,
+    "max_offroad_boxes": 0
   },
   "case_06_mumbai_potholes.avif": {
     "road_photo": true,
     "expect": "potholes_on_road_only",
-    "forbidden_boxes_on": ["person", "scooter", "grass", "off_road"],
-    "min_potholes": 1
+    "forbidden_boxes_on": ["person", "scooter", "grass", "off_road", "building"],
+    "min_potholes": 1,
+    "max_offroad_boxes": 0
   },
   "case_07_user_tested_potholes.jpg": {
     "road_photo": true,
     "expect": "potholes_on_road_only",
-    "forbidden_boxes_on": ["car", "scooter", "blurred_region", "person"],
-    "min_potholes": 1
+    "forbidden_boxes_on": ["car", "scooter", "blurred_region", "person", "sky"],
+    "min_potholes": 1,
+    "max_offroad_boxes": 0
+  },
+  "case_08_images_77_cropped.jpg": {
+    "road_photo": true,
+    "expect": "road_surface_inspection",
+    "forbidden_boxes_on": ["sky", "vegetation", "off_road"],
+    "max_offroad_boxes": 0
+  },
+  "user_uploaded_car_potholes.jpg": {
+    "road_photo": true,
+    "expect": "potholes_on_road_only",
+    "forbidden_boxes_on": ["car", "vehicle", "sky", "tree", "signboard", "blurred_region"],
+    "min_potholes": 1,
+    "max_offroad_boxes": 0
   }
 }

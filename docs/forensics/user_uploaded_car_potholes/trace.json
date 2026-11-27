@@ -1,0 +1,129 @@
+{
+  "file": "user_uploaded_car_potholes.jpg",
+  "dimensions": [
+    528,
+    323
+  ],
+  "input_gate": {
+    "is_road": true,
+    "reason": "ok"
+  },
+  "obstacles_detected": 1,
+  "obstacles": [
+    {
+      "label": "car",
+      "conf": 0.849,
+      "box": [
+        38.5,
+        2.3,
+        459.9,
+        125.6
+      ]
+    }
+  ],
+  "final_detections_count": 10,
+  "final_detections": [
+    {
+      "label": "POTHOLE",
+      "conf": 0.871,
+      "box": [
+        8.4,
+        185.7,
+        78.8,
+        227.3
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.867,
+      "box": [
+        246.7,
+        168.6,
+        301.0,
+        191.2
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.809,
+      "box": [
+        213.7,
+        140.2,
+        285.9,
+        165.4
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.717,
+      "box": [
+        174.5,
+        145.5,
+        227.5,
+        170.4
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.71,
+      "box": [
+        183.3,
+        172.9,
+        231.7,
+        191.0
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.701,
+      "box": [
+        63.9,
+        227.2,
+        107.3,
+        255.4
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.693,
+      "box": [
+        45.2,
+        145.7,
+        141.2,
+        191.2
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.652,
+      "box": [
+        314.6,
+        133.7,
+        395.9,
+        187.8
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.531,
+      "box": [
+        222.2,
+        201.6,
+        302.6,
+        251.7
+      ]
+    },
+    {
+      "label": "POTHOLE",
+      "conf": 0.429,
+      "box": [
+        451.4,
+        124.8,
+        525.5,
+        174.0
+      ]
+    }
+  ],
+  "forbidden_box_violations": [],
+  "passed_gate_a": true
+}

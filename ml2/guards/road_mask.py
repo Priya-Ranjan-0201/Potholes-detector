@@ -89,11 +89,12 @@ class RoadSurfaceSegmenter:
         bot_l = float(np.mean(cv2.cvtColor(bot_25, cv2.COLOR_BGR2GRAY)))
         diff_l = abs(top_l - bot_l)
 
+        min_horizon = max(5, int(h * 0.18))
         if diff_l >= 25.0 or top_l >= 155.0:
-            horizon_y = max(5, int(h * self.horizon_cutoff_pct))
+            horizon_y = max(min_horizon, int(h * self.horizon_cutoff_pct))
             road_mask_dilated[:horizon_y, :] = 0
         else:
-            horizon_y = max(2, int(h * 0.03))
+            horizon_y = min_horizon
             road_mask_dilated[:horizon_y, :] = 0
 
         return road_mask_dilated

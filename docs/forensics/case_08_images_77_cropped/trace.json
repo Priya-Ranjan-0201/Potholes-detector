@@ -1,0 +1,78 @@
+{
+  "file": "case_08_images_77_cropped.jpg",
+  "dimensions": [
+    702,
+    332
+  ],
+  "input_gate": {
+    "is_road": true,
+    "reason": "ok"
+  },
+  "obstacles_detected": 6,
+  "obstacles": [
+    {
+      "label": "car",
+      "conf": 0.532,
+      "box": [
+        58.5,
+        24.8,
+        137.4,
+        67.9
+      ]
+    },
+    {
+      "label": "car",
+      "conf": 0.466,
+      "box": [
+        212.4,
+        40.3,
+        238.9,
+        67.9
+      ]
+    },
+    {
+      "label": "car",
+      "conf": 0.444,
+      "box": [
+        665.2,
+        20.5,
+        701.8,
+        78.5
+      ]
+    },
+    {
+      "label": "car",
+      "conf": 0.443,
+      "box": [
+        269.3,
+        25.2,
+        308.6,
+        57.1
+      ]
+    },
+    {
+      "label": "car",
+      "conf": 0.405,
+      "box": [
+        179.1,
+        31.1,
+        219.5,
+        57.4
+      ]
+    },
+    {
+      "label": "car",
+      "conf": 0.317,
+      "box": [
+        251.1,
+        37.6,
+        273.7,
+        61.5
+      ]
+    }
+  ],
+  "final_detections_count": 0,
+  "final_detections": [],
+  "forbidden_box_violations": [],
+  "passed_gate_a": true
+}
