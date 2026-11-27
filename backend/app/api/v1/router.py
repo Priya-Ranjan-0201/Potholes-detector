@@ -18,9 +18,13 @@ from backend.app.api.v1.verification import router as verification_router
 from backend.app.api.v1.drift import router as drift_router
 from backend.app.api.v1.surveys import router as surveys_router
 from backend.app.api.v1.priority import router as priority_router
+from backend.app.api.v1.review import router as review_router
 from fastapi import APIRouter
 
 api_v1_router = APIRouter()
+
+# Gate E: Human Review Loop, Triage Queue & Chainage Exports
+api_v1_router.include_router(review_router, prefix="", tags=["Human Review Loop"])
 
 # Health endpoints available at both /health and /api/v1/health
 api_v1_router.include_router(health_router, prefix="", tags=["Health"])
