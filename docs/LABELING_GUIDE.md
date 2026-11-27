@@ -25,10 +25,46 @@
 
 ## 2. Pavement & Surface Distinctions
 
-### Edge Case A: Water-Filled Pothole vs. Surface Water Puddle
-- **Water-Filled Pothole (Defect - D41):** The depression has visible broken, fractured asphalt lip boundaries around the water line, indicating loss of pavement base.
-- **Surface Puddle (Negative / Non-Defect):** Standing water on intact asphalt where pavement edges are unbroken and road texture continues beneath the water film.
-- **Rule:** **A puddle on intact asphalt is NEVER a pothole.** Only label as a defect if fractured pavement edges are present.
+### Edge Case A: Water-Filled Pothole vs. Surface Water Puddle (Gate D Policy)
+- **Water-Filled Pothole (Defect — `D41` / `POTHOLE`):**
+  - **Definition:** Structural cavity in asphalt wearing and binder courses filled with rainwater, silt, or muddy runoff.
+  - **Visual Criteria:**
+    1. **Fractured Asphalt Rim:** Visible broken, jagged, or sharp asphalt lip perimeter indicating ruptured wearing course.
+    2. **Internal Depth / Shadow:** Dark absorption cavity inside the water boundary; turbid bottom sediment distinct from surrounding road texture.
+    3. **Structural Depression:** Visible height drop from surrounding road plane into the cavity.
+  - **Classification:** **DEFECT (High Severity)** due to dynamic wheel impact damage and high hydroplaning hazard.
+
+- **Surface Water Puddle (Negative / Non-Defect):**
+  - **Definition:** Shallow, harmless standing water film on top of intact, undamaged asphalt or concrete pavement.
+  - **Visual Criteria:**
+    1. **Smooth Perimeter Transition:** Water edge thins continuously to zero depth with no broken asphalt edges or height drop.
+    2. **Texture Continuation:** Underlying aggregate texture, painted lane lines, or road crown continue unbroken beneath the water film.
+    3. **Specular Sky Reflection:** Flat mirror reflection of overcast sky or direct sunlight without internal cavity perimeter.
+  - **Classification:** **NON-DEFECT (0 Annotations)**. Puddles on intact asphalt must NEVER be boxed as potholes.
+
+---
+
+## 3. CVAT Annotation Protocol & Two-Annotator Quality Control
+
+In compliance with **Gate D (India Coverage & Annotation Reliability)**, all ground truth datasets must adhere to the two-annotator quality gate:
+
+### 3.1 CVAT Setup & Tooling
+- Tool: Computer Vision Annotation Tool (CVAT) / Label Studio.
+- Labeling Format: Rectangle bounding box with class attributes (`severity`, `wet_status`, `camera_mount`).
+- Zoom & Precision: Annotators must zoom to $\ge 150\%$ resolution when boxing small distant defects ($< 32\times 32$ pixels).
+
+### 3.2 Two-Annotator Agreement Verification Protocol
+1. **Independent Dual Annotation:**
+   - Every candidate image is labeled independently by **Annotator 1** and **Annotator 2** without cross-communication.
+2. **Intersection-over-Union (IoU) Matching:**
+   - Two boxes are considered matched if $\text{IoU} \ge 0.70$ and $\text{Class ID}$ matches exactly.
+3. **Inter-Annotator Agreement Metric:**
+   - Inter-annotator agreement is scored via Cohen's Kappa:
+     $$\kappa = \frac{p_o - p_e}{1 - p_e}$$
+   - **Quality Gate:** $\kappa \ge 0.75$ across the dataset batch.
+4. **Adjudication Phase:**
+   - All disagreements (boundary $\text{IoU} < 0.70$, class mismatch, or one-sided detections) are routed to the **Principal Civil Engineer Reviewer Queue**.
+   - The adjudicator verifies ground truth against high-resolution zoom and local road condition logs before finalizing the master annotation.
 
 ### Edge Case B: Bitumen Patch vs. Pothole
 - **Bitumen Patch (Negative / Non-Defect):** Fresh or weathered asphalt applied during municipal repairs. Surface is raised or coplanar with the road, exhibiting flat granular texture without an internal depression shadow.
