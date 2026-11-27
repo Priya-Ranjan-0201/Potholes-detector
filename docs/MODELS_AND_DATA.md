@@ -99,3 +99,13 @@ In compliance with **Rule G4 (Provenance and Licenses)**, this register document
 - **Manifest:** `data/benchmarks/manifest_test_c.json` (SHA-256 locked)
 - **License:** CC0 / Public Domain / CC BY-SA 4.0
 - **Benchmark Target:** Rejection rate >= 95.0%.
+
+### 2.5 Gate C Multi-Source Benchmark TEST-A
+- **Location:** `data/benchmarks/test_a_multisource/`
+- **Sample Size:** 1,508 authentic multi-source road images:
+  - 750 damaged road scenes with multi-class annotations (pothole, longitudinal crack, transverse crack, alligator crack)
+  - 758 clean road negatives with zero defects
+- **Geographic Composition:** 6 countries (India, Japan, Czech, China, Norway, United States)
+- **Manifest:** `data/benchmarks/manifest_test_a.json` (SHA-256 locked)
+- **License:** CC BY-SA 4.0 (RDD2022 multi-country benchmark)
+- **Leakage Verification:** 0 overlapping images with all training datasets; scored once per Gate C protocol.
