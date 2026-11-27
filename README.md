@@ -1,403 +1,161 @@
-<div align="center">
+# ScamRoad: Dashcam Road Defect Inspection Pilot
 
-# 🛣️ ScamRoad
-### Autonomous Road Distress Inspection & Audit Engine
-
-An edge-optimized computer vision system for highway authorities, municipal engineers, and road contractors that automates pavement distress detection (potholes, alligator cracks, longitudinal and transverse cracks) from camera feeds and dashcam imagery, calculates civil-grade severity ratings, and exports ASTM D6433 & IRC:82 compliant audit reports.
-
-<br/>
-
-[![License](https://img.shields.io/badge/License-MIT-orange.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](pyproject.toml)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](backend)
-[![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](web)
-[![Vite](https://img.shields.io/badge/Vite-5.4-646cff.svg)](web)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](web)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC.svg)](web)
-[![Model](https://img.shields.io/badge/YOLO11n-Rescue-FF5A00.svg)](runs/rescue_train/yolo11n_rescue)
-
-<br/>
-
-**[⚡ Previews & UI](#web-application-previews)** • **[🔍 Live Road Scanner](#2-live-road-scanner-scanner)** • **[📋 PDF Audit Ledger](#3-civil-damage-audit-report--vector-pdf-report)** • **[🚀 Quickstart](#quickstart-guide)** • **[📊 Benchmarks](#accuracy--latency-benchmarks)** • **[👨‍💻 Author](#author--lead-researcher)**
-
-</div>
+ScamRoad is a computer-vision pavement defect triage system for Indian roads (National Highways, State Highways, urban corridors, and rural PMGSY roads). It processes dashcam and smartphone video feeds at normal driving speeds, filters non-road images and background clutter through spatial guards, and feeds a human review loop for municipal and highway maintenance prioritization.
 
 ---
 
-## About the Project
+### Reality Check & Pilot Scope
 
-**ScamRoad** is an autonomous pavement vision and civic audit platform engineered to solve one of modern infrastructure's most persistent and costly challenges: **unmonitored road deterioration and delayed maintenance**.
+The National Highways Authority of India (NHAI) and major concessionaires already operate dedicated laser profilometer Network Survey Vehicles (NSV) across tens of thousands of kilometers of highway. A student research project cannot replace specialized multi-crore survey trucks or millimeter-accurate profilometers.
 
-### The Motivation
-Potholes and structural fatigue fractures cause billions in vehicle damage, fatal commuter accidents, and severe traffic congestion each year. Traditional municipal road inspections rely on either manual citizen complaints or cost-prohibitive specialized survey trucks equipped with 3D LiDAR laser profilers costing upwards of $100,000+. Consequently, secondary roads and municipal corridors go un-surveyed for months or years.
-
-### The ScamRoad Solution
-ScamRoad democratizes infrastructure intelligence by enabling **any standard monocular camera, dashcam, or smartphone** to function as a calibrated pavement survey sensor:
-- **Sub-120ms Latency**: Executes on standard CPU architecture without requiring cloud GPU dependencies.
-- **Zero Hallucinations on Shadows**: Dual spatial priors eliminate 99.4% of false alarms on tree shadows, wet road reflections, and non-road images.
-- **Civil-Grade Integrity**: Converts raw pixel detections into standardized **Pavement Condition Index (PCI 0–100)** scores and verifiable PDF audit ledgers.
+Instead, ScamRoad provides a validated low-cost triage tool for state PWDs, urban municipal corporations, and rural PMGSY roads. It bridges the gap between annual NSV surveys and reactive citizen complaints by pairing low-cost optical capture with a 7-stage filter pipeline and an engineer verification queue.
 
 ---
 
-## 👨‍💻 Author & Lead Researcher
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/Priya-Ranjan-0201">
-        <img src="https://github.com/Priya-Ranjan-0201.png" width="110px;" alt="Priye Ranjan" style="border-radius: 50%; border: 3px solid #FF5A00;"/><br />
-        <sub><b>Priye Ranjan</b></sub>
-      </a><br />
-      <sub>Lead Researcher & Full-Stack AI Engineer</sub><br />
-      <a href="https://github.com/Priya-Ranjan-0201">GitHub Profile</a> • 
-      <a href="https://github.com/Priya-Ranjan-0201/potholes-detection">Project Repo</a>
-    </td>
-    <td>
-      <b>Project Inception & Core Engineering:</b>
-      <ul>
-        <li>Designed the 5-Stage Neural Vision Architecture fusing fine-tuned YOLO11n with spatial prior guards.</li>
-        <li>Implemented the high-visibility roadwork design system and interactive client-side PDF audit engine.</li>
-        <li>Curated the 730-image held-out benchmark and achieved 0 false alarms on non-road diagrams.</li>
-      </ul>
-    </td>
-  </tr>
-</table>
-
----
-
-## Visual Inspection Showcase
-
-| State Highway Crater | Fatigue Alligator Cracking | National Highway Shoulder Void |
-| :---: | :---: | :---: |
-| <img src="web/public/samples/asphalt_crater.jpg" width="280" alt="State Highway Crater"/> | <img src="web/public/samples/alligator_cracks.jpg" width="280" alt="Alligator Cracks"/> | <img src="web/public/samples/pothole_nh44.jpg" width="280" alt="NH-44 Pothole"/> |
-| **State Highway 17**<br><code>PCI 38/100 · Critical</code><br>Base Layer Collapse | **MDR-04 Corridor**<br><code>PCI 44/100 · Poor</code><br>IRC:82 Sealant Required | **National Highway 44**<br><code>PCI 62/100 · Fair</code><br>Wheelpath Hazard Void |
-
----
-
-## Table of Contents
-
-- [About the Project](#about-the-project)
-- [Author & Lead Researcher](#author--lead-researcher)
-- [Key Capabilities](#key-capabilities)
-- [System Architecture](#system-architecture)
-- [Web Application Previews](#web-application-previews)
-- [Accuracy & Latency Benchmarks](#accuracy--latency-benchmarks)
-- [Pavement Assessment & Maintenance Criteria](#pavement-assessment--maintenance-criteria)
-- [Quickstart Guide](#quickstart-guide)
-- [REST API Reference](#rest-api-reference)
-- [Project Directory Structure](#project-directory-structure)
-- [Project Presentation (PPT)](#project-presentation)
-- [Verification & Automated Tests](#verification--automated-tests)
-- [License](#license)
-
----
-
-## Key Capabilities
-
-- **Unified Multi-Class Detection**: Detects asphalt potholes (including water-filled cavities), longitudinal fractures, transverse joints, and fatigue alligator cracking in a single neural pass.
-- **Dual Spatial Prior Guards**:
-  - **Guard B (Input Usability Gate)**: Identifies and rejects diagrams, schematics, and screenshots via multi-spectral glyph and chroma analysis with HTTP 422.
-  - **Guard A (Road Surface Prior)**: Segments drivable asphalt boundaries to suppress off-road false positives from sidewalks, foliage, and sky.
-- **Obstacle & Shadow Immunity**: Eliminates 99.4% of false alarms caused by tree canopy shadows, wet surface reflections, vehicles, pedestrians, and roadside clutter.
-- **ASTM D6433 Pavement Condition Index (PCI)**: Translates raw bounding box pixel geometries and defect counts into standardized 0–100 PCI ratings (*Good*, *Fair*, *Poor*, *Critical*).
-- **One-Click Vector PDF Audit Reports**: Generates formal damage ledgers with GPS coordinates, surface area percentages, repair recommendations, and contractor cost estimates directly in the browser.
-- **High-Visibility Roadwork Design System**: Themed in safety orange (`#FF5A00`), hazard yellow (`#FFD200`), charcoal slate (`#121820`), deep asphalt black (`#0B0F14`), and crisp white.
-- **Ultra-Fast Edge Inference**: Sub-120 ms latency on consumer CPU with optimized ONNX Runtime execution.
-
----
-
-## System Architecture
+## Architecture & 7-Stage Pipeline
 
 ```
-                             [ High-Res Photo / Dashcam / Device Camera ]
-                                                  │
-                                                  ▼
-                                      [ Universal EXIF Transposition ]
-                                                  │
-                                                  ▼
-                           ┌──────────────────────────────────────────────┐
-                           │   Guard B: Chroma & Text Rejection Gate      │ ──> (Rejects Non-Road Diagrams)
-                           └──────────────────────────────────────────────┘
-                                                  │
-                                                  ▼
-                           ┌──────────────────────────────────────────────┐
-                           │   Guard A: Drivable Asphalt Segmentation     │ ──> (Suppresses Off-Road Clutter)
-                           └──────────────────────────────────────────────┘
-                                                  │
-                                                  ▼
-                           ┌──────────────────────────────────────────────┐
-                           │   YOLO11n-Rescue Multi-Class Neural Engine   │
-                           │   (Potholes · Alligator · Long · Transverse) │
-                           └──────────────────────────────────────────────┘
-                                                  │
-                                                  ▼
-                           ┌──────────────────────────────────────────────┐
-                           │   Obstacle Suppression & Box Post-Processing │
-                           └──────────────────────────────────────────────┘
-                                                  │
-                                                  ▼
-                           ┌──────────────────────────────────────────────┐
-                           │   ASTM D6433 & IRC:82 Distress Scoring       │
-                           │   (PCI Index · Severity Level · Action Plan) │
-                           └──────────────────────────────────────────────┘
-                                                  │
-                           ┌──────────────────────┴──────────────────────┐
-                           ▼                                             ▼
-               [ Live Highway UI /scanner ]                  [ Vector PDF Audit /report ]
+[Camera / Dashcam Feed]
+         │
+         ▼
+[Stage 1: Road vs Non-Road Classifier] ──(P(road) < 0.12)──> [Rejected / Flagged]
+         │
+         ▼
+[Stage 2: Drivable Surface Mask] ───────(Overlap < 35%)───> [Dropped]
+         │
+         ▼
+[Stage 3: Regularized YOLO11 Detector]
+         │
+         ▼
+[Stage 4: Weighted Boxes Fusion (WBF)]
+         │
+         ▼
+[Stage 5: Dual-Feature Puddle Classifier] ──(Specular puddle)─> [Reclassified / Ignored]
+         │
+         ▼
+[Stage 6: ByteTrack Video Tracker] ─────(Kalman IoU)─────> [Single Consolidated Event]
+         │
+         ▼
+[Stage 7: Confidence Triage]
+         ├── Conf >= 0.65 ──────────────> [Auto-Accepted to Master Catalog]
+         ├── 0.25 <= Conf < 0.65 ────────> [Routed to Human Review Queue]
+         └── Conf < 0.25 ────────────────> [Auto-Dropped]
+```
+
+1. **Input Gate Classifier (MobileNetV3-Small):** Rejects non-road inputs (diagrams, whiteboards, sky, indoor scenes) before detector execution.
+2. **Drivable Road Surface Mask:** Enforces a &ge; 35% bounding-box overlap constraint on the drivable asphalt carriage, eliminating false alarms on pedestrians, signboards, or roadside vegetation.
+3. **Regularized YOLO11 Detector:** Detects potholes and structural road cracks with hard-negative background regularization.
+4. **Weighted Boxes Fusion (WBF):** Merges multi-scale and multi-model consensus boxes without ad-hoc heuristic weighting.
+5. **Dual-Feature Puddle Classifier:** Evaluates perimeter rim gradient (&ge; 22.0) and cavity shadow absorption (&ge; 0.35) to distinguish harmless rain puddles from deep potholes.
+6. **ByteTrack Video Tracker:** Consolidates bounding boxes across continuous frames into single physical distress events with zero duplicate inflation.
+7. **Human-in-the-Loop Triage Engine:** Automatically commits high-confidence detections, drops noise, and routes ambiguous cases to engineers for verification.
+
+---
+
+## Measured Benchmark Results
+
+All metrics were evaluated once on frozen, held-out test sets without synthetic data, demo seeders, or train-test leakage. Sample sizes and 95% Wilson score confidence intervals are reported:
+
+| Benchmark Suite | Sample Size | Primary Target | Measured Result | 95% Confidence Interval | Status |
+| :--- | :---: | :--- | :---: | :---: | :---: |
+| **TEST-A (Multi-Country)** | $N=1,508$ | Clean Image Specificity | **98.81%** (749/758 clean zero FP) | [97.77%, 99.42%] | **PASS** |
+| **TEST-A (Multi-Country)** | $N=1,508$ | Precision (Balanced Preset) | **71.15%** (High Prec: 75.86%) | [57.73%, 81.67%] | **PASS** |
+| **TEST-B (Road Clutter)** | $N=300$ | False Alarm Images &le; 2.0% | **1.33%** (4/300 false alarms) | [0.52%, 3.38%] | **PASS** |
+| **TEST-C (Non-Road Scenes)**| $N=220$ | Rejection Rate &ge; 95.0% | **95.00%** (209/220 rejected) | [91.27%, 97.19%] | **PASS** |
+| **Dashcam Survey Video** | 20 clips | False Alarms / min &amp; Dedup | **0.00 / min** (13/13 matched) | 0 duplicate events | **PASS** |
+
+### Calibrated Operating Presets (PR Curve)
+- **High Precision (conf &ge; 0.40):** 75.86% precision, 99.87% clean image specificity (only 1 false alarm image out of 758 clean scenes).
+- **Balanced (Default, conf &ge; 0.25):** 71.15% precision, 98.81% clean image specificity. Optimal F1 across all defect types.
+- **High Recall (conf &ge; 0.15):** 65.81% precision, 13.71% recall. Maximizes detection of faint micro-cracks.
+
+---
+
+## Field Pilot Validation Protocol
+
+The formal pilot protocol ([VALIDATION_PROTOCOL.md](docs/VALIDATION_PROTOCOL.md)) defines a field validation procedure on a real highway corridor:
+- **Corridor:** 25.0 km section of National Highway 44 (Hebbal Flyover `km 10.000` to Devanahalli Toll Plaza `km 35.000`).
+- **Ground Truth Baseline:** Engineer walking survey with sub-meter RTK-GNSS receiver and graduated depth gauge.
+- **Temporal Synchronization:** Vehicle dashcam survey runs executed within $\le 24\text{ hours}$ of ground survey.
+- **Spatial Matching Rule:** Prediction matched to ground truth if along-track distance error $|\text{Chainage}_{\text{pred}} - \text{Chainage}_{\text{gt}}| \le 5.0\text{ meters}$ and lateral offset $\le 1.8\text{ meters}$.
+
+---
+
+## Operational Boundaries & Known Limitations
+
+1. **Optical 2D Projection:** Monocular dashcams measure 2D surface area ($L \times W$), not 3D cavity depth in millimeters. Metric depth requires physical measurement on site.
+2. **Night Illumination Decay:** Halogen and LED vehicle headlights exhibit inverse-square ($1/d^2$) intensity decay beyond 12 meters. Accuracy drops to 38.9% under headlights alone; night captures are automatically flagged for human review.
+3. **No International Roughness Index (IRI):** The system does not measure vertical accelerations or road roughness in m/km. High-speed laser profilometer NSVs remain necessary for formal concessionaire compliance.
+4. **Advisory Tool Only:** Detections are advisory prioritization indicators and require authorized engineer sign-off before contractor work orders are issued.
+
+---
+
+## Repository Structure
+
+```
+scam_road/
+├── backend/            # FastAPI REST backend, triage service, chainage reporting
+│   ├── app/            # Service modules (triage, active learning, chainage)
+│   └── tests/          # Pytest regression suite across Gates A through G (29 tests)
+├── data/
+│   └── benchmarks/     # Locked JSON manifests (TEST-A, TEST-B, TEST-C)
+├── docs/               # Audit documentation, model cards, compliance gap registers
+├── eval_failures/      # Golden failure cases with expected.json ground truth
+├── ml2/                # Production ML2 pipeline
+│   ├── guards/         # Road surface mask, input gate, puddle classifier
+│   ├── models/         # ONNX weights (MobileNetV3 classifier, YOLO11 detector)
+│   ├── pipeline/       # Weighted Boxes Fusion (WBF) coordinator
+│   └── tracker/        # ByteTrack Kalman IoU video event tracker
+├── scripts/            # Reproducibility and benchmark evaluation scripts
+└── web/                # React 18 + Vite 5 frontend ("Paper and Asphalt" palette)
 ```
 
 ---
 
-## Web Application Previews
+## Quickstart & Reproduction
 
-### 1. Overview & Architecture Showcase (`/`)
-> Full-length engineering landing page featuring real-time telemetry, 5-stage neural inspection pipeline, accuracy benchmark showdown, and interactive radar scanner preview.
+### Prerequisites
+- Python 3.12+
+- Node.js 18+ and npm
+- CPU with AVX2 support (no GPU required for inference)
 
-<p align="center">
-  <img src="docs/images/preview_overview.png" alt="ScamRoad Overview Landing Page" width="100%"/>
-</p>
-
-### 2. Live Road Scanner (`/scanner`)
-> Real-time pavement distress scanner with camera feed, image upload, sensitivity calibration slider, and neural bounding box overlays.
-
-<p align="center">
-  <img src="docs/images/preview_scanner.png" alt="ScamRoad Live Scanner Workspace" width="100%"/>
-</p>
-
-### 3. Civil Damage Audit Report & Vector PDF (`/report`)
-> Automated civil damage audit ledger calculating ASTM D6433 Pavement Condition Index (PCI 0–100), treatment recommendations, and one-click vector PDF generation.
-
-<p align="center">
-  <img src="docs/images/preview_report.png" alt="ScamRoad Audit Report and PDF Generator" width="100%"/>
-</p>
-
----
-
-## Accuracy & Latency Benchmarks
-
-Measured on the locked, held-out **$N = 730$ Rescue Benchmark** comprising real-world Indian highway and urban street scenes:
-
-| Benchmark Metric | Vanilla YOLO Baseline | ScamRoad YOLO11n-Rescue | Real-World Impact |
-| :--- | :---: | :---: | :---: |
-| **Non-Road Diagram Rejection** | 0.0% (0/30 rejected) | **100.0%** (30/30 rejected) | Zero false alarms on screenshots & diagrams |
-| **Clean Pavement False Alarms** | 93.0% (279/300) | **26.6%** (80/300) | **-66.4 pp drop** in false positive triggers |
-| **Clutter Scene False Alarm Rate** | 44.0% (44/100) | **11.0%** (11/100) | **-33.0 pp drop** around urban traffic |
-| **Pothole Detection Precision** | 41.2% | **85.7%** | **+44.5 pp increase** in genuine detection accuracy |
-| **Transverse Crack Precision** | 15.4% | **75.0%** | **+59.6 pp increase** on pavement joints |
-| **Alligator Crack Spurious Boxes** | 13,487 spurious boxes | **0 spurious boxes** | **-100% false alarms** eliminated |
-| **Host CPU Latency (p50)** | 555.2 ms | **< 120 ms** | **~4.6x faster** execution on consumer hardware |
-
----
-
-## Pavement Assessment & Maintenance Criteria
-
-ScamRoad aligns computer vision detections directly with standard pavement condition assessment methods:
-
-- **Pavement Condition Index (PCI 0–100)**: Evaluates deduct values based on defect density, severity, and relative surface area.
-  - **Good (85–100)**: Minor cosmetic wear; routine monitoring.
-  - **Fair (55–84)**: Visible hairline cracks and small voids; preventative sealing recommended.
-  - **Poor (25–54)**: Significant structural distress and alligator cracking; milling and structural overlay recommended.
-  - **Critical (0–24)**: Deep cavity collapse and base layer failure; urgent reconstruction required.
-
-- **Actionable Maintenance Protocols**:
-  - **Potholes**: Cold-mix / hot-mix asphalt patching with mechanical compaction.
-  - **Alligator Cracks**: Surface slurry seal or full-depth asphalt replacement.
-  - **Longitudinal / Transverse Cracks**: Hot-poured elastomeric bitumen sealant.
-
----
-
-## Quickstart Guide
-
-### 1. Prerequisites
-- **Python**: Version 3.10 or higher (3.12 recommended)
-- **Node.js**: Version 18 or higher with npm
-
-### 2. Clone the Repository
+### 1. Installation
 ```bash
+# Clone the repository
 git clone https://github.com/Priya-Ranjan-0201/potholes-detection.git
 cd potholes-detection
-```
 
-### 3. Backend Setup
-```bash
 # Install Python backend dependencies
+pip install -r requirements.txt
 pip install -r backend/requirements.txt
 
-# Start FastAPI Inference Server on Port 8001
-python scripts/serve_inference.py
+# Install frontend dependencies
+cd web && npm install && cd ..
 ```
-- API Endpoint: `http://127.0.0.1:8001`
-- Interactive OpenAPI Docs: `http://127.0.0.1:8001/docs`
 
-### 4. Frontend Setup
+### 2. Run Reproduction Suite
 ```bash
-# Navigate to web workspace
-cd web
-
-# Install npm dependencies
-npm install
-
-# Start Vite dev server on Port 3000
-npm run dev
-```
-Open your browser at `http://localhost:3000`.
-
-### 5. One-Click Windows Launch
-Launch both backend and frontend servers simultaneously:
-```cmd
-run.bat
-```
-or via PowerShell:
-```powershell
-.\run.ps1
+# Runs golden failure verification and all 29 automated gate regression tests
+make reproduce
 ```
 
-### 6. Docker Deployment
-Run the complete stack with Docker Compose:
+### 3. Run Web & API Stack
 ```bash
-docker compose up -d
+# Start backend API (FastAPI on port 8000)
+python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+
+# Start frontend application (Vite on port 5173)
+cd web && npm run dev
 ```
 
 ---
 
-## REST API Reference
+## License & Provenance
 
-### Health Check
-```http
-GET /api/v1/health
-```
-**Response:**
-```json
-{
-  "status": "ok",
-  "version": "0.1.0",
-  "environment": "development",
-  "dependencies": {
-    "api": {
-      "status": "ok",
-      "message": "API engine running"
-    }
-  }
-}
-```
-
-### Inference Endpoint
-```http
-POST /api/v1/infer
-Content-Type: multipart/form-data
-```
-
-| Parameter | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
-| `file` | `UploadFile` | Yes | Road photograph or dashcam frame (JPEG, PNG, WebP, AVIF) |
-| `confidence` | `float` | No | Minimum confidence threshold (0.05 to 0.95, default: `0.25`) |
-
-**Sample Response:**
-```json
-{
-  "success": true,
-  "detections": [
-    {
-      "class_id": 0,
-      "class_name": "pothole",
-      "confidence": 0.857,
-      "box": [182.4, 240.1, 410.8, 385.6],
-      "severity": "Critical",
-      "pci_deduct": 24.5
-    }
-  ],
-  "pci_score": 42.0,
-  "pci_rating": "Poor",
-  "inference_time_ms": 112.4
-}
-```
+- **Application Code:** [AGPL-3.0](LICENSE)
+- **Model Checkpoints:** Ultralytics YOLO11 (AGPL-3.0), MobileNetV3-Small (BSD-3-Clause)
+- **Evaluation Datasets:** RDD2022 (CC BY-SA 4.0), local benchmark field images (Academic Fair Use)
 
 ---
 
-## Project Directory Structure
-
-```text
-potholes-detection/
-├── backend/                  # FastAPI inference REST API, schemas, and ORM
-│   ├── app/
-│   │   ├── api/v1/           # Endpoints: infer.py, defects.py, stats.py
-│   │   └── services/         # Severity scoring, alignment, video tracking
-│   └── tests/                # 95 backend unit and regression tests
-│
-├── web/                      # React 18 + TypeScript + Tailwind CSS frontend
-│   ├── src/
-│   │   ├── pages/            # RoadOverviewPage, RoadScannerPage, RoadAuditReportPage
-│   │   ├── components/       # Navbar, Footer, Icons, ThemeToggle, Logo
-│   │   ├── context/          # InspectionContext, ThemeContext, LanguageContext
-│   │   └── utils/            # cvDetector.ts (API client), pdfReport.ts (PDF generator)
-│   └── public/               # Sample highway photography and icons
-│
-├── ml2/                      # 5-Stage inference pipeline and spatial prior guards
-│   ├── guards/               # input_gate.py (Guard B), road_mask.py (Guard A)
-│   ├── pipeline/             # detector.py (unified detection orchestrator)
-│   └── tests/                # Automated acceptance test suite
-│
-├── configs/                  # Taxonomy and severity YAML specifications
-├── config/                   # Rate cards and severity thresholds
-├── data/sample/              # Curated validation images and dataset.yaml
-├── eval_failures/            # Real-world challenging edge-case test suite
-├── runs/                     # Calibrated production ONNX model weights
-│   ├── export/               # best_int8.onnx (quantized lightweight model)
-│   └── rescue_train/         # yolo11n_rescue/weights/best.onnx (production model)
-│
-├── notebooks/                # Google Colab and Kaggle GPU training pipelines
-├── scripts/                  # Inference server launcher (`serve_inference.py`) and verification
-├── docker/                   # Container definitions (api, web, worker)
-├── run.bat                   # One-click Windows CMD launcher
-├── run.ps1                   # One-click Windows PowerShell launcher
-├── pyproject.toml            # Python configuration and test settings
-└── README.md                 # Main documentation and quickstart guide
-```
-
----
-
-## Verification & Automated Tests
-
-ScamRoad includes end-to-end verification suites covering backend logic, machine learning edge cases, and frontend interfaces:
-
-```bash
-# 1. Run full backend test suite (95 tests)
-pytest backend/tests
-
-# 2. Run machine learning acceptance suite on failure edge-cases
-python ml2/tests/test_acceptance.py --pipeline ml2 --test a1
-
-# 3. Run frontend unit tests (Vitest)
-cd web && npm test -- --run
-
-# 4. Check frontend TypeScript types and production asset compilation
-cd web && npm run build
-```
-
----
-
-## Project Presentation
-
-The 12-slide project presentation is available in both native PowerPoint and interactive browser formats:
-- 📥 **PowerPoint Deck**: [`ScamRoad_Presentation.pptx`](ScamRoad_Presentation.pptx) (16:9 widescreen, custom cyber-civil dark theme, embedded UI previews and forensic benchmarks)
-- 🌐 **Interactive Slide Viewer**: [`docs/presentation.html`](docs/presentation.html) (Full screen with arrow key navigation, F-key fullscreen)
-- 🛠️ **Presentation Generator**: Run `python generate_ppt.py` to regenerate the deck with `python-pptx`.
-
-<p align="center">
-  <img src="docs/ppt_slides/Slide1.JPG" alt="ScamRoad Title Slide" width="48%"/>
-  <img src="docs/ppt_slides/Slide4.JPG" alt="ScamRoad Architecture Slide" width="48%"/>
-</p>
-<p align="center">
-  <img src="docs/ppt_slides/Slide6.JPG" alt="ScamRoad Live Scanner Slide" width="48%"/>
-  <img src="docs/ppt_slides/Slide8.JPG" alt="ScamRoad Forensic Model Rescue Slide" width="48%"/>
-</p>
-<p align="center">
-  <img src="docs/ppt_slides/Slide9.JPG" alt="ScamRoad Blind Test Slide" width="48%"/>
-  <img src="docs/ppt_slides/Slide12.JPG" alt="ScamRoad Author Summary Slide" width="48%"/>
-</p>
-
----
-
-## License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+*Student research project. Not an official government system. Not safety-certified.*

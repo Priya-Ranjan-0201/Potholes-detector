@@ -1,73 +1,62 @@
-# ScamRoad Model Card: Edge Pothole & Road Defect Detector (v1.0.0-frozen)
+# Model Card: ScamRoad National Pilot Model Ensemble
 
-**Model Identifier:** `scamroad-yolov8n-edge-v1.0.0`  
-**Architecture:** Ultralytics YOLOv8 Nano (Anchor-Free Decoupled Head)  
-**Primary Deployment Artifact:** `runs/export/best_int8.onnx` (Dynamic INT8 Quantized ONNX Opset 17)  
-**Artifact Size:** `3.32 MB` (72.7% compression from 12.18 MB FP32)  
-**Fidelity Parity:** Max absolute tensor error = `0.00312` ($< 10^-2$)  
-**Calibration:** Expected Calibration Error (ECE) = `0.0671` ($T^* = 0.50$)  
-**Status:** FROZEN & VERIFIED (Pass 3 Complete)  
-**Release Tag:** `v1.0.0-model`  
-**Release Date:** `2026-11-03T17:34:06.187174+00:00`  
-**Governing Standard:** Truth Over Appearance (Zero Unsubstantiated Metrics)
+**Model Suite Identifier:** `scamroad-national-pilot-v2.0`  
+**Pipeline Architecture:** 7-Stage Multi-Model Triage Pipeline  
+**Primary Deployment Target:** CPU Host (ONNX Runtime) & Edge Dashcam / Smartphone  
+**Status:** FROZEN & EMPIRICALLY VERIFIED (Gate G Pass)  
+**Governing Standard:** Rule R1 (Real Numbers Only) & Rule R3 (Disclaimers Enforced)  
 
 ---
 
-## 1. Intended Use & Operational Envelope
+## 1. Ensemble Components & Architecture
 
-### 1.1 In-Scope Applications
-- Real-time automated road pavement defect detection on edge compute platforms:
-  - **Single Board Computers:** Raspberry Pi 5 (via ONNX Runtime CPU), Jetson Orin Nano.
-  - **Android Smartphones:** Mobile dashcam inspection via ONNX Runtime Mobile (OPPO K13).
-  - **Municipal Survey Fleets:** Automated road defect outbox recording with GPS geotagging.
-- **Physical Consolidation:** Continuous multi-frame tracking with `0.0 FP/km` and `0.0% false duplicate inflation`.
+ScamRoad deploys a coordinated pipeline of specialized neural and geometric models:
 
-### 1.2 Out-of-Scope / Prohibited Applications
-- **Automotive Collision Safety:** NOT certified as an ISO 26262 ASIL safety or automated emergency braking (AEB) sensor.
-- **Physical Metric Depth (Rule 10):** Reports pixel coordinates and relative areas only (`calibrated: false`, `physical_size: None`, `unit: pixels`). Metric depth in cm is strictly prohibited without calibrated stereo / LiDAR.
-- **Automated Work-Order Closure:** Model outputs are strictly advisory; authorized human maintenance sign-off is required.
-
----
-
-## 2. Quantitative Performance & Holdout Verification
-
-All metrics measured directly on held-out validation sequences:
-
-| Metric | Measured Value | Minimum Gate | Status |
-| :--- | :---: | :---: | :---: |
-| **Validation mAP@50 (Overall)** | **0.8575** | $\ge 0.7000$ | **PASSED** |
-| **Validation mAP@50-95** | **0.7913** | $\ge 0.4000$ | **PASSED** |
-| **Validation Precision** | **0.8125** (0.8540 w/ Hard Negatives) | $\ge 0.7500$ | **PASSED** |
-| **Validation Recall** | **0.9000** | $\ge 0.8000$ | **PASSED** |
-| **Local India Slice mAP@50** | **0.8575** | $\ge 0.7000$ | **PASSED** |
-| **Expected Calibration Error (ECE)** | **0.0671** | $< 0.0800$ | **PASSED** |
-| **Reproduction $\Delta$ mAP@50** | **0.000000** | $< 0.0050$ | **DETERMINISTIC** |
+| Component | Model Architecture | Weight Artifact Path | Size | License | Role & Input Resolution |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **Stage 1: Road Classifier** | MobileNetV3-Small (TorchVision) | `ml2/models/road_classifier.onnx` | 5.81 MB | BSD-3-Clause | Non-road scene rejector ($224 \times 224$ RGB, threshold: 0.12). |
+| **Stage 2: Drivable Mask** | Spatial Prior Segmenter | `ml2/guards/road_mask.py` | Code | AGPL-3.0 | Road-surface mask filtering; drops boxes with $< 35\%$ overlap. |
+| **Stage 3: General Detector** | YOLO11 Nano (Decoupled Head) | `ml2/models/yolo11_road_damage.onnx` | 10.17 MB | AGPL-3.0 | Multi-class damage detector ($640 \times 640$ RGB). |
+| **Stage 4: Consensus Fusion** | Weighted Boxes Fusion (WBF) | `ml2/pipeline/wbf.py` | Code | MIT | Coordinate consensus & confidence weighting (IoU: 0.50). |
+| **Stage 5: Puddle Classifier** | Dual-Feature Gradient Filter | `ml2/guards/puddle_classifier.py` | Code | AGPL-3.0 | Filters rain reflections (rim gradient $\ge 22.0$, shadow $\ge 0.35$). |
+| **Stage 6: Video Tracker** | ByteTrack / BoT-SORT | `ml2/tracker/tracker.py` | Code | MIT | Kalman IoU temporal matching; 0 duplicate event inflation. |
+| **Stage 7: Triage Engine** | 3-Tier Confidence Router | `backend/app/services/triage_service.py` | Code | AGPL-3.0 | High ($\ge 0.65$), Review ($0.25..0.65$), Drop ($< 0.25$). |
 
 ---
 
-## 3. Edge Latency & Resource Utilization
+## 2. Quantitative Empirical Performance (Held-Out Test Sets)
 
-*Measured on AMD Ryzen 7 7445HS host edge reference (6 physical / 12 logical threads):*
+All metrics measured directly on disk without synthetic numbers:
 
-| Format | Precision | File Size | Median Latency (p50) | 95th Percentile (p95) | Throughput (FPS) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **PyTorch FP32** | FP32 | 12.20 MB | 51.7 ms | 58.2 ms | 19.3 FPS |
-| **ONNX FP32** | FP32 | 12.18 MB | 48.2 ms | 54.1 ms | 20.7 FPS |
-| **ONNX INT8** | **INT8** | **3.32 MB** | **45.46 ms** | **53.29 ms** | **21.0 FPS** |
-
----
-
-## 4. Adverse Environmental Boundaries (Stage 11 Empirical Limits)
-
-1. **Illuminance Threshold:** Operates reliably down to standard dusk. Night operation requires external vehicle lighting providing $\ge 15\text{ lux}$ at the road surface (unilluminated night drops recall to zero).
-2. **Vehicle Speed & Shutter:** Vehicle speed must remain $\le 40\text{ km/h}$ at standard camera shutter ($1/500\text{ s}$) to prevent optical motion blur kernel from exceeding 11px.
-3. **Precipitation:** Resilient to light/moderate rainfall; torrential rain (>900 drops/frame) requires multi-frame track persistence threshold $\ge 4$ detections.
+| Evaluation Suite | Sample Size | Primary Metric | Measured Value | 95% Confidence Interval |
+| :--- | :---: | :--- | :---: | :---: |
+| **TEST-A (Multi-Country)** | $N=1,508$ | Clean Image Specificity | **98.81%** (749/758 clean images zero FP) | [97.77%, 99.42%] |
+| **TEST-A (Multi-Country)** | $N=1,508$ | Precision (Balanced Preset) | **71.15%** (High Prec: 75.86%) | [57.73%, 81.67%] |
+| **TEST-B (Road Clutter)** | $N=300$ | False Alarm Rate (&le; 2.0%) | **1.33%** (4/300 false alarms) | [0.52%, 3.38%] |
+| **TEST-C (Non-Road Scenes)**| $N=220$ | Rejection Rate (&ge; 95.0%) | **95.00%** (209/220 rejected) | [91.27%, 97.19%] |
+| **Video Tracking Suite** | 20 clips | False Alarms / min &amp; Event Dedup | **0.00 / min** (13/13 events matched) | 0 duplicate events |
 
 ---
 
-## 5. Provenance & Training Lineage
+## 3. Operational Envelope & Environmental Boundaries
 
-- **Dataset:** RDD2022 India Subset (`dataset_v1.0`, SHA-256: `1ab5e956961ada65317531ed87507c858908713c7429617c75637bf01a1f2bee`).
-- **Data Licenses:** CC BY-SA 4.0, CC BY 4.0, CC0. No proprietary or commercial license infringements.
-- **Privacy Enforcement (Rule 9):** Gaussian privacy blurring applied to all human faces and license plates prior to export.
-- **Random Seed:** 42 (Pinned across all training, validation, and quantization pipelines).
+### 3.1 Certified Operating Conditions
+- **Daylight Operations:** Optimum performance under clear, overcast, and hazy daylight conditions (precision &ge; 74%).
+- **Road Classifications:** Evaluated across National Highways (DBM wearing course), State Highways, Urban Arterials, and single-lane PMGSY rural pavements.
+- **Speeds:** Designed for vehicle capture at 30–60 km/h with 30 fps camera frame ingestion.
+
+### 3.2 Known Failure Modes & Physical Limits
+- **Night Headlight Decay:** Optical intensity falls off with inverse-square distance ($1/d^2$). Beyond 12 meters from vehicle headlights, dark cavity detection drops to 38.9% accuracy. Night detections are routed to human review.
+- **Lack of Physical Depth:** 2D optical cameras cannot measure millimeter-accurate cavity depth. Pothole volume is estimated from 2D pixel area, requiring physical on-site measurement for contractual repair billing.
+- **Dust & Heavy Dried Mud:** Thick caked mud on rural roads can partially obscure crack patterns, requiring manual review.
+
+---
+
+## 4. Intended Use & Safety Disclaimers
+
+- **Advisory Pavement Intelligence:** ScamRoad is designed as an asset management prioritization and defect triage tool for municipal and highway maintenance engineers.
+- **Prohibited Application:** NOT certified for automated collision avoidance, Advanced Driver Assistance Systems (ADAS), or Autonomous Emergency Braking (AEB).
+
+---
+
+*Student research project. Not an official government system. Not safety-certified.*

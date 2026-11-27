@@ -120,16 +120,10 @@ quantize:  ## Quantize ONNX model to INT8
 report:  ## Generate comprehensive AI evaluation report
 	$(PYTHON) -m ml.evaluation.evaluate
 
-.PHONY: demo
-demo:  ## Seed realistic demo data (is_demo=true) and print verification endpoints
-	$(PYTHON) scripts/seed/seed_demo_data.py
-	@Write-Host "Demo data seeded successfully with is_demo=true badge indicators." -ForegroundColor Green
-	@Write-Host "Web Portal: http://localhost:3000" -ForegroundColor Cyan
-	@Write-Host "API Documentation: http://localhost:8000/api/v1/docs" -ForegroundColor Cyan
-
 .PHONY: reproduce
-reproduce:  ## Run clean reproduction check
-	$(PYTHON) -m pytest ml/tests/ -v
+reproduce:  ## Run clean reproduction check across all gates
+	$(PYTHON) scripts/gate_a_verify_golden.py
+	$(PYTHON) -m pytest backend/tests/test_gate_a_golden_regressions.py backend/tests/test_gate_b_road_only.py backend/tests/test_gate_c_accuracy.py backend/tests/test_gate_d_india_coverage.py backend/tests/test_gate_e_human_review.py backend/tests/test_gate_f_pilot_validation.py backend/tests/test_gate_g_frontend.py -v
 
 # --- Utilities --------------------------------------------------------------
 .PHONY: clean
