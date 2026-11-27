@@ -3,11 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import { Globe } from "./Icons";
 import { useLanguage, LANGUAGES } from "../context/LanguageContext";
 import { ThemeToggle } from "./ThemeToggle";
-import { Logo } from "./Logo";
 import { api } from "../api/client";
 
 export const Navbar: React.FC = () => {
-  const { language, setLanguage, currentOption } = useLanguage();
+  const { language, setLanguage, currentOption, t } = useLanguage();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [serverHealthy, setServerHealthy] = useState<boolean | null>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
@@ -36,92 +35,73 @@ export const Navbar: React.FC = () => {
         });
     };
     check();
-    const interval = setInterval(check, 8000);
+    const interval = setInterval(check, 10000);
     return () => {
       active = false;
       clearInterval(interval);
     };
   }, []);
 
-  const isOverviewActive = location.pathname === "/" || location.pathname === "/overview" || location.pathname === "/about";
-  const isScannerActive = location.pathname === "/scanner" || location.pathname === "/scan";
-  const isReportActive = location.pathname === "/report";
+  const navItems = [
+    { key: "navHome", path: "/", match: (p: string) => p === "/" || p === "/overview" },
+    { key: "navDetect", path: "/detect", match: (p: string) => p === "/detect" || p === "/scanner" || p === "/scan" },
+    { key: "navRecords", path: "/records", match: (p: string) => p === "/records" || p === "/report" },
+    { key: "navReview", path: "/review", match: (p: string) => p === "/review" },
+    { key: "navBenchmarks", path: "/benchmarks", match: (p: string) => p === "/benchmarks" },
+    { key: "navMethod", path: "/method", match: (p: string) => p === "/method" },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#121820]/95 border-b border-[#283545] shadow-xl backdrop-blur-md select-none">
+    <header className="sticky top-0 z-50 w-full bg-surface/95 border-b border-rule backdrop-blur-sm select-none transition-colors">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-3 sm:gap-6">
-          {/* Brand Logo & Original Name ScamRoad */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="p-1.5 rounded-lg bg-[#FF5A00] text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
-              <Logo showWordmark={false} size="sm" />
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-              <span className="font-sans font-black text-lg tracking-tight text-white group-hover:text-[#FFD200] transition-colors">
-                ScamRoad
-              </span>
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-[#FFD200] tracking-wide">
-                AI Road Vision
-              </span>
-            </div>
+        <div className="flex items-center justify-between h-14 gap-2 sm:gap-4">
+          {/* Brand Logo & Name */}
+          <Link to="/" className="flex items-center gap-2 shrink-0 group">
+            <span className="font-serif font-bold text-lg tracking-tight text-text">
+              ScamRoad
+            </span>
+            <span className="hidden sm:inline-block text-[11px] font-mono px-1.5 py-0.5 rounded-[4px] bg-accent/15 text-text border border-accent/30 font-medium">
+              Pilot
+            </span>
           </Link>
 
-          {/* Center Navigation Bar (Spacious, Never Wrapping) */}
-          <nav className="flex items-center p-1 rounded-xl bg-[#0B0F14] border border-[#283545] shadow-inner shrink-0">
-            <Link
-              to="/"
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
-                isOverviewActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
-                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
-              }`}
-            >
-              <span>⚡ Overview</span>
-            </Link>
-
-            <Link
-              to="/scanner"
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
-                isScannerActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
-                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
-              }`}
-            >
-              <span>🛣️ Road Scanner</span>
-            </Link>
-
-            <Link
-              to="/report"
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
-                isReportActive
-                  ? "bg-[#FF5A00] text-white shadow-md shadow-orange-500/25 font-extrabold"
-                  : "text-slate-300 hover:text-white hover:bg-[#1E293B]"
-              }`}
-            >
-              <span>📋 Audit Report &amp; PDF</span>
-            </Link>
+          {/* Top Bar Navigation: Home | Detect | Records | Review | Benchmarks | Method */}
+          <nav className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto py-1 scrollbar-none" aria-label="Main Navigation">
+            {navItems.map((item) => {
+              const isActive = item.match(location.pathname);
+              return (
+                <Link
+                  key={item.key}
+                  to={item.path}
+                  className={`px-2.5 sm:px-3 py-1 rounded-[4px] text-xs font-sans font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? "bg-text text-bg font-semibold shadow-xs"
+                      : "text-muted hover:text-text hover:bg-surface-raised"
+                  }`}
+                >
+                  {t(item.key)}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* Right Controls: AI Engine Status + Language + Theme */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* AI Engine Status Badge */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono bg-[#1E293B] border border-[#334155] shrink-0">
+          {/* Right Controls: Status + Language + Theme */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* System Status Pill */}
+            <div
+              className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-[11px] font-mono border border-rule bg-surface-raised text-muted"
+              title={serverHealthy === true ? "ML inference service healthy" : "ML inference service disconnected"}
+            >
               <span
-                className={`w-2 h-2 rounded-full ${
+                className={`w-1.5 h-1.5 rounded-full ${
                   serverHealthy === true
-                    ? "bg-[#10B981] animate-pulse"
+                    ? "bg-[#10B981]"
                     : serverHealthy === false
-                    ? "bg-[#FF5A00]"
-                    : "bg-[#FFD200]"
+                    ? "bg-[#D55E00]"
+                    : "bg-[#E8B100]"
                 }`}
               />
-              <span className="text-[11px] text-white font-medium whitespace-nowrap">
-                {serverHealthy === true
-                  ? "AI Live (YOLO11n)"
-                  : serverHealthy === false
-                  ? "Backend Offline"
-                  : "Connecting..."}
-              </span>
+              <span>{serverHealthy === true ? "ML2 Live" : serverHealthy === false ? "Offline" : "Checking"}</span>
             </div>
 
             {/* Language Selector */}
@@ -129,15 +109,16 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs bg-[#1E293B] hover:bg-[#283545] border border-[#334155] text-white hover:border-[#FF5A00] transition-colors cursor-pointer font-mono"
+                className="flex items-center gap-1 px-2 py-1 rounded-[4px] text-xs font-mono bg-surface-raised hover:bg-rule/40 border border-rule text-text transition-colors cursor-pointer"
                 title="Switch language"
+                aria-label="Select language"
               >
-                <Globe className="w-3.5 h-3.5 text-[#FFD200]" />
-                <span className="font-medium hidden sm:inline">{currentOption.nativeName}</span>
+                <Globe className="w-3.5 h-3.5 text-muted" />
+                <span className="font-medium">{currentOption.nativeName}</span>
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-40 bg-[#121820] border border-[#334155] rounded-lg shadow-2xl py-1 z-50 text-xs font-mono">
+                <div className="absolute right-0 mt-1 w-36 bg-surface border border-rule rounded-[4px] shadow-lg py-1 z-50 text-xs font-mono">
                   {LANGUAGES.map((opt) => (
                     <button
                       key={opt.code}
@@ -146,21 +127,21 @@ export const Navbar: React.FC = () => {
                         setLanguage(opt.code);
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-1.5 text-left flex items-center justify-between hover:bg-[#1E293B] transition-colors cursor-pointer ${
+                      className={`w-full px-3 py-1 text-left flex items-center justify-between hover:bg-surface-raised transition-colors cursor-pointer ${
                         language === opt.code
-                          ? "text-[#FF5A00] font-bold bg-[#1E293B]"
-                          : "text-slate-300"
+                          ? "font-bold text-accent bg-surface-raised"
+                          : "text-text"
                       }`}
                     >
                       <span>{opt.nativeName}</span>
-                      <span className="text-[10px] text-slate-400 uppercase">{opt.code}</span>
+                      <span className="text-[10px] text-muted uppercase">{opt.code}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Theme Toggle (Clean Sun/Moon) */}
+            {/* Theme Toggle */}
             <ThemeToggle />
           </div>
         </div>

@@ -16,12 +16,15 @@ interface BoxOverlayProps {
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
   className?: string;
-  colorScheme?: "emerald" | "severity";
   viewMode?: "boxes" | "masks" | "both";
 }
 
 /**
- * High-contrast dark bounding box overlay with non-overlapping label badges.
+ * BoxOverlay with colour-blind safe palette (Wong 2011):
+ * - Pothole: #D55E00
+ * - Crack: #0072B2
+ * - Water-filled: #CC79A7
+ * 2px outline, labels placed outside bounding box with collision avoidance.
  */
 export const BoxOverlay: React.FC<BoxOverlayProps> = ({
   detections,
@@ -35,25 +38,26 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
 
   const getDefectName = (rawLabel: string) => {
     const upper = (rawLabel || "").toUpperCase();
-    if (upper.includes("ALLIGATOR") || upper.includes("CROCODILE")) return "Alligator";
-    if (upper.includes("LONGITUDINAL") || upper.includes("LONG")) return "Long. Crack";
-    if (upper.includes("TRANSVERSE") || upper.includes("TRANS")) return "Trans. Crack";
+    if (upper.includes("WATER")) return "Water-filled Pothole";
+    if (upper.includes("ALLIGATOR") || upper.includes("CROCODILE")) return "Alligator Crack";
+    if (upper.includes("LONGITUDINAL") || upper.includes("LONG")) return "Longitudinal Crack";
+    if (upper.includes("TRANSVERSE") || upper.includes("TRANS")) return "Transverse Crack";
     if (upper.includes("CRACK")) return "Crack";
     return "Pothole";
   };
 
   const getColor = (rawLabel: string) => {
     const upper = (rawLabel || "").toUpperCase();
-    if (upper.includes("CRACK") || upper.includes("ALLIGATOR") || upper.includes("LONGITUDINAL") || upper.includes("TRANSVERSE")) {
-      return "#FFD200"; // Bright Hazard Yellow for cracks
-    }
     if (upper.includes("WATER")) {
-      return "#FF7A1A"; // High-Visibility Orange Accent for water-filled craters
+      return "#CC79A7"; // Colour-blind safe reddish purple
     }
-    return "#FF5A00"; // High-Visibility Safety Orange for potholes & pavement craters
+    if (upper.includes("CRACK") || upper.includes("ALLIGATOR") || upper.includes("LONGITUDINAL") || upper.includes("TRANSVERSE")) {
+      return "#0072B2"; // Colour-blind safe blue
+    }
+    return "#D55E00"; // Colour-blind safe vermillion orange
   };
 
-  const labelHeight = 2.4;
+  const labelHeight = 2.6;
   const placedLabels: { x: number; y: number; w: number; h: number }[] = [];
 
   const items = sorted.map((d, index) => {
@@ -61,17 +65,17 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
     const color = getColor(d.label);
     const shortName = getDefectName(d.label);
     const labelText = `${shortName} ${Math.round(d.confidence * 100)}%`;
-    const labelWidth = Math.max(12.0, Math.min(24.0, labelText.length * 1.05 + 2.5));
+    const labelWidth = Math.max(14.0, Math.min(28.0, labelText.length * 1.1 + 3.0));
 
+    // Prefer outside above; fallback to outside below if too close to frame top
     const candidates = [
-      { x, y: y - labelHeight - 0.3 },
-      { x: x + 0.3, y: y + 0.3 },
-      { x, y: y + h + 0.3 },
-      { x: Math.max(0.5, x + w - labelWidth), y: y - labelHeight - 0.3 },
-      { x: Math.max(0.5, x + w - labelWidth - 0.3), y: y + 0.3 },
+      { x, y: y - labelHeight - 0.5 }, // Above top edge
+      { x, y: y + h + 0.5 },           // Below bottom edge
+      { x: Math.max(0.5, x + w - labelWidth), y: y - labelHeight - 0.5 }, // Above right-aligned
+      { x: Math.max(0.5, x + w - labelWidth), y: y + h + 0.5 },           // Below right-aligned
     ].map((c) => ({
-      x: Math.max(0.4, Math.min(100 - labelWidth - 0.4, c.x)),
-      y: Math.max(0.4, Math.min(100 - labelHeight - 0.4, c.y)),
+      x: Math.max(0.5, Math.min(100 - labelWidth - 0.5, c.x)),
+      y: Math.max(0.5, Math.min(100 - labelHeight - 0.5, c.y)),
     }));
 
     let bestPos: { x: number; y: number } | null = null;
@@ -92,7 +96,7 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
     }
 
     const isActive = activeId === d.id;
-    const showLabel = isActive || (bestPos !== null && index < 15);
+    const showLabel = isActive || (bestPos !== null && index < 20);
     const finalPos = bestPos ?? candidates[0];
     if (bestPos !== null) {
       placedLabels.push({ x: finalPos.x, y: finalPos.y, w: labelWidth, h: labelHeight });
@@ -133,7 +137,7 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
           <g
             key={d.id}
             className="pointer-events-auto cursor-pointer transition-opacity duration-150"
-            style={{ opacity: isDimmed ? 0.65 : 1 }}
+            style={{ opacity: isDimmed ? 0.5 : 1 }}
             onMouseEnter={() => onHover(d.id)}
             onMouseLeave={() => onHover(null)}
             onClick={() => onSelect(d.id)}
@@ -141,57 +145,37 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
             tabIndex={0}
             aria-label={`${d.label} ${Math.round(d.confidence * 100)}%`}
           >
+            {/* Segmentation Polygon if available */}
             {(viewMode === "masks" || viewMode === "both") &&
               d.polygon &&
               d.polygon.length >= 3 && (
-                <>
-                  <polygon
-                    points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
-                    fill="none"
-                    stroke="#FFFFFF"
-                    strokeWidth={isActive ? 1.6 : 1.2}
-                    strokeLinejoin="round"
-                    strokeOpacity={0.85}
-                  />
-                  <polygon
-                    points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
-                    fill={color}
-                    fillOpacity={isActive ? 0.08 : 0.05}
-                    stroke={color}
-                    strokeWidth={isActive ? 1.1 : 0.8}
-                    strokeLinejoin="round"
-                  />
-                </>
+                <polygon
+                  points={d.polygon.map(([px, py]) => `${px},${py}`).join(" ")}
+                  fill={color}
+                  fillOpacity={isActive ? 0.25 : 0.15}
+                  stroke={color}
+                  strokeWidth="2"
+                  vectorEffect="non-scaling-stroke"
+                />
               )}
 
+            {/* Bounding Box: 2px outline */}
             {(viewMode === "boxes" || viewMode === "both" || !d.polygon || d.polygon.length < 3) && (
-              <>
-                {/* 3px High-contrast Halo Layer */}
-                <rect
-                  x={x}
-                  y={y}
-                  width={w}
-                  height={h}
-                  fill="none"
-                  stroke="#FFFFFF"
-                  strokeOpacity={0.9}
-                  strokeWidth={isActive ? 1.7 : 1.3}
-                  rx={0.35}
-                />
-                <rect
-                  x={x}
-                  y={y}
-                  width={w}
-                  height={h}
-                  fill={color}
-                  fillOpacity={isActive ? 0.08 : 0.04}
-                  stroke={color}
-                  strokeWidth={isActive ? 1.15 : 0.85}
-                  rx={0.35}
-                />
-              </>
+              <rect
+                x={x}
+                y={y}
+                width={w}
+                height={h}
+                fill={color}
+                fillOpacity={isActive ? 0.18 : 0.08}
+                stroke={color}
+                strokeWidth="2"
+                vectorEffect="non-scaling-stroke"
+                rx={0.5}
+              />
             )}
 
+            {/* Outside Label with collision avoidance */}
             {showLabel && (
               <g transform={`translate(${labelX}, ${labelY})`}>
                 <rect
@@ -200,18 +184,18 @@ export const BoxOverlay: React.FC<BoxOverlayProps> = ({
                   width={labelWidth}
                   height={labelHeight}
                   fill={color}
-                  stroke="#000000"
-                  strokeOpacity={0.55}
-                  strokeWidth={0.22}
-                  rx={0.35}
+                  stroke="#1B1A17"
+                  strokeWidth="0.5"
+                  vectorEffect="non-scaling-stroke"
+                  rx={0.3}
                 />
                 <text
-                  x={0.75}
+                  x={0.8}
                   y={labelHeight * 0.72}
-                  fill="#ffffff"
-                  fontSize={1.45}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  fontWeight="700"
+                  fill="#FFFFFF"
+                  fontSize={1.5}
+                  fontFamily="'IBM Plex Mono', monospace"
+                  fontWeight="600"
                 >
                   {labelText}
                 </text>

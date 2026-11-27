@@ -1,77 +1,64 @@
 /**
- * ScamRoad AI - Autonomous Road Distress Inspection & Audit Engine
- * High-Visibility Theme: Safety Orange, Bright Hazard Yellow, Slate Charcoal, Deep Asphalt Black, and Crisp White.
+ * ScamRoad — Design Tokens ("Paper and Asphalt")
+ * Palette:
+ * Light: bg #F6F4EE, surface #FFFFFF, rule #DAD6CA, text #1B1A17, muted #5F5B50, accent #E8B100, link #1D4ED8
+ * Dark:  bg #121311, surface #1A1B18, rule #282A26, text #ECEAE2, muted #8E8B82, accent #F5C400, link #60A5FA
+ * Overlay (Colour-Blind Safe): pothole #D55E00, crack #0072B2, water-filled #CC79A7
  */
 
-:root,
-[data-theme="high-vis-light"] {
-  /* Light Mode */
-  --bg-canvas: #F1F5F9;
-  --bg-surface: #FFFFFF;
-  --bg-surface-2: #E2E8F0;
-  --border-rule: #CBD5E1;
-  --border-subtle: #CBD5E1;
-  --border-strong: #94A3B8;
+:root {
+  /* Light ("Paper") */
+  --bg: #F6F4EE;
+  --surface: #FFFFFF;
+  --surface-raised: #EFECE3;
+  --rule: #DAD6CA;
+  --border: #DAD6CA;
+  --text: #1B1A17;
+  --muted: #5F5B50;
+  --accent: #E8B100;
+  --link: #1D4ED8;
 
-  --text-main: #0B0F14;       /* Deep Asphalt Black */
-  --text-muted: #334155;      /* Slate Charcoal */
-  --text-faint: #64748B;
-  --text-inverse: #FFFFFF;    /* Crisp White */
+  /* Overlay (Colour-Blind Safe) */
+  --overlay-pothole: #D55E00;
+  --overlay-crack: #0072B2;
+  --overlay-water-pothole: #CC79A7;
 
-  --primary: #FF5A00;         /* High-Visibility Safety Orange */
-  --primary-hover: #E04F00;
-  --primary-text: #FFFFFF;
-  --focus-ring: #FF5A00;
-  --accent-yellow: #F59E0B;   /* Bright Hazard Yellow */
+  /* Typography */
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Status Colors */
-  --status-good: #10B981;
-  --status-warn: #F59E0B;
-  --status-alert: #FF5A00;
-
-  /* Detection Overlay */
-  --overlay-pothole: #FF5A00;
-  --overlay-crack: #FFD200;
-  --overlay-water-pothole: #FB923C;
-  --overlay-spalling: #EAB308;
-  --overlay-halo: #000000;
-
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* Radius (4-6px) */
+  --radius: 4px;
+  --radius-md: 6px;
 }
 
-/* Dark Mode - Deep Asphalt Black & Charcoal Primary */
 .dark,
-.dark:root,
-[data-theme="high-vis-dark"] {
-  --bg-canvas: #0B0F14;       /* Deep Asphalt Black */
-  --bg-surface: #121820;      /* Slate Charcoal Surface */
-  --bg-surface-2: #1A222D;    /* Raised Charcoal Surface */
-  --border-rule: #283545;     /* Slate Gray Rule */
-  --border-subtle: #283545;
-  --border-strong: #475569;
+[data-theme="dark"] {
+  /* Dark ("Asphalt") */
+  --bg: #121311;
+  --surface: #1A1B18;
+  --surface-raised: #232520;
+  --rule: #282A26;
+  --border: #282A26;
+  --text: #ECEAE2;
+  --muted: #8E8B82;
+  --accent: #F5C400;
+  --link: #60A5FA;
 
-  --text-main: #FFFFFF;       /* Crisp White */
-  --text-muted: #94A3B8;      /* Slate Gray Text */
-  --text-faint: #64748B;
-  --text-inverse: #0B0F14;
+  /* Overlay (Colour-Blind Safe) */
+  --overlay-pothole: #D55E00;
+  --overlay-crack: #0072B2;
+  --overlay-water-pothole: #CC79A7;
+}
 
-  --primary: #FF5A00;         /* High-Visibility Safety Orange */
-  --primary-hover: #FF7324;
-  --primary-text: #FFFFFF;
-  --focus-ring: #FF5A00;
-  --accent-yellow: #FFD200;   /* Bright Hazard Yellow */
-
-  /* Status Colors */
-  --status-good: #10B981;
-  --status-warn: #FFD200;
-  --status-alert: #FF5A00;
-
-  /* Detection Overlay */
-  --overlay-pothole: #FF5A00;
-  --overlay-crack: #FFD200;
-  --overlay-water-pothole: #FB923C;
-  --overlay-spalling: #FACC15;
-  --overlay-halo: #000000;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
