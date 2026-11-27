@@ -22,6 +22,7 @@ import onnxruntime as ort
 from ml2.guards.input_gate import InputGate
 from ml2.guards.obstacle_filter import ObstacleFilter
 from ml2.guards.road_mask import RoadSurfaceSegmenter
+from ml2.pipeline.wbf import weighted_boxes_fusion
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -40,7 +41,7 @@ class ML2DetectorPipeline:
         # 1. Initialize Guards
         self.input_gate = InputGate()
         self.obstacle_filter = ObstacleFilter()
-        self.road_segmenter = RoadSurfaceSegmenter(horizon_cutoff_pct=0.385)
+        self.road_segmenter = RoadSurfaceSegmenter(horizon_cutoff_pct=0.385, min_overlap_pct=0.35)
 
         # 2. Locate trained detector models
         opts = ort.SessionOptions()
@@ -110,9 +111,9 @@ class ML2DetectorPipeline:
             crack_thresh = 0.25
             dep_thresh = 0.25
         else:  # balanced
-            conf_thresh = 0.30
-            crack_thresh = 0.32
-            dep_thresh = 0.32
+            conf_thresh = 0.35
+            crack_thresh = 0.35
+            dep_thresh = 0.35
 
         # Letterbox 640x640
         scale = min(640.0 / h, 640.0 / w)
@@ -294,17 +295,16 @@ class ML2DetectorPipeline:
         if not candidates:
             return True, "ok", []
 
-        # Unified NMS (IoU 0.25 to cleanly suppress envelope bounding duplicates)
-        indices = cv2.dnn.NMSBoxes(boxes_nms, confs_nms, conf_thresh, 0.25)
-        if len(indices) == 0:
+        # --- Stage 6: Weighted Boxes Fusion (WBF) ---
+        fused_candidates = weighted_boxes_fusion(
+            candidates, iou_thr=0.40, skip_box_thr=conf_thresh
+        )
+        if not fused_candidates:
             return True, "ok", []
-
-        keep_idx = indices.flatten() if hasattr(indices, "flatten") else [i[0] for i in indices]
-        nms_candidates = [candidates[i] for i in keep_idx]
 
         # --- Stage 4: Person / Vehicle / Obstacle Subtraction ---
         after_obstacles, _ = self.obstacle_filter.filter_defects(
-            nms_candidates, img_bgr, iom_thresh=0.40
+            fused_candidates, img_bgr, iom_thresh=0.40
         )
 
         # --- Stage 3: Road Surface Mask Prior Filtering ---

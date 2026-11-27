@@ -15,9 +15,15 @@ from typing import Any, Dict, List, Tuple
 class RoadSurfaceSegmenter:
     """Extracts continuous drivable road surface mask."""
 
-    def __init__(self, dilation_pct: float = 0.18, horizon_cutoff_pct: float = 0.38):
+    def __init__(
+        self,
+        dilation_pct: float = 0.18,
+        horizon_cutoff_pct: float = 0.38,
+        min_overlap_pct: float = 0.35,
+    ):
         self.dilation_pct = dilation_pct
         self.horizon_cutoff_pct = horizon_cutoff_pct
+        self.min_overlap_pct = min_overlap_pct
 
     def compute_road_mask(self, img_bgr: np.ndarray) -> np.ndarray:
         """Computes binary road surface mask (uint8, 255=road, 0=non-road)."""
@@ -102,7 +108,11 @@ class RoadSurfaceSegmenter:
     def filter_defects(
         self, defect_boxes: List[Dict[str, Any]], img_bgr: np.ndarray
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        """Keep box only if its center or bottom lies inside the drivable road mask.
+        """Keep box only if enough of it is on the drivable road mask.
+
+        Requires:
+        1. Box road area overlap >= min_overlap_pct (e.g. 35%).
+        2. Center or bottom pixel lies inside the road mask.
 
         Returns: (kept_boxes, removed_boxes).
         """
@@ -114,14 +124,27 @@ class RoadSurfaceSegmenter:
 
         for d in defect_boxes:
             bx = d["box"]  # [x1, y1, x2, y2]
+            x1 = max(0, min(w - 1, int(round(bx[0]))))
+            y1 = max(0, min(h - 1, int(round(bx[1]))))
+            x2 = max(x1 + 1, min(w, int(round(bx[2]))))
+            y2 = max(y1 + 1, min(h, int(round(bx[3]))))
+
+            box_area = max(1, (x2 - x1) * (y2 - y1))
+            road_pixels = int(np.count_nonzero(road_mask[y1:y2, x1:x2]))
+            overlap_pct = road_pixels / float(box_area)
+
             cx = int(np.clip((bx[0] + bx[2]) / 2.0, 0, w - 1))
             cy_c = int(np.clip((bx[1] + bx[3]) / 2.0, 0, h - 1))
             cy_b = int(np.clip(bx[3] - 2, 0, h - 1))
 
-            # Center must lie on road mask (and optionally check bottom)
-            if road_mask[cy_c, cx] > 0:
-                kept.append(d)
+            # Box is kept only if enough of it is on road
+            if overlap_pct >= self.min_overlap_pct and (road_mask[cy_c, cx] > 0 or road_mask[cy_b, cx] > 0):
+                kept.append({**d, "road_overlap_pct": round(float(overlap_pct), 3)})
             else:
-                removed.append({**d, "reason": "outside_road_mask"})
+                removed.append({
+                    **d,
+                    "road_overlap_pct": round(float(overlap_pct), 3),
+                    "reason": "insufficient_road_overlap",
+                })
 
         return kept, removed

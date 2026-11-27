@@ -51,6 +51,15 @@ In compliance with **Rule G4 (Provenance and Licenses)**, this register document
 - **License:** AGPL-3.0
 - **Operational Role:** Generates polygonal segmentation masks constrained inside confirmed bounding boxes.
 
+### 1.6 Road Scene vs Non-Road Neural Classifier (Gate B)
+- **Path:** `ml2/models/road_classifier.onnx`
+- **Architecture:** MobileNetV3-Small (TorchVision fine-tuned, ONNX opset 14)
+- **File Size:** 5.81 MB (6,089,255 bytes)
+- **SHA-256:** `ec843f51da259068c07e0523d45ef450700d3d57d7eeff5be3c07248108a7395`
+- **Source / Lineage:** Fine-tuned from PyTorch MobileNetV3-Small weights on 250 verified road scenes and 230 non-road scenes.
+- **License:** BSD-3-Clause
+- **Operational Role:** Gate B2 input gate rejection of non-road scenes (diagrams, UI screenshots, indoor, and landscapes).
+
 ---
 
 ## 2. Evaluation Datasets
@@ -73,3 +82,20 @@ In compliance with **Rule G4 (Provenance and Licenses)**, this register document
 - **Ground Truth Manifest:** `data/test_videos/video_ground_truth.json` (SHA-256: `7847575a839d44cfcc66294b48e1f7a12cf0f4a2c0f2233a21b52fbb1a2c17f2`)
 - **Environmental Conditions Covered:** Urban daylight, high-contrast glare, dusk/dawn, wet/rainy asphalt, and highway corridors.
 - **Ground Truth Defect Events:** 13 verified physical defect encounters.
+
+### 2.3 Gate B Benchmark TEST-B (Clean Clutter Road Scenes)
+- **Location:** `data/benchmarks/test_b_clutter/`
+- **Sample Size:** 300 authentic clean road images with zero defects across 3 geographical groups:
+  - 100 China/Czech rural and urban highways
+  - 100 Japan/Norway suburban corridors
+  - 100 India urban, highway, and rural roads
+- **Manifest:** `data/benchmarks/manifest_test_b.json` (SHA-256 locked)
+- **License:** CC BY-SA 4.0 (RDD2022 benchmark)
+- **Benchmark Target:** False-alarm images <= 2.0%.
+
+### 2.4 Gate B Benchmark TEST-C (Non-Road Scenes)
+- **Location:** `data/benchmarks/test_c_non_road/`
+- **Sample Size:** 220 authentic non-road scenes (50 technical diagrams / UI screenshots / slide formats + 170 natural landscapes, indoor interiors, architectural structures, and portrait photos)
+- **Manifest:** `data/benchmarks/manifest_test_c.json` (SHA-256 locked)
+- **License:** CC0 / Public Domain / CC BY-SA 4.0
+- **Benchmark Target:** Rejection rate >= 95.0%.

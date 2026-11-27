@@ -12,8 +12,12 @@ Returns:
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 import cv2
 import numpy as np
+import onnxruntime as ort
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # Perceptual hash of known civil engineering diagram (case_02 / LTPP manual figure)
 KNOWN_DIAGRAM_HASHES = {
@@ -22,7 +26,7 @@ KNOWN_DIAGRAM_HASHES = {
 
 
 class InputGate:
-    """Non-road infographic, diagram, and digital screenshot gate."""
+    """Non-road infographic, diagram, indoor, landscape, and digital screenshot gate."""
 
     def __init__(
         self,
@@ -30,11 +34,30 @@ class InputGate:
         max_luminance: float = 245.0,
         min_laplacian_var: float = 15.0,
         glyph_threshold: int = 35,
+        road_prob_threshold: float = 0.12,
+        model_path: Path | str | None = None,
     ):
         self.min_luminance = min_luminance
         self.max_luminance = max_luminance
         self.min_laplacian_var = min_laplacian_var
         self.glyph_threshold = glyph_threshold
+        self.road_prob_threshold = road_prob_threshold
+
+        # Load road scene classifier ONNX (MobileNetV3-Small)
+        self.classifier_sess = None
+        if model_path is None:
+            model_path = PROJECT_ROOT / "ml2" / "models" / "road_classifier.onnx"
+        model_path = Path(model_path)
+        if model_path.exists():
+            opts = ort.SessionOptions()
+            opts.intra_op_num_threads = 2
+            opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+            self.classifier_sess = ort.InferenceSession(str(model_path), opts, providers=["CPUExecutionProvider"])
+            self.in_name = self.classifier_sess.get_inputs()[0].name
+            self.out_name = self.classifier_sess.get_outputs()[0].name
+
+        self.norm_mean = np.array([0.485, 0.456, 0.406], dtype=np.float32).reshape(1, 3, 1, 1)
+        self.norm_std = np.array([0.229, 0.224, 0.225], dtype=np.float32).reshape(1, 3, 1, 1)
 
     def evaluate(self, img_rgb: np.ndarray, raw_bytes: bytes | None = None) -> tuple[bool, str]:
         """Evaluate an RGB image array."""
@@ -97,5 +120,18 @@ class InputGate:
             edge_ratio = float(np.sum(np.abs(grad_x) > 80)) / max(1.0, float(np.sum(np.abs(grad_y) > 80)))
             if edge_ratio > 3.2 and border_std < 25.0:
                 return False, f"Not a road photograph (text document / slide format detected, edge_ratio={edge_ratio:.2f})."
+
+        # 4. Neural Road vs Non-Road Scene Classifier (MobileNetV3-Small)
+        if self.classifier_sess is not None:
+            img_resized = cv2.resize(img_rgb, (224, 224), interpolation=cv2.INTER_LINEAR)
+            arr = (img_resized.astype(np.float32) / 255.0).transpose(2, 0, 1)[None, ...]
+            arr = (arr - self.norm_mean) / self.norm_std
+            logits = self.classifier_sess.run([self.out_name], {self.in_name: arr.astype(np.float32)})[0][0]
+            exp_logits = np.exp(logits - np.max(logits))
+            probs = exp_logits / np.sum(exp_logits)
+            prob_road = float(probs[1])
+
+            if prob_road < self.road_prob_threshold:
+                return False, f"Not a road photograph (non-road scene classifier: P(road)={prob_road:.2f} < {self.road_prob_threshold:.2f})."
 
         return True, "ok"
